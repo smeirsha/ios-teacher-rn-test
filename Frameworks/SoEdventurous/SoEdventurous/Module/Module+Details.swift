@@ -1,0 +1,46 @@
+//
+// Copyright (C) 2016-present Instructure, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+import SoPersistent
+import TooLegit
+import ReactiveCocoa
+import SoPersistent
+import CoreData
+
+extension Module {
+    public static func observer(session: Session, moduleID: String) throws -> ManagedObjectObserver<Module> {
+        let context = try session.soEdventurousManagedObjectContext()
+        let predicate = NSPredicate(format: "%K == %@", "id", moduleID)
+        return try ManagedObjectObserver(predicate: predicate, inContext: context)
+    }
+
+    public static func refresher(session: Session, courseID: String, moduleID: String) throws -> Refresher {
+        let context = try session.soEdventurousManagedObjectContext()
+
+        // Refresh all modules because prerequisite modules.
+        let modules = try Module.getModules(session, courseID: courseID)
+        let syncModules = Module.syncSignalProducer(inContext: context, fetchRemote: modules)
+
+        let moduleItems = try ModuleItem.getModuleItems(session, courseID: courseID, moduleID: moduleID)
+        let syncModuleItems = ModuleItem.syncSignalProducer(ModuleItem.predicate(forItemsIn: moduleID), includeSubentities: false, inContext: context, fetchRemote: moduleItems)
+
+        let sync: SignalProducer<SignalProducer<Void, NSError>, NSError> = SignalProducer(values: [syncModules.map { _ in () }, syncModuleItems.map { _ in () }])
+
+        let key = cacheKey(context, [courseID, moduleID])
+
+        return SignalProducerRefresher(refreshSignalProducer: sync.flatten(.Merge), scope: session.refreshScope, cacheKey: key)
+    }
+}
