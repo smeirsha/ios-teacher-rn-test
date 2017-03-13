@@ -144,7 +144,7 @@ enum {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     UIView *backgroundView = [UIView new];
     self.tableView.backgroundView = backgroundView;
     [backgroundView setBackgroundColor:[UIColor prettyOffWhite]];
@@ -771,12 +771,7 @@ NSIndexPath *rootEntryIndexPath() {
         CGFloat inputViewHeight = 60;
         CGRect startingInputFrame = CGRectMake(0, CGRectGetMaxY(overlayView.bounds), overlayView.bounds.size.width, inputViewHeight);
         CGRect finalInputFrame = startingInputFrame;
-        
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            finalInputFrame.origin.y -= (inputViewHeight + self.tabBarController.tabBar.bounds.size.height);
-        } else {
-            finalInputFrame.origin.y -= inputViewHeight;
-        }
+        finalInputFrame.origin.y -= inputViewHeight + self.bottomLayoutGuide.length;
 
         inputView = [[CKRichTextInputView alloc] initWithFrame:startingInputFrame];
         [inputView setShowsAttachmentButton:NO];

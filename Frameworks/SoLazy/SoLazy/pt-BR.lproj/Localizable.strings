@@ -1,11 +1,20 @@
+/* Message for an error alert */
+"An unexpected error occured. %@(%@)" = "Ocorreu um erro inesperado. %1$@(%2$@)";
+
 /* Dismiss an error dialog */
 "Dismiss" = "Recusar";
 
 /* Data encoding error title */
 "Encoding Error" = "Erro de Codificação";
 
+/* Title for an error alert */
+"Error" = "Erro";
+
+/* attached to error explanation in dialog */
+"Explanation:" = "Explicação:";
+
 /* Option to report an error */
-"Report" = "Relatório";
+"Report" = "Relatório ";
 
 /* Data encoding error message */
 "There was a problem encoding UTF8 Data" = "Houve um problema ao codificar UTF8 Data";
@@ -15,7 +24,4 @@
 
 /* SoLazy's fallback title for an unknown error */
 "Unknown Error" = "Erro Desconhecido";
-
-/* attached to error explanation in dialog */
-"Explanation:" = "Explicação:";
 

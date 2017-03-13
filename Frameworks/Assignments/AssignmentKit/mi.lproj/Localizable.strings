@@ -1,5 +1,5 @@
 /* grade details for points based grade i.e. \"10 of 12\" */
-"of (formatter(possible))" = "o (formatter(taea))";
+" of (formatter(possible))" = "o (formatter(taea))";
 
 /* grade details for points based grade i.e. \"10 of 12\" */
 "(formatter(points)) of (formatter(possible))" = "(formatter (ngā)) o (formatter (taea))";
@@ -16,19 +16,22 @@
 /* Title for 5 minutes assignment reminder */
 "5 minutes" = "5 meneti";
 
-/* Assignment label */
+/* URL submission option */
+"Add Website Address" = "Tāpiri  Wāhitau Paetukutuku";
+
+/* (No Commment) */
 "Assignment" = "Taumahi";
 
 /* Title for alert view for assignment reminders */
 "Assignment Reminder" = "Whakamaumahara Taumahi";
 
-/* Message indicating that an assignment is currently be submitted */
+/* (No Commment) */
 "Assignment is currently being submitted" = "Kei te tukuna Taumahi tēnei wā";
 
 /* This assignment hasn't been graded yet but can be graded */
 "Awaiting Grade" = "Tatari Kōeke";
 
-/* cancel button */
+/* Cancel submission option */
 "Cancel" = "Whakakore";
 
 /* Title for reminder options for an assignment */
@@ -37,17 +40,26 @@
 /* Title for a rating that hasn't been graded but has a comment */
 "Comment" = "Tākupu";
 
-/* Assignment submission comment placeholder text */
+/* (No Commment) */
 "Comment.." = "Tākupu ..";
 
 /* error displayed when submitting an assignment is unavailable */
 "Could not submit assignment. Invalid assignment or session." = "Kāore i taea te tuku taumahi. taumahi muhu wātū ranei.";
 
-/* error displayed when submitting a submission is invalid. */
+/* (No Commment) */
 "Could not submit assignment. Invalid submission." = "Kāore i taea te tuku taumahi. tāpaetanga muhu.";
 
-/* String telling the user that the date is the due date */
+/* (No Commment) */
 "Due:" = "Nā:";
+
+/* String telling the user that the date is the due date */
+"Due: " = "Nā:";
+
+/* Text submission option */
+"Enter Text" = "Whakauru Kuputuhi";
+
+/* Prompt for text upload */
+"Enter your submission..." = "Whakauru i tō tukunga...";
 
 /* Error title for parsing assignment data from server */
 "Error Updating Assignment" = "Hapa Whakahōu Taumahi";
@@ -55,7 +67,7 @@
 /* This assignment is excused */
 "Excused" = "Tukua";
 
-/* Error when an upload failed to resume. */
+/* (No Commment) */
 "Failed to resume upload." = "I rahua ki te tīmata anō tikiake.";
 
 /* This assignment is late */
@@ -85,11 +97,14 @@
 /* title for submission button if student has submitted previously */
 "Re-submit Assignment" = "Re-tuku Taumahi";
 
-/* Message indicating that a submission type is not supported for this assignment. */
+/* (No Commment) */
 "Submission type not allowed" = "momo tukunga kore whakaaetia";
 
 /* submission title for assignment that doesn't support submissions */
 "Submissions N/A" = "Ngā tāpaetanga N/HE";
+
+/* Submit assignment button */
+"Submit" = "Tuku";
 
 /* title for submission button if student has never submitted */
 "Submit Assignment" = "Tuku Taumahi";
@@ -103,24 +118,30 @@
 /* submission title for assignemnt that is submitted */
 "Turned in!" = "Tahuri i roto i!";
 
-/* Error message when a course could not be selected */
+/* (No Commment) */
 "Unable to select a course." = "Kāore e taea te tīpako i te akoranga.";
 
-/* Error message when an assignment could not be selected */
+/* (No Commment) */
 "Unable to select an assignment." = "Kāore e taea te tīpako i te ohipa.";
 
-/* Error message when unable to submit assignment. */
+/* (No Commment) */
 "Unable to submit assignment." = "Kāore e taea te tuku taumahi.";
 
 /* Assignments with no dates */
 "Undated" = "e tai'o";
 
 /* This assignment is not graded */
-"Ungraded" = "tē Mākahia";
+"Ungraded" = "Tē Mākahia";
 
 /* Upcoming assignments */
 "Upcoming" = "ka ū mai";
 
+/* File upload submission option */
+"Upload File" = "Tukuake kōnae";
+
 /* Title for button to see rubric from assignment detail */
 "View Rubric" = "Tirohia Rubric";
+
+/* (No Commment) */
+"of (formatter(possible))" = "o (formatter(taea))";
 

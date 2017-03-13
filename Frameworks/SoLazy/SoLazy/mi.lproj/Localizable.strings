@@ -1,8 +1,17 @@
+/* Message for an error alert */
+"An unexpected error occured. %@(%@)" = "He hapa ohorere i puta. %1$@(%2$@)";
+
 /* Dismiss an error dialog */
 "Dismiss" = "Tonoa";
 
 /* Data encoding error title */
 "Encoding Error" = "Hapa Whakawaehere";
+
+/* Title for an error alert */
+"Error" = "Hapa";
+
+/* attached to error explanation in dialog */
+"Explanation:" = "Whakamārama:";
 
 /* Option to report an error */
 "Report" = "Pūrongo";
@@ -15,7 +24,4 @@
 
 /* SoLazy's fallback title for an unknown error */
 "Unknown Error" = "Hapa Unknown";
-
-/* attached to error explanation in dialog */
-"Explanation:" = "whakamārama:";
 

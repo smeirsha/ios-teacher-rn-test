@@ -18,15 +18,38 @@
 
 import Foundation
 import TooLegit
-import ReactiveCocoa
+import ReactiveSwift
 import SoPretty
 import Marshal
 
 extension Enrollment {
-    public static func put(session:Session, color: UIColor, forContextID: ContextID) -> SignalProducer<(), NSError> {
+    public static func put(_ session:Session, color: UIColor, forContextID: ContextID) -> SignalProducer<(), NSError> {
         let path = "/api/v1/users/self/colors" / forContextID.canvasContextID
-        let params: [String: AnyObject] = ["hexcode": color.hex]
+        let params: [String: Any] = ["hexcode": color.hex]
         return attemptProducer { try session.PUT(path, parameters: params) }
-            .flatMap(.Merge, transform: session.emptyResponseSignalProducer)
+            .flatMap(.merge, transform: session.emptyResponseSignalProducer)
+    }
+    
+    public static func arcLTIToolID(_ session: Session, for contextID: ContextID) throws -> SignalProducer<String, NSError> {
+        let path = contextID.apiPath + "/external_tools"
+        let request = try session.GET(path, parameters: ["include_parents": "true"], encoding: .urlEncodedInURL, authorized: true)
+        return session.paginatedJSONSignalProducer(request)
+            .map { jsonLTITools in
+                
+                return jsonLTITools
+                    .filter { json in
+                        guard let url: String = (try? json <| "url") else { return false }
+                        return url.contains("instructuremedia.com/lti/launch")
+                    }
+                
+                    .flatMap { json in
+                        return try? json.stringID("id")
+                    }
+                
+                    // There should only ever be one arc lti me thinks
+                    // See Enrollment.swift - 
+                    // Empty string means we've checked, nil string means we haven't
+                    .first ?? ""
+            }
     }
 }

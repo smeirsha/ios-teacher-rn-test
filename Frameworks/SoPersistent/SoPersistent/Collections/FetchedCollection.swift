@@ -25,34 +25,23 @@
 import Foundation
 import CoreData
 import SoLazy
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 
-extension NSIndexPath {
-    var safeCopy: NSIndexPath {
-        guard let path = copy() as? NSIndexPath else { ❨╯°□°❩╯⌢"copy should be safe, !" }
-        
-        return path
-    }
-}
-
-public class FetchedCollection<Model where Model: NSManagedObject>: NSObject, Collection, SequenceType, NSFetchedResultsControllerDelegate {
+open class FetchedCollection<Model>: NSObject, Collection, Sequence, NSFetchedResultsControllerDelegate where Model: NSManagedObject {
     public typealias Object = Model
     
-    let fetchedResultsController: NSFetchedResultsController
-    let titleForSectionTitle: String?->String?
+    let fetchedResultsController: NSFetchedResultsController<Model>
+    let titleForSectionTitle: (String?)->String?
 
-    private var updateBatch: [CollectionUpdate<Object>] = []
-    private var insertedSections = NSMutableIndexSet()
-    
-    public let collectionUpdates: Signal<[CollectionUpdate<Model>], NoError>
+    open let collectionUpdates: Signal<[CollectionUpdate<Model>], NoError>
     internal let updatesObserver: Observer<[CollectionUpdate<Model>], NoError>
     
-    public func reload() {
+    open func reload() {
         
     }
 
-    public init(frc: NSFetchedResultsController, titleForSectionTitle: String?->String? = { $0 }) throws {
+    public init(frc: NSFetchedResultsController<Model>, titleForSectionTitle: @escaping (String?)->String? = { $0 }) throws {
         self.fetchedResultsController = frc
         self.titleForSectionTitle = titleForSectionTitle
         (collectionUpdates, updatesObserver) = Signal.pipe()
@@ -65,116 +54,69 @@ public class FetchedCollection<Model where Model: NSManagedObject>: NSObject, Co
         self.fetchedResultsController.delegate = nil
     }
     
-    public var isEmpty: Bool {
+    open var isEmpty: Bool {
         return fetchedResultsController.fetchedObjects?.isEmpty ?? true
     }
 
-    public func numberOfSections() -> Int {
+    open func numberOfSections() -> Int {
         return fetchedResultsController.sections?.count ?? 0
     }
     
-    public func numberOfItemsInSection(section: Int) -> Int {
+    open func numberOfItemsInSection(_ section: Int) -> Int {
         return fetchedResultsController.sections?[section].numberOfObjects ?? 0
     }
     
-    public func titleForSection(section: Int) -> String? {
+    open func titleForSection(_ section: Int) -> String? {
         return titleForSectionTitle(fetchedResultsController.sections?[section].name)
     }
     
-    public subscript(indexPath: NSIndexPath) -> Object {
-        guard let m = fetchedResultsController.objectAtIndexPath(indexPath) as? Object else { ❨╯°□°❩╯⌢"You must have your entities crossed" }
-        return m
+    open subscript(indexPath: IndexPath) -> Object {
+        return fetchedResultsController.object(at: indexPath)
+    }
+
+    public func indexPath(forObject object: Model) -> IndexPath? {
+        return fetchedResultsController.indexPath(forObject: object)
     }
     
-    public var first: Object? {
-        return fetchedResultsController.fetchedObjects?.first as? Object
+    open var first: Object? {
+        return fetchedResultsController.fetchedObjects?.first
     }
     
-    public var last: Object? {
-        return fetchedResultsController.fetchedObjects?.last as? Object
+    open var last: Object? {
+        return fetchedResultsController.fetchedObjects?.last
     }
     
-    public var count: Int {
+    open var count: Int {
         return fetchedResultsController.fetchedObjects?.count ?? 0
     }
     
     // MARK: NSFetchedResultsControllerDelegate
-    
-    public func controllerWillChangeContent(controller: NSFetchedResultsController) {
-        updateBatch = []
-        insertedSections.removeAllIndexes()
-    }
-    
-    public func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
-        switch type {
-        case .Insert:
-            updateBatch.append(.SectionInserted(sectionIndex))
-            insertedSections.addIndex(sectionIndex)
-        case .Delete:
-            updateBatch.append(.SectionDeleted(sectionIndex))
-        default:
-            break // NA sections only insert and delete
-        }
-    }
-    
-    public func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-        
-        guard let m = anObject as? Object else { ❨╯°□°❩╯⌢"Make sure the entity type for your FRC matches M" }
-        
-        switch type {
-        case .Insert:
-            updateBatch.append(.Inserted(newIndexPath!.safeCopy, m))
-        case .Update:
-            // tl;dr is this is terrible, NSFetchedResultsController is terrible, Apple is terrible
-            // Occassionaly NSFRC reports an Update instead of a Move, as mentioned here: https://developer.apple.com/library/content/releasenotes/iPhone/NSFetchedResultsChangeMoveReportedAsNSFetchedResultsChangeUpdate/index.html
-            // Instead of doing that terrible workaround, someone on SO found that `indexPathForObject` 
-            // reports the new correct location for the object, if it changed sections. So if this were
-            // *really* an update, the sections should be the same. In the case of NSFRC reporting an update
-            // it still passes in a newIndexPath, so you can key off that, and do the right thing (maybe)
-            if let section = fetchedResultsController.indexPathForObject(m)?.section where section == indexPath!.section && !insertedSections.contains(indexPath!.section) {
-                updateBatch.append(.Updated(indexPath!.safeCopy, m))
-            } else if let newIndexPath = newIndexPath where newIndexPath.section != indexPath!.section {
-                updateBatch.append(.Moved(indexPath!.safeCopy, newIndexPath.safeCopy, m))
-            }
-
-        case .Move:
-            let from = indexPath!.safeCopy
-            let to = newIndexPath!.safeCopy
-            guard from != to else {
-                updateBatch.append(.Updated(from, m))
-                return
-            }
-            updateBatch.append(.Moved(from, to, m))
-        case .Delete:
-            updateBatch.append(.Deleted(indexPath!.safeCopy, m))
-        }
-    }
-    
-    public func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        updatesObserver.sendNext(updateBatch)
+    open func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        updatesObserver.send(value: [.reload])
     }
     
 }
 
-public struct FetchedResultsControllerGenerator<T>: GeneratorType {
+public struct FetchedResultsControllerGenerator<T: NSManagedObject>: IteratorProtocol {
     public typealias Element = T
     
     var index: Int = 0
-    let fetchedResultsController: NSFetchedResultsController
+    let fetchedResultsController: NSFetchedResultsController<T>
     
-    init(fetchedResultsController: NSFetchedResultsController) {
+    init(fetchedResultsController: NSFetchedResultsController<T>) {
         self.fetchedResultsController = fetchedResultsController
     }
     
     public mutating func next() -> T? {
-        guard index < fetchedResultsController.fetchedObjects?.count else { return nil }
+        guard let count = fetchedResultsController.fetchedObjects?.count else { return nil}
+        guard index < count else { return nil }
         defer { index += 1 }
-        return fetchedResultsController.fetchedObjects?[index] as? T
+        return fetchedResultsController.fetchedObjects?[index]
     }
 }
 
 extension FetchedCollection {
-    public func generate() -> FetchedResultsControllerGenerator<Object> {
+    public func makeIterator() -> FetchedResultsControllerGenerator<Object> {
         return FetchedResultsControllerGenerator<Object>(fetchedResultsController: fetchedResultsController)
     }
 }

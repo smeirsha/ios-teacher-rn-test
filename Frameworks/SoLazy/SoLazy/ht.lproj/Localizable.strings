@@ -1,8 +1,17 @@
+/* Message for an error alert */
+"An unexpected error occured. %@(%@)" = "Yon erè fèt sanzatann. %1$@(%2$@)";
+
 /* Dismiss an error dialog */
 "Dismiss" = "Rejte";
 
 /* Data encoding error title */
 "Encoding Error" = "Erè Kodaj";
+
+/* Title for an error alert */
+"Error" = "Erè";
+
+/* attached to error explanation in dialog */
+"Explanation:" = "Esplikasyon:";
 
 /* Option to report an error */
 "Report" = "Rapòte";
@@ -15,7 +24,4 @@
 
 /* SoLazy's fallback title for an unknown error */
 "Unknown Error" = "Erè Enkoni";
-
-/* attached to error explanation in dialog */
-"Explanation:" = "Esplikasyon:";
 

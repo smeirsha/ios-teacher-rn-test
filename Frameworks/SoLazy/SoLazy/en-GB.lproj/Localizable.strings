@@ -1,8 +1,17 @@
+/* Message for an error alert */
+"An unexpected error occured. %@(%@)" = "An unexpected error occurred. %1$@(%2$@)";
+
 /* Dismiss an error dialog */
 "Dismiss" = "Dismiss";
 
 /* Data encoding error title */
 "Encoding Error" = "Encoding error";
+
+/* Title for an error alert */
+"Error" = "Error";
+
+/* attached to error explanation in dialog */
+"Explanation:" = "Explanation:";
 
 /* Option to report an error */
 "Report" = "Report";
@@ -15,7 +24,4 @@
 
 /* SoLazy's fallback title for an unknown error */
 "Unknown Error" = "Unknown reror";
-
-/* attached to error explanation in dialog */
-"Explanation:" = "Explanation:";
 

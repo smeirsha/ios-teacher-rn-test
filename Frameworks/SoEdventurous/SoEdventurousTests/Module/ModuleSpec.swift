@@ -27,7 +27,11 @@ import WebKit
 import TooLegit
 import Result
 import Marshal
-import ReactiveCocoa
+import ReactiveSwift
+import CoreLocation
+import Photos
+import MapKit
+
 
 class ModuleSpec: QuickSpec {
     override func spec() {
@@ -127,14 +131,27 @@ class ModuleSpec: QuickSpec {
 
         describe("refreshers") {
             describe("collection refresher") {
-                it("syncs modules") {
-                    let session = User(credentials: .user1).session
-                    let count = Module.observeCount(inSession: session)
+                let courseID = "1867097"
+                var session: Session!
+                var refresher: Refresher!
+                beforeEach {
+                    session = User(credentials: .user1).session
+                    refresher = try! Module.refresher(session: session, courseID: courseID)
+                }
 
-                    let refresher = try! Module.refresher(session, courseID: "1867097")
+                it("syncs modules") {
+                    let count = Module.observeCount(inSession: session)
                     expect {
-                        refresher.playback("RefreshModules", in: .soAutomated, with: session)
+                        refresher.playback("RefreshModules", with: session)
                     }.to(change({ count.currentCount }, from: 0, to: 2))
+                }
+
+                it("should not delete modules in other courses") {
+                    let otherModule = Module.build(inSession: session) {
+                        $0.courseID = "200"
+                    }
+                    refresher.playback("RefreshModules", with: session)
+                    expect(otherModule.isDeleted) == false
                 }
             }
 
@@ -150,12 +167,44 @@ class ModuleSpec: QuickSpec {
                         $0.state = .completed
                     }
 
-                    let refresher = try! Module.refresher(session, courseID: courseID, moduleID: moduleID)
+                    let refresher = try! Module.refresher(session: session, courseID: courseID, moduleID: moduleID)
 
-                    refresher.playback("RefreshModule", in: .soAutomated, with: session)
+                    refresher.playback("RefreshModule", with: session)
 
                     expect(module.reload().state) == .completed
                 }
+            }
+        }
+
+        describe("predicate(withPrerequisite:)") {
+            it("should include modules with the prerequisite module id") {
+                let session = Session.user1
+                let moc = try! session.soEdventurousManagedObjectContext()
+
+                let one = Module(inContext: moc)
+                one.prerequisiteModuleIDs = ["1", "2", "10", "120"]
+
+                let two = Module(inContext: moc)
+                two.prerequisiteModuleIDs = ["12"]
+
+                let three = Module(inContext: moc)
+                three.prerequisiteModuleIDs = []
+
+                let all = [one, two, three]
+
+                var predicate = Module.predicate(withPrerequisite: "1")
+                var results = all.filter(predicate.evaluate)
+
+                expect(results.contains(one)) == true
+                expect(results.contains(two)) == false
+                expect(results.contains(three)) == false
+
+                predicate = Module.predicate(withPrerequisite: "12")
+                results = all.filter(predicate.evaluate)
+
+                expect(results.contains(one)) == false
+                expect(results.contains(two)) == true
+                expect(results.contains(three)) == false
             }
         }
     }

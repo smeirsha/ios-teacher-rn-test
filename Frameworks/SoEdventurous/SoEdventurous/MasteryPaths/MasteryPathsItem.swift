@@ -19,18 +19,17 @@ import CoreData
 import SoPersistent
 
 public class MasteryPathsItem: ModuleItem {
-    @NSManaged internal (set) public var locked: Bool
     @NSManaged internal (set) public var moduleItemID: String
     @NSManaged internal (set) public var selectedSetID: String?
     @NSManaged internal (set) public var assignmentSets: NSSet
 
     func addAssignmentSetObject(object: MasteryPathAssignmentSet) {
-        let sets = self.mutableSetValueForKey("assignmentSets")
-        sets.addObject(object)
+        let sets = self.mutableSetValue(forKey: "assignmentSets")
+        sets.add(object)
     }
 
     func removeAssignmentSetObject(object: MasteryPathAssignmentSet) {
-        let sets = self.mutableSetValueForKey("assignmentSets")
-        sets.removeObject(object)
+        let sets = self.mutableSetValue(forKey: "assignmentSets")
+        sets.remove(object)
     }
 }

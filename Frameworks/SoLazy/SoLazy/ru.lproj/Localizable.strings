@@ -1,8 +1,17 @@
+/* Message for an error alert */
+"An unexpected error occured. %@(%@)" = "Возникла непредвиденная ошибка. %1$@(%2$@)";
+
 /* Dismiss an error dialog */
 "Dismiss" = "Отклонить";
 
 /* Data encoding error title */
 "Encoding Error" = "Ошибка при кодировании";
+
+/* Title for an error alert */
+"Error" = "Ошибка";
+
+/* attached to error explanation in dialog */
+"Explanation:" = "Объяснение:";
 
 /* Option to report an error */
 "Report" = "Сообщить";
@@ -15,7 +24,4 @@
 
 /* SoLazy's fallback title for an unknown error */
 "Unknown Error" = "Неизвестная ошибка";
-
-/* attached to error explanation in dialog */
-"Explanation:" = "Объяснение:";
 

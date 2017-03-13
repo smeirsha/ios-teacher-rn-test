@@ -16,29 +16,47 @@
     
     
 
-import ReactiveCocoa
+import ReactiveSwift
 import TooLegit
 import Marshal
 
 extension Course {
-    public static var getCoursesParameters: [String: AnyObject] {
+    public static var getCoursesParameters: [String: Any] {
         return ["include": ["needs_grading_count", "syllabus_body", "total_scores", "term", "permissions", "current_grading_period_scores", "favorites"]]
     }
     
-    public static var getCourseParameters: [String: AnyObject] {
+    public static var getCourseParameters: [String: Any] {
         return ["include": ["needs_grading_count", "syllabus_body", "total_scores", "term", "permissions", "current_grading_period_scores"]]
     }
 
-    public static func getAllCourses(session: Session) throws -> SignalProducer<[JSONObject], NSError> {
+    public static func getAllCourses(_ session: Session) throws -> SignalProducer<[JSONObject], NSError> {
         let request = try session.GET(api/v1/"courses", parameters: getCoursesParameters)
         return session.paginatedJSONSignalProducer(request)
             
-            // filter out restricted courses because their json is too sparse and will cause parsing issues
             .map { coursesJSON in
-                return coursesJSON.filter { json in
-                    let restricted: Bool = (try? json <| "access_restricted_by_date") ?? false
-                    return !restricted
-                }
+                return coursesJSON
+                    // filter out restricted courses because their json is too sparse and will cause parsing issues
+                    .filter { json in
+                        let restricted: Bool = (try? json <| "access_restricted_by_date") ?? false
+                        return !restricted
+                    }
+
+                    // remove pending enrollments because their json is also too sparse
+                    .map { json in
+                        var json = json
+                        let enrollments: [JSONObject] = (try? json <| "enrollments") ?? []
+                        json["enrollments"] = enrollments.filter { json in
+                            let enrollmentState: String = (try? json <| "enrollment_state") ?? ""
+                            return enrollmentState != "invited"
+                        }
+                        return json
+                    }
+
+                    // filter out courses without any enrollments
+                    .filter { json in
+                        let enrollments: [JSONObject] = (try? json <| "enrollments") ?? []
+                        return enrollments.any()
+                    }
             }
     }
 }

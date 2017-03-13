@@ -21,21 +21,31 @@ import SoPretty
 
 class QuestionHeaderView: UITableViewHeaderFooterView {
     
-    @IBOutlet private var flagButton: UIButton!
-    @IBOutlet private var numberLabel: UILabel!
+    @IBOutlet fileprivate var flagButton: UIButton!
+    @IBOutlet fileprivate var numberLabel: UILabel!
+
+    static var questionNumberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .none
+        return formatter
+    }()
     
     var flagged: Bool {
         get {
-            return flagButton?.selected ?? false
+            return flagButton?.isSelected ?? false
         } set {
-            flagButton?.selected = newValue
+            flagButton?.isSelected = newValue
             updateAccessibilityLabel()
         }
     }
     
-    var questionNumber: Int = 0 {
+    var questionNumber: Int? {
         didSet {
-            numberLabel?.text = "\(questionNumber)."
+            if let questionNumber = questionNumber {
+                numberLabel?.text = String(format: NSLocalizedString("%@.", comment: "Question number in a quiz"), QuestionHeaderView.questionNumberFormatter.string(from: NSNumber(value: questionNumber)) ?? "")
+            } else {
+                numberLabel?.text = ""
+            }
             updateAccessibilityLabel()
         }
     }
@@ -47,7 +57,7 @@ class QuestionHeaderView: UITableViewHeaderFooterView {
     }
     
     class var Nib: UINib {
-        return UINib(nibName: "QuestionHeaderView", bundle: NSBundle(forClass: self.classForCoder()))
+        return UINib(nibName: "QuestionHeaderView", bundle: Bundle(for: self.classForCoder()))
     }
     
     override func awakeFromNib() {
@@ -58,7 +68,7 @@ class QuestionHeaderView: UITableViewHeaderFooterView {
         accessibilityTraits |= UIAccessibilityTraitHeader
         accessibilityElements = []
         
-        let toggleName = NSLocalizedString("Toggle Flag", tableName: "Localizable", bundle: NSBundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "Toggle flag accessiblity action")
+        let toggleName = NSLocalizedString("Toggle Flag", tableName: "Localizable", bundle: Bundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "Toggle flag accessiblity action")
         let toggleFlagAction = UIAccessibilityCustomAction(name: toggleName, target: self, selector: #selector(flagAction(_:)))
         
         accessibilityCustomActions = [toggleFlagAction]
@@ -71,8 +81,8 @@ class QuestionHeaderView: UITableViewHeaderFooterView {
     
     // MARK: Actions
     
-    @IBAction func flagAction(button: UIButton?) {
-        flagButton.selected = !flagButton.selected
+    @IBAction func flagAction(_ button: UIButton?) {
+        flagButton.isSelected = !flagButton.isSelected
         
         updateAccessibilityLabel()
         postFlagChangedA11yNotification()
@@ -85,11 +95,11 @@ class QuestionHeaderView: UITableViewHeaderFooterView {
 extension QuestionHeaderView {
     
     func updateAccessibilityLabel() {
-        let question = NSLocalizedString("Question", tableName: "Localizable", bundle: NSBundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "accessibility label for a quiz question")
+        let question = NSLocalizedString("Question", tableName: "Localizable", bundle: Bundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "accessibility label for a quiz question")
         var label = question + " \(questionNumber)."
         
         if flagged {
-            label += " " + NSLocalizedString("Flagged", tableName: "Localizable", bundle: NSBundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "State of the flagged question")
+            label += " " + NSLocalizedString("Flagged", tableName: "Localizable", bundle: Bundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "State of the flagged question")
         }
         accessibilityLabel = label
     }
@@ -97,9 +107,9 @@ extension QuestionHeaderView {
     func postFlagChangedA11yNotification() {
         let notification: String
         if flagged {
-            notification = NSLocalizedString("Question \(questionNumber) Flagged", tableName: "Localizable", bundle: NSBundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "state for a question that has been flagged")
+            notification = NSLocalizedString("Question \(questionNumber) Flagged", tableName: "Localizable", bundle: Bundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "state for a question that has been flagged")
         } else {
-            notification = NSLocalizedString("Question \(questionNumber) Unflagged", tableName: "Localizable", bundle: NSBundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "state for unflagged question")
+            notification = NSLocalizedString("Question \(questionNumber) Unflagged", tableName: "Localizable", bundle: Bundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "state for unflagged question")
         }
         
         UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, notification)

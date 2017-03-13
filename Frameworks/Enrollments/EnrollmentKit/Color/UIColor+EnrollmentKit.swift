@@ -19,56 +19,6 @@
 import Foundation
 
 extension UIColor {
-    
-    public static func colorFromHexString(hex: String) -> UIColor? {
-        let justTheNumber = hex
-            .stringByTrimmingCharactersInSet(.whitespaceAndNewlineCharacterSet())
-            .stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "#"))
-        
-        let digitCount = justTheNumber.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)
-        
-        var number = UInt32(0)
-        guard NSScanner(string: justTheNumber).scanHexInt(&number) else { return nil }
-        
-        let mask: UInt32, shift: UInt32
-        if digitCount == 3 {
-            mask = 0xF
-            shift = 4
-        } else {
-            mask = 0xFF
-            shift = 8
-        }
-        
-        var b = number & mask
-        
-        number >>= shift
-        var g = number & mask
-        
-        number >>= shift
-        var r = number & mask
-        
-        if digitCount == 3 {
-            r |= (r << shift)
-            g |= (g << shift)
-            b |= (b << shift)
-        }
-        
-        return UIColor(red: CGFloat(r)/255, green: CGFloat(g)/255, blue: CGFloat(b)/255, alpha: 1.0)
-    }
-    
-    public var hex: String {
-        let components = CGColorGetComponents(CGColor)
-        
-        let r: CGFloat = components[0]
-        let g: CGFloat = components[1]
-        let b: CGFloat = components[2]
-        
-        let hex = String(format: "#%02X%02X%02X", UInt(round(r * 255)), UInt(round(g * 255)), UInt(round(b * 255)))
-
-        return hex
-    }
-    
-    //Main 15 Colors
     public class func contextRed() -> UIColor {
         return UIColor(red: 0xEF/255.0, green: 0x44/255.0, blue: 0x37/255.0, alpha: 1.0)
     }
@@ -90,7 +40,7 @@ extension UIColor {
     public class func contextLightBlue() -> UIColor {
         return UIColor(red: 0x35/255.0, green: 0xA4/255.0, blue: 0xDC/255.0, alpha: 1.0)
     }
-    public class func contextCyan() -> UIColor {0
+    public class func contextCyan() -> UIColor {
         return UIColor(red: 0x09/255.0, green: 0xBC/255.0, blue: 0xD3/255.0, alpha: 1.0)
     }
     public class func contextTeal() -> UIColor {

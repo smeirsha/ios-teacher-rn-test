@@ -1,13 +1,22 @@
 /* Error message component with the report id */
-"Error report ID: (reportID)" = "Fejl rapport ID: (reportID)";
+" Error report ID: (reportID)" = "Fejl rapport ID: (reportID)";
 
 /* Failure reason from the JSON payload from canvas */
-"Failure reason: (reason)." = "Fejlårsag: (reason)";
+" Failure reason: (reason)." = "Fejlårsag: (reason)";
+
+/* Shows the number of flagged questions */
+"%@ Flagged" = "%@ Markeret";
+
+/* Accessiblity hint for question drawer button */
+"%@ Questions Answered" = "%@ Spørgsmål svaret";
+
+/* Question number in a quiz */
+"%@." = "%@.";
 
 /* Confirmations alerting user of unanswered questions */
 "%d questions not answered" = "%d spørgsmål ikke besvaret";
 
-/* Accessiblity hint for question drawer button */
+/* (No Commment) */
 "(questionsController!.flaggedCount) Questions Answered" = "(questionsController!.flaggedCount) Spørgsmål besvaret";
 
 /* Accessiblity hint for question drawer button */
@@ -18,6 +27,9 @@
 
 /* Notification to alert the user that there is only 30 seconds left in the time quiz */
 "30 seconds remaining" = "30 sekunder tilbage";
+
+/* Shows the number questions */
+"All %@ Questions" = "Alle %@ spørgsmål";
 
 /* label for number of attempts that are allowed */
 "Allowed Attempts" = "Tilladte forsøg";
@@ -34,10 +46,15 @@
 /* label for quiz availability date */
 "Available Until" = "Tilgængelig indtil";
 
-/* Cancel button
-   cancel button for submitting a quiz
-   Cancel removing the formatting */
+/* Cancel button title
+   Cancel upload */
 "Cancel" = "Annuller";
+
+/* Choose a file */
+"Choose a File" = "Vælg en fil";
+
+/* Label indicating that the question is a multiple dropdown answer question and answer must be chosen. */
+"Choose your answers below" = "Vælg dine svar nedenfor";
 
 /* Button for electing to be late on a quiz */
 "Continue Quiz" = "Fortsæt Quiz";
@@ -46,7 +63,7 @@
 "Dismiss" = "Afvis";
 
 /* Done button */
-"Done" = "Gjort";
+"Done" = "Udført";
 
 /* due date label for quiz due date */
 "Due Date" = "Forfaldsdato";
@@ -54,8 +71,17 @@
 /* Default text for essay cell */
 "Enter answer..." = "Indtast svar...";
 
+/* Title for quiz loading error */
+"Error Loading Quiz" = "Fejl ved indlæsning af quiz";
+
+/* (No Commment) */
+"Error report ID: (reportID)" = "Fejlrapport-ID: (reportID)";
+
 /* Exit button to leave the quiz */
 "Exit" = "Udgang";
+
+/* (No Commment) */
+"Failure reason: (reason)." = "Fejl grund: (grund).";
 
 /* State of the flagged question */
 "Flagged" = "Markeret";
@@ -71,6 +97,12 @@
 Submitting" = "Låsningsdato nået
 Indsender";
 
+/* Title for when another tool called Lockdown Browser is required to take a quiz */
+"Lockdown Browser Required" = "Lockdown Browser påkrævet";
+
+/* Detail label for when a tool called Lockdown Browser is required to take the quiz */
+"Lockdown Browser is required for viewing your results. Please open the quiz in Lockdown Browser to continue." = "Lockdown Browser påkrævet for at se dine resultater. Åbn quizzen i Lockdown Browser for at fortsætte. ";
+
 /* Next button for advancing a quiz */
 "Next" = "Næste";
 
@@ -83,14 +115,20 @@ Indsender";
 /* Title for alert showing when a quiz isn't takeable */
 "Not Takeable" = "Kan ikke tages";
 
-/* OK */
+/* OK Button Title */
 "OK" = "OK";
+
+/* No comment provided by engineer. */
+"Please check your network connection and try again." = "Tjek venligst din netværk forbindelse og prøv igen.";
 
 /* label for number of points in a quiz */
 "Points" = "Points";
 
 /* accessibility label for a quiz question */
 "Question" = "Spørgsmål";
+
+/* Shows question position */
+"Question %@" = "Spørgsmål %@";
 
 /* state for a question that has been flagged */
 "Question (questionNumber) Flagged" = "Spørgsmål (questionNumber) markeret";
@@ -137,9 +175,7 @@ Indsender";
 /* Label for indication that the quiz submission failed */
 "Submission Failure" = "Indsendelse mislykkedes";
 
-/* Button for electing to not be late on a quiz
-   confirm submitting quiz
-   Submit button for completing a quiz */
+/* Submit button title */
 "Submit" = "Indsend";
 
 /* Label for indication of submitting quiz */
@@ -172,7 +208,7 @@ Indsender";
 /* Message when telling the user they can't take the quiz because the quiz is locked */
 "This quiz is locked." = "Denne quiz er låst.";
 
-/* Message when telling the user they can't take the quiz because the quiz is locked */
+/* (No Commment) */
 "This quiz is locked. Reason: (description)" = "Denne quiz er låst. Årsag: (beskrivelse)";
 
 /* label for the time limit */
@@ -187,18 +223,24 @@ Indsender";
 /* When a quiz has no limit on the number of attempts */
 "Unlimited" = "Ubegrænset";
 
+/* Message displayed while a file is being uploaded */
+"Uploading file..." = "Overfører fil ...";
+
 /* a warning message */
 "Warning" = "Advarsel";
 
 /* Shows time limit on a quiz */
+"You have %d minutes." = "Du har %d minutter.";
+
+/* (No Commment) */
 "You have (minuteLimit) minutes." = "Du har (minuteLimit) minutter.";
 
 /* Message when telling the user they can't take the quiz because they used up all their attempts */
 "You have used all your attempts available on this quiz." = "Du har brugt alle dine tilgængelige forsøg på denne quiz.";
 
-/* Hours label for time limit */
+/* (No Commment) */
 "hr" = "time";
 
-/* Minutes label localized */
+/* (No Commment) */
 "min" = "min";
 
