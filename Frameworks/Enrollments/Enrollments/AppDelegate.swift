@@ -22,19 +22,30 @@ import SoPersistent
 import TooLegit
 import EnrollmentKit
 import SoLazy
+import CoreLocation
+import Photos
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         if unitTesting { return true }
-        window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        window = UIWindow(frame: UIScreen.main.bounds)
         
         window?.rootViewController = UINavigationController(rootViewController: IntroViewController(nibName: nil, bundle: nil))
         
         window?.makeKeyAndVisible()
+        
+        ErrorReporter.setErrorHandler { error, presentingVC in
+            print(error.reportDescription)
+            if let deets = error.alertDetails(reportAction: { print("Yo, Support! \(error.reportDescription)") }) {
+                let alert = UIAlertController(title: deets.title, message: deets.description, preferredStyle: .alert)
+                deets.actions.forEach(alert.addAction)
+                presentingVC?.present(alert, animated: true, completion: nil)
+            }
+        }
         
         return true
     }

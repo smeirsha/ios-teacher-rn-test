@@ -25,7 +25,7 @@ import CoreData
 import Marshal
 import SoIconic
 import TooLegit
-import ReactiveCocoa
+import ReactiveSwift
 import SoProgressive
 import Result
 
@@ -37,56 +37,6 @@ class ModuleItemSpec: QuickSpec {
             beforeEach {
                 session = User(credentials: .user1).session
                 moc = try! session.soEdventurousManagedObjectContext()
-            }
-
-            describe("lockedBySequentialProgress") {
-                it("should be true if its position is greater than or equal to the lowest incomplete item") {
-                    let module = Module.build(inSession: session) { $0.requireSequentialProgress = true }
-                    let complete = ModuleItem.build(inSession: session) {
-                        $0.moduleID = module.id
-                        $0.completed = true
-                        $0.position = 1
-                    }
-                    expect(try! complete.lockedBySequentialProgress(session)) == false
-
-                    let incomplete = ModuleItem.build(inSession: session) {
-                        $0.moduleID = module.id
-                        $0.completed = false
-                        $0.position = 0
-                    }
-
-                    expect(try! incomplete.lockedBySequentialProgress(session)) == false
-                    expect(try! complete.lockedBySequentialProgress(session)) == true
-
-                    let otherIncomplete = ModuleItem.build(inSession: session) {
-                        $0.moduleID = module.id
-                        $0.completed = false
-                        $0.position = 2
-                    }
-                    expect(try! otherIncomplete.lockedBySequentialProgress(session)) == true
-                }
-
-                it("should be true if a prerequisite module requires sequential progress with incomplete items") {
-                    let sequential = Module.build(inSession: session) {
-                        $0.id = "1"
-                        $0.requireSequentialProgress = true
-                    }
-                    let module = Module.build(inSession: session) {
-                        $0.id = "2"
-                        $0.prerequisiteModuleIDs = [sequential.id]
-                    }
-
-                    let incomplete = ModuleItem.build(inSession: session) {
-                        $0.moduleID = sequential.id
-                        $0.completed = false
-                    }
-
-                    let item = ModuleItem.build(inSession: session) {
-                        $0.moduleID = module.id
-                    }
-
-                    expect(try! item.lockedBySequentialProgress(session)) == true
-                }
             }
 
             describe("next") {
@@ -111,9 +61,25 @@ class ModuleItemSpec: QuickSpec {
                     expect(try! moduleItem.next(session)?.id) == "11"
                 }
 
+                it("should not include locked mastery paths module items") {
+                    let moduleItem = ModuleItem.build(inSession: session) {
+                        $0.id = "1"
+                        $0.moduleID = "1"
+                        $0.position = 1
+                    }
+                    let masteryPathsItem = MasteryPathsItem.factory(inSession: session) {
+                        $0.id = "11"
+                        $0.moduleItemID = moduleItem.id
+                        $0.moduleID = moduleItem.moduleID
+                        $0.position = 1.5
+                        $0.lockedForUser = true
+                    }
+                    expect(try! moduleItem.next(session)).to(beNil())
+                }
+
                 it("skips subheaders") {
                     let moduleItem = ModuleItem.build(inSession: session) { $0.id = "1"; $0.moduleID = "1"; $0.position = 1 }
-                    ModuleItem.build(inSession: session) { $0.id = "2"; $0.moduleID = "1"; $0.position = 2; $0.content = .SubHeader }
+                    ModuleItem.build(inSession: session) { $0.id = "2"; $0.moduleID = "1"; $0.position = 2; $0.content = .subHeader }
                     ModuleItem.build(inSession: session) { $0.id = "3"; $0.moduleID = "1"; $0.position = 3; }
                     expect(try! moduleItem.next(session)?.id) == "3"
                 }
@@ -149,7 +115,7 @@ class ModuleItemSpec: QuickSpec {
 
                 it("skips subheaders") {
                     let moduleItem = ModuleItem.build(inSession: session) { $0.id = "1"; $0.moduleID = "1"; $0.position = 3 }
-                    ModuleItem.build(inSession: session) { $0.id = "2"; $0.moduleID = "1"; $0.position = 2; $0.content = .SubHeader }
+                    ModuleItem.build(inSession: session) { $0.id = "2"; $0.moduleID = "1"; $0.position = 2; $0.content = .subHeader }
                     ModuleItem.build(inSession: session) { $0.id = "3"; $0.moduleID = "1"; $0.position = 1; }
                     expect(try! moduleItem.previous(session)?.id) == "3"
                 }
@@ -203,7 +169,7 @@ class ModuleItemSpec: QuickSpec {
                 }
 
                 it("removes completion requirements") {
-                    moduleItem.completionRequirement = .MinScore
+                    moduleItem.completionRequirement = .minScore
                     moduleItem.minScore = 10
                     moduleItem.completed = true
                     var json = ModuleItem.validJSON
@@ -213,7 +179,7 @@ class ModuleItemSpec: QuickSpec {
 
                     expect(moduleItem.completionRequirement).to(beNil())
                     expect(moduleItem.minScore).to(beNil())
-                    expect(moduleItem.completed) == false
+                    expect(moduleItem.completed) == true
                 }
 
                 it("sets completion requirements") {
@@ -229,7 +195,7 @@ class ModuleItemSpec: QuickSpec {
 
                     try! moduleItem.updateValues(json, inContext: moc)
 
-                    expect(moduleItem.completionRequirement) == .MinScore
+                    expect(moduleItem.completionRequirement) == .minScore
                     expect(moduleItem.minScore) == 10
                     expect(moduleItem.completed) == true
                 }
@@ -249,11 +215,22 @@ class ModuleItemSpec: QuickSpec {
                     try! moduleItem.updateValues(json, inContext: moc)
 
                     if let content = moduleItem.content,
-                        case .Assignment(let id) = content {
+                        case .assignment(let id) = content {
                         expect(id) == "1"
                     } else {
                         fail("expected assignment content type")
                     }
+                }
+
+                it("should update locked status") {
+                    moduleItem.lockedForUser = false
+                    var json = ModuleItem.jsonWithLockedForUser(true)
+                    try! moduleItem.updateValues(json, inContext: moc)
+                    expect(moduleItem.lockedForUser) == true
+
+                    json = ModuleItem.jsonWithLockedForUser(false)
+                    try! moduleItem.updateValues(json, inContext: moc)
+                    expect(moduleItem.lockedForUser) == false
                 }
 
                 it("should create a mastery paths module item") {
@@ -316,7 +293,7 @@ class ModuleItemSpec: QuickSpec {
                 }
 
                 it("should mark locked mastery path items as incomplete") {
-                    var json = ModuleItem.jsonWithMasteryPaths(locked: true)
+                    var json = ModuleItem.jsonWithMasteryPaths(true)
                     let masteryPathsItem = MasteryPathsItem.factory(inSession: session) {
                         $0.moduleItemID = "1"
                         $0.completed = true
@@ -328,8 +305,21 @@ class ModuleItemSpec: QuickSpec {
                     expect(masteryPathsItem.completed).toEventually(beFalse())
                 }
 
+                it("should mark locked mastery path items as locked for user") {
+                    var json = ModuleItem.jsonWithMasteryPaths(true)
+                    let masteryPathsItem = MasteryPathsItem.factory(inSession: session) {
+                        $0.moduleItemID = "1"
+                        $0.lockedForUser = false
+                    }
+
+                    try! moduleItem.updateValues(json, inContext: moc)
+                    try! moc.saveFRD()
+
+                    expect(masteryPathsItem.lockedForUser).toEventually(beTrue())
+                }
+
                 it("should mark unlocked mastery path items as complete") {
-                    var json = ModuleItem.jsonWithMasteryPaths(locked: false)
+                    var json = ModuleItem.jsonWithMasteryPaths(false)
                     let masteryPathsItem = MasteryPathsItem.factory(inSession: session) {
                         $0.moduleItemID = "1"
                         $0.completed = false
@@ -339,6 +329,19 @@ class ModuleItemSpec: QuickSpec {
                     try! moc.saveFRD()
 
                     expect(masteryPathsItem.completed).toEventually(beTrue())
+                }
+
+                it("should mark unlocked mastery path items as not locked for user") {
+                    var json = ModuleItem.jsonWithMasteryPaths(false)
+                    let masteryPathsItem = MasteryPathsItem.factory(inSession: session) {
+                        $0.moduleItemID = "1"
+                        $0.lockedForUser = true
+                    }
+
+                    try! moduleItem.updateValues(json, inContext: moc)
+                    try! moc.saveFRD()
+
+                    expect(masteryPathsItem.lockedForUser).toEventually(beFalse())
                 }
             }
 
@@ -350,7 +353,7 @@ class ModuleItemSpec: QuickSpec {
                         $0.id = "25474105"
                         $0.moduleID = "3001848"
                         $0.courseID = "1867097"
-                        $0.completionRequirement = .MarkDone
+                        $0.completionRequirement = .markDone
                         $0.completed = false
                     }
                 }
@@ -367,9 +370,9 @@ class ModuleItemSpec: QuickSpec {
                     let session = Session.user1
                     let item = happyItem
 
-                    session.playback(happyStub, in: .soAutomated) {
+                    session.playback(happyStub) {
                         waitUntil { done in
-                            try! item.markDone(session).startWithCompletedAction(done)
+                            try! item.markDone(session: session).startWithCompletedAction(done)
                         }
                     }
 
@@ -380,9 +383,9 @@ class ModuleItemSpec: QuickSpec {
                     let session = Session.user1
                     let item = sadItem
 
-                    session.playback(sadStub, in: .soAutomated) {
+                    session.playback(sadStub) {
                         waitUntil { done in
-                            try! item.markDone(session).startWithFailedAction(done)
+                            try! item.markDone(session: session).startWithFailedAction(done)
                         }
                     }
 
@@ -392,17 +395,17 @@ class ModuleItemSpec: QuickSpec {
                 it("should dispatch marked done progress") {
                     let session = Session.user1
                     let item = happyItem
-                    var progress: Progress?
-                    session.progressDispatcher.onProgress.observeNext { progress = $0 }
+                    var progress: SoProgressive.Progress?
+                    session.progressDispatcher.onProgress.observeValues { progress = $0 }
 
-                    session.playback(happyStub, in: .soAutomated) {
+                    session.playback(happyStub) {
                         waitUntil { done in
-                            try! item.markDone(session).startWithCompletedAction(done)
+                            try! item.markDone(session: session).startWithCompletedAction(done)
                         }
                     }
 
                     expect(progress).toNot(beNil())
-                    expect(progress?.kind) == .MarkedDone
+                    expect((progress?.kind).map { $0.rawValue }) == SoProgressive.Progress.Kind.markedDone.rawValue
                 }
             }
 
@@ -429,9 +432,9 @@ class ModuleItemSpec: QuickSpec {
                     let session = Session.user1
                     let item = happyItem
                     
-                    session.playback(happyStub, in: .soAutomated) {
+                    session.playback(happyStub) {
                         waitUntil { done in
-                            try! item.markRead(session).startWithCompletedAction(done)
+                            try! item.markRead(session: session).startWithCompletedAction(done)
                         }
                     }
                     expect(item.completed).toEventually(beTrue())
@@ -441,9 +444,9 @@ class ModuleItemSpec: QuickSpec {
                     let session = Session.user1
                     let item = sadItem
 
-                    session.playback(sadStub, in: .soAutomated) {
+                    session.playback(sadStub) {
                         waitUntil { done in
-                            try! item.markRead(session).startWithFailedAction(done)
+                            try! item.markRead(session: session).startWithFailedAction(done)
                         }
                     }
 
@@ -453,17 +456,17 @@ class ModuleItemSpec: QuickSpec {
                 it("should dispatch viewed progress") {
                     let session = Session.user1
                     let item = happyItem
-                    var progress: Progress?
-                    session.progressDispatcher.onProgress.observeNext { progress = $0 }
+                    var progress: SoProgressive.Progress?
+                    session.progressDispatcher.onProgress.observeValues { progress = $0 }
 
-                    session.playback(happyStub, in: .soAutomated) {
+                    session.playback(happyStub) {
                         waitUntil { done in
-                            try! item.markRead(session).startWithCompletedAction(done)
+                            try! item.markRead(session: session).startWithCompletedAction(done)
                         }
                     }
 
                     expect(progress).toNot(beNil())
-                    expect(progress?.kind) == .Viewed
+                    expect((progress?.kind).map { $0.rawValue }) == SoProgressive.Progress.Kind.viewed.rawValue
                 }
             }
 
@@ -480,69 +483,92 @@ class ModuleItemSpec: QuickSpec {
                     ModuleItem.beginObservingProgress(session)
                 }
 
-                func cacheInvalidated(key: String) -> Bool {
-                    let refreshingMoc = try! session.managedObjectContext(SoRefreshingStoreID)
-                    let refresh: Refresh? = try! refreshingMoc.findOne(withValue: key, forKey: "key")
-                    return refresh != nil
-                }
-
-                it("should invalidate modules collection cache if there is a module item matching the progress item type") {
+                context("post progress") {
                     let itemID = "25474105"
                     let moduleID = "3001848"
                     let courseID = "1867097"
                     let assignmentID = "1"
-                    let progress = Progress(kind: .MarkedDone, contextID: ContextID(id: courseID, context: .Course), itemType: .Assignment, itemID: assignmentID)
+                    let progress = SoProgressive.Progress(kind: .markedDone, contextID: ContextID(id: courseID, context: .course), itemType: .assignment, itemID: assignmentID)
+                    var item: ModuleItem!
+                    beforeEach {
+                        Module.build(inSession: session) {
+                            $0.id = moduleID
+                            $0.courseID = courseID
+                        }
 
-                    Module.build(inSession: session) {
-                        $0.id = moduleID
-                        $0.courseID = courseID
-                    }
+                        Module.build(inSession: session) {
+                            $0.id = "20"
+                            $0.courseID = courseID
+                            $0.prerequisiteModuleIDs = [moduleID]
+                        }
 
-                    let item = ModuleItem.build(inSession: session) {
-                        $0.id = itemID
-                        $0.moduleID = moduleID
-                        $0.courseID = courseID
-                        $0.completionRequirement = .MarkDone
-                        $0.completed = false
-                        $0.content = .Assignment(id: assignmentID)
-                    }
+                        item = ModuleItem.build(inSession: session) {
+                            $0.id = itemID
+                            $0.moduleID = moduleID
+                            $0.courseID = courseID
+                            $0.completionRequirement = .markDone
+                            $0.completed = false
+                            $0.content = .assignment(id: assignmentID)
+                        }
 
-                    session.playback("ModuleItemMarkDone", in: .soAutomated) {
-                        var completed = false
-                        session.progressDispatcher
-                            .onProgress
-                            .assumeNoErrors()
-                            .filter {
-                                $0.itemType == .ModuleItem
-                            }
-                            .observeNext {
-                                completed = completed || $0.itemID == item.id
-                            }
+                        session.playback("ModuleItemMarkDone") {
+                            waitUntil { done in
+                                session.progressDispatcher
+                                    .onProgress
+                                    .assumeNoErrors()
+                                    .filter {
+                                        $0.itemType == .moduleItem
+                                    }
+                                    .observeValues {
+                                        if $0.itemID == item.id {
+                                            done()
+                                        }
+                                    }
 
-                        session.progressDispatcher.dispatch(progress)
-
-                        waitUntil { done in
-                            if completed {
-                                done()
+                                session.progressDispatcher.dispatch(progress)
                             }
                         }
+
+                        expect(errors).to(beEmpty())
                     }
 
-                    expect(errors).to(beEmpty())
-                    expect(cacheInvalidated(Module.collectionCacheKey(moc, courseID: courseID))).toEventually(beTrue())
-                    expect(item.completed).toEventually(beTrue())
+                    it("should invalidate the module collection cache") {
+                        expect(session.cacheInvalidated(Module.collectionCacheKey(context: moc, courseID: courseID))).toEventually(beTrue())
+                    }
+
+                    it("should invalidate module details cache") {
+                        expect(session.cacheInvalidated(Module.detailsCacheKey(context: moc, courseID: courseID, moduleID: moduleID))).toEventually(beTrue())
+                    }
+
+                    it("should invalidate dependent module details cache") {
+                        expect(session.cacheInvalidated(Module.detailsCacheKey(context: moc, courseID: courseID, moduleID: "20"))).toEventually(beTrue())
+                    }
+
+                    it("should mark the item as completed") {
+                        expect(item.completed).toEventually(beTrue())
+                    }
                 }
 
-                it("should invalidate modules collection cache from legacy module item updates") {
+                context("legacy module progress shim") {
                     let itemID = "25915393"
                     let moduleID = "3001848"
                     let courseID = "1867097"
+                    let legacyProgress = SoProgressive.Progress(kind: .viewed, contextID: ContextID(id: "1", context: .user), itemType: .legacyModuleProgressShim, itemID: "1")
+                    var item: ModuleItem!
+                    beforeEach {
+                        item = ModuleItem.build(inSession: session) {
+                            $0.id = itemID
+                            $0.moduleID = moduleID
+                            $0.courseID = courseID
+                            $0.content = .assignment(id: "1")
+                            $0.completionRequirement = .mustView
+                        }
                     let item = ModuleItem.build(inSession: session) {
                         $0.id = itemID
                         $0.moduleID = moduleID
                         $0.courseID = courseID
-                        $0.content = .Assignment(id: "1")
-                        $0.completionRequirement = .MustView
+                        $0.content = .assignment(id: "1")
+                        $0.completionRequirement = .mustView
                     }
 
                     session.playback("ModuleItemMarkRead", in: .soAutomated) {
@@ -551,25 +577,48 @@ class ModuleItemSpec: QuickSpec {
                             .onProgress
                             .assumeNoErrors()
                             .filter {
-                                $0.itemType == .ModuleItem
+                                $0.itemType == .moduleItem
                             }
-                            .observeNext {
+                            .observeValues {
                                 completed = completed || $0.itemID == item.id
                             }
 
-                        let legacyProgress = Progress(kind: .Viewed, contextID: ContextID(id: "1", context: .User), itemType: .LegacyModuleProgressShim, itemID: "1")
+                        let legacyProgress = SoProgressive.Progress(kind: .viewed, contextID: ContextID(id: "1", context: .user), itemType: .legacyModuleProgressShim, itemID: "1")
                         session.progressDispatcher.dispatch(legacyProgress)
 
-                        waitUntil(timeout: 3) { done in
-                            if completed {
-                                done()
+                        session.playback("ModuleItemMarkRead") {
+                            waitUntil { done in
+                                session.progressDispatcher
+                                    .onProgress
+                                    .assumeNoErrors()
+                                    .filter {
+                                        $0.itemType == .moduleItem
+                                    }
+                                    .observeValues {
+                                        if $0.itemID == item.id {
+                                            done()
+                                        }
+                                    }
+
+                                session.progressDispatcher.dispatch(legacyProgress)
                             }
                         }
                     }
-                    expect(cacheInvalidated(Module.collectionCacheKey(moc, courseID: courseID))).toEventually(beTrue())
-                    expect(item.completed).toEventually(beTrue())
+
+                    it("should invalidate modules collection cache") {
+                        expect(session.cacheInvalidated(Module.collectionCacheKey(context: moc, courseID: courseID))).toEventually(beTrue())
+                    }
+
+                    it("should mark item as completed") {
+                        expect(item.completed).toEventually(beTrue())
+                    }
+
+                    it("should invalidate module details cache") {
+                        expect(session.cacheInvalidated(Module.detailsCacheKey(context: moc, courseID: courseID, moduleID: moduleID))).toEventually(beTrue())
+                    }
                 }
             }
         }
+    }
     }
 }

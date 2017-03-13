@@ -1,5 +1,5 @@
 /* grade details for points based grade i.e. \"10 of 12\" */
-"of (formatter(possible))" = "共 (formatter(可能分數))";
+" of (formatter(possible))" = " 共 (formatter(可能分數))";
 
 /* grade details for points based grade i.e. \"10 of 12\" */
 "(formatter(points)) of (formatter(possible))" = "(formatter(分數)) 共 (formatter(可能分數))";
@@ -16,19 +16,22 @@
 /* Title for 5 minutes assignment reminder */
 "5 minutes" = "5 分鐘";
 
-/* Assignment label */
+/* URL submission option */
+"Add Website Address" = "加入網址";
+
+/* (No Commment) */
 "Assignment" = "任務";
 
 /* Title for alert view for assignment reminders */
 "Assignment Reminder" = "任務提醒";
 
-/* Message indicating that an assignment is currently be submitted */
+/* (No Commment) */
 "Assignment is currently being submitted" = "任務正在提交中";
 
 /* This assignment hasn't been graded yet but can be graded */
 "Awaiting Grade" = "等待評分中";
 
-/* cancel button */
+/* Cancel submission option */
 "Cancel" = "取消";
 
 /* Title for reminder options for an assignment */
@@ -37,17 +40,26 @@
 /* Title for a rating that hasn't been graded but has a comment */
 "Comment" = "評論";
 
-/* Assignment submission comment placeholder text */
+/* (No Commment) */
 "Comment.." = "評論。。";
 
 /* error displayed when submitting an assignment is unavailable */
 "Could not submit assignment. Invalid assignment or session." = "無法提交任務。任務或進程無效。";
 
-/* error displayed when submitting a submission is invalid. */
+/* (No Commment) */
 "Could not submit assignment. Invalid submission." = "無法提交任務。提交件無效。";
 
-/* String telling the user that the date is the due date */
+/* (No Commment) */
 "Due:" = "到期日：";
+
+/* String telling the user that the date is the due date */
+"Due: " = "到期日：";
+
+/* Text submission option */
+"Enter Text" = "輸入文字";
+
+/* Prompt for text upload */
+"Enter your submission..." = "輸入您的提交....";
 
 /* Error title for parsing assignment data from server */
 "Error Updating Assignment" = "更新任務時出錯";
@@ -55,7 +67,7 @@
 /* This assignment is excused */
 "Excused" = "已豁免";
 
-/* Error when an upload failed to resume. */
+/* (No Commment) */
 "Failed to resume upload." = "恢復上載失敗。";
 
 /* This assignment is late */
@@ -77,7 +89,7 @@
 "Overdue" = "過期";
 
 /* Assignments that have been turned in and are past */
-"Past" = "以往的";
+"Past" = "過去的";
 
 /* Rubric Points Possible Title */
 "Points Possible" = "可獲得分數";
@@ -85,11 +97,14 @@
 /* title for submission button if student has submitted previously */
 "Re-submit Assignment" = "重新提交任務";
 
-/* Message indicating that a submission type is not supported for this assignment. */
+/* (No Commment) */
 "Submission type not allowed" = "提交件類型不許可";
 
 /* submission title for assignment that doesn't support submissions */
 "Submissions N/A" = "提交件 N/A";
+
+/* Submit assignment button */
+"Submit" = "提交";
 
 /* title for submission button if student has never submitted */
 "Submit Assignment" = "提交任務";
@@ -103,13 +118,13 @@
 /* submission title for assignemnt that is submitted */
 "Turned in!" = "已提交！";
 
-/* Error message when a course could not be selected */
+/* (No Commment) */
 "Unable to select a course." = "無法選擇一門課程。";
 
-/* Error message when an assignment could not be selected */
+/* (No Commment) */
 "Unable to select an assignment." = "無法選擇一個任務。";
 
-/* Error message when unable to submit assignment. */
+/* (No Commment) */
 "Unable to submit assignment." = "無法提交任務。";
 
 /* Assignments with no dates */
@@ -121,6 +136,12 @@
 /* Upcoming assignments */
 "Upcoming" = "即將進行的";
 
+/* File upload submission option */
+"Upload File" = "上載檔案";
+
 /* Title for button to see rubric from assignment detail */
 "View Rubric" = "檢視專欄";
+
+/* (No Commment) */
+"of (formatter(possible))" = "共 (formatter(可能分數))";
 

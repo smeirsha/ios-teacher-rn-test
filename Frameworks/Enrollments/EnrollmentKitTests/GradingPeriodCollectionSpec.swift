@@ -29,7 +29,7 @@ class GradingPeriodItemSpec: QuickSpec {
         describe("GradingPeriodItem") {
             describe("all") {
                 var all: GradingPeriodItem!
-                beforeEach { all = .All }
+                beforeEach { all = .all }
 
                 it("has the correct title") {
                     expect(all.title) == "All Grading Periods"
@@ -46,7 +46,7 @@ class GradingPeriodItemSpec: QuickSpec {
                     let user = User(credentials: .user1)
                     let managedObjectContext = try! user.session.enrollmentManagedObjectContext()
                     let gradingPeriod = GradingPeriod.build(managedObjectContext, id: "11", title: "Some Title")
-                    some = GradingPeriodItem.Some(gradingPeriod)
+                    some = GradingPeriodItem.some(gradingPeriod)
                 }
 
                 it("has the correct title") {
@@ -61,12 +61,12 @@ class GradingPeriodItemSpec: QuickSpec {
             it("is equatable") {
                 let user = User(credentials: .user1)
                 let managedObjectContext = try! user.session.enrollmentManagedObjectContext()
-                let some1 = GradingPeriodItem.Some(GradingPeriod.build(managedObjectContext, id: "1"))
-                let some2 = GradingPeriodItem.Some(GradingPeriod.build(managedObjectContext, id: "1"))
-                let some3 = GradingPeriodItem.Some(GradingPeriod.build(managedObjectContext, id: "2"))
+                let some1 = GradingPeriodItem.some(GradingPeriod.build(managedObjectContext, id: "1"))
+                let some2 = GradingPeriodItem.some(GradingPeriod.build(managedObjectContext, id: "1"))
+                let some3 = GradingPeriodItem.some(GradingPeriod.build(managedObjectContext, id: "2"))
 
-                expect(GradingPeriodItem.All).to(equal(GradingPeriodItem.All))
-                expect(GradingPeriodItem.All).toNot(equal(some1))
+                expect(GradingPeriodItem.all).to(equal(GradingPeriodItem.all))
+                expect(GradingPeriodItem.all).toNot(equal(some1))
                 expect(some1).to(equal(some2))
                 expect(some1).toNot(equal(some3))
             }
@@ -100,7 +100,7 @@ class GradingPeriodCollectionSpec: QuickSpec {
                     }
 
                     it("defaults to 'all'") {
-                        expect(collection.selectedGradingPeriod.value) == GradingPeriodItem.All
+                        expect(collection.selectedGradingPeriod.value) == GradingPeriodItem.all
                     }
                 }
 
@@ -113,7 +113,7 @@ class GradingPeriodCollectionSpec: QuickSpec {
                     }
 
                     it("defaults to 'all'") {
-                        expect(collection.selectedGradingPeriod.value) == GradingPeriodItem.All
+                        expect(collection.selectedGradingPeriod.value) == GradingPeriodItem.all
                     }
                 }
             }
@@ -128,12 +128,12 @@ class GradingPeriodCollectionSpec: QuickSpec {
                     var gradingPeriods: [GradingPeriod]!
                     beforeEach {
                         var updated = false
-                        collection.collectionUpdates.observeNext { _ in
+                        collection.collectionUpdates.observeValues { _ in
                             updated = true
                         }
                         gradingPeriods = [
-                            GradingPeriod.build(managedObjectContext, id: "1", courseID: "1", startDate: NSDate(year: 2016, month: 1, day: 1)),
-                            GradingPeriod.build(managedObjectContext, id: "2", courseID: "1", startDate: NSDate(year: 2016, month: 1, day: 2))
+                            GradingPeriod.build(managedObjectContext, id: "1", courseID: "1", startDate: Date(year: 2016, month: 1, day: 1)),
+                            GradingPeriod.build(managedObjectContext, id: "2", courseID: "1", startDate: Date(year: 2016, month: 1, day: 2))
                         ]
                         managedObjectContext.processPendingChanges()
                         waitUntil { done in
@@ -142,8 +142,8 @@ class GradingPeriodCollectionSpec: QuickSpec {
                     }
                     let expectUpdate: (CollectionUpdate<GradingPeriodItem>, (Void) -> Void) -> Void = { update, block in
                         var gotUpdate = false
-                        collection.collectionUpdates.observeNext { updates in
-                            gotUpdate = gotUpdate || updates.indexOf(update) != nil
+                        collection.collectionUpdates.observeValues { updates in
+                            gotUpdate = gotUpdate || updates.index(of: update) != nil
                         }
                         block()
                         expect(gotUpdate).toEventually(beTrue())
@@ -155,18 +155,18 @@ class GradingPeriodCollectionSpec: QuickSpec {
 
                     it("has 'all' row in first section") {
                         expect(collection.numberOfItemsInSection(1)) == 2
-                        expect(collection[NSIndexPath(forRow: 0, inSection: 0)]) == GradingPeriodItem.All
+                        expect(collection[IndexPath(row: 0, section: 0)]) == GradingPeriodItem.all
                     }
 
                     it("has grading periods in second section") {
-                        expect(collection[NSIndexPath(forRow: 0, inSection: 1)].gradingPeriodID) == "1"
-                        expect(collection[NSIndexPath(forRow: 1, inSection: 1)].gradingPeriodID) == "2"
+                        expect(collection[IndexPath(row: 0, section: 1)].gradingPeriodID) == "1"
+                        expect(collection[IndexPath(row: 1, section: 1)].gradingPeriodID) == "2"
                     }
 
                     context("when collection updates") {
                         it("offsets inserts") {
                             let gradingPeriod = GradingPeriod.build(managedObjectContext)
-                            expectUpdate(.Inserted(NSIndexPath(forRow: 2, inSection: 1), .Some(gradingPeriod))) {
+                            expectUpdate(.reload) {
                                 gradingPeriod.courseID = "1"
                             }
                         }
@@ -178,20 +178,27 @@ class GradingPeriodCollectionSpec: QuickSpec {
                             }
 
                             it("offsets updates") {
-                                expectUpdate(.Updated(NSIndexPath(forRow: 0, inSection: 1), .Some(gradingPeriod))) {
+                                var updates: [CollectionUpdate<GradingPeriodItem>] = []
+                                waitUntil { done in
+                                    collection.collectionUpdates.observeValues {
+                                        updates = $0
+                                        done()
+                                    }
                                     gradingPeriod.title = "Updated title"
                                 }
+
+                                expect(updates) == [.reload]
                             }
 
                             it("offsets deletes") {
-                                expectUpdate(.Deleted(NSIndexPath(forRow: 0, inSection: 1), .Some(gradingPeriod))) {
+                                expectUpdate(.reload) {
                                     gradingPeriod.delete(inContext: managedObjectContext)
                                 }
                             }
 
                             it("offsets moves") {
-                                expectUpdate(.Moved(NSIndexPath(forRow: 0, inSection: 1), NSIndexPath(forRow: 1, inSection: 1), .Some(gradingPeriod))) {
-                                    gradingPeriod.startDate = NSDate(year: 2016, month: 1, day: 3)
+                                expectUpdate(.reload) {
+                                    gradingPeriod.startDate = Date(year: 2016, month: 1, day: 3)
                                 }
                             }
                         }
@@ -204,7 +211,7 @@ class GradingPeriodCollectionSpec: QuickSpec {
                         expect(collection.numberOfItemsInSection(0)) == 1
                         expect(collection.numberOfItemsInSection(1)) == 0
                         expect(collection.titleForSection(0)).to(beNil())
-                        expect(collection[NSIndexPath(forRow: 0, inSection: 0)]) == GradingPeriodItem.All
+                        expect(collection[IndexPath(row: 0, section: 0)]) == GradingPeriodItem.all
                     }
                 }
             }
@@ -213,10 +220,10 @@ class GradingPeriodCollectionSpec: QuickSpec {
                 var reloaded = false
                 let gradingPeriods = try! GradingPeriod.collectionByCourseID(session, courseID: course.id)
                 let collection = GradingPeriodCollection(course: course, gradingPeriods: gradingPeriods)
-                collection.collectionUpdates.observeNext { updates in
-                    reloaded = reloaded || updates.contains(.Reload)
+                collection.collectionUpdates.observeValues { updates in
+                    reloaded = reloaded || updates.contains(.reload)
                 }
-                gradingPeriods.updatesObserver.sendNext([.Reload])
+                gradingPeriods.updatesObserver.send(value: [.reload])
                 expect(reloaded).toEventually(beTrue())
             }
         }

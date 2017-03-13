@@ -19,16 +19,26 @@
 import Foundation
 
 import MobileCoreServices
+import ReactiveCocoa
+import Result
+import FileKit
+import TooLegit
+import SoPersistent
+import CoreData
+
 
 extension Assignment {
-    // these are the allowed file types
     public var allowedSubmissionUTIs: [String] {
+        return Assignment.allowedSubmissionUTIs(submissionTypes, allowedExtensions: allowedExtensions)
+    }
+
+    public static func allowedSubmissionUTIs(_ submissionTypes: SubmissionTypes, allowedExtensions: [String]?) -> [String] {
         var utis: [String] = []
         
         var startDotStar = false
         
-        if submissionTypes.contains(.Upload) {
-            if allowedExtensions?.count > 0 {
+        if submissionTypes.contains(.upload) {
+            if let count = allowedExtensions?.count, count > 0 {
                 utis += (allowedExtensions ?? []).map(toUTI)
             } else {
                 startDotStar = true
@@ -36,62 +46,18 @@ extension Assignment {
             }
         }
         
-        if !startDotStar && submissionTypes.contains(.MediaRecording) {
+        if !startDotStar && submissionTypes.contains(.mediaRecording) {
             utis += [kUTTypeMovie as String, kUTTypeAudio as String]
         }
 
-        if submissionTypes.contains(.Text) {
+        if submissionTypes.contains(.text) {
             utis += [kUTTypeText as String]
         }
 
-        if submissionTypes.contains(.URL) {
+        if submissionTypes.contains(.url) {
             utis += [kUTTypeURL as String]
         }
 
         return utis
     }
-
-    public var allowsAllFiles: Bool {
-        return allowedSubmissionUTIs.contains(kUTTypeItem as String)
-    }
-    
-    public var allowsPhotos: Bool {
-        return allowsAllFiles || allowedSubmissionUTIs.filter(isUTIPhoto).count > 0
-    }
-    
-    public var allowsVideo: Bool {
-        return allowsAllFiles || allowedSubmissionUTIs.filter(isUTIVideo).count > 0
-    }
-    
-    public var allowsAudio: Bool {
-        return allowsAllFiles || allowedSubmissionUTIs.filter(isUTIAudio).count > 0
-    }
-    
-    public var allowedImagePickerControllerMediaTypes: [String] {
-        let images =  allowsPhotos ? [kUTTypeImage as String] : []
-        let video = allowsVideo ? [kUTTypeMovie as String] : []
-        
-        return images + video
-    }
-}
-
-
-private func toUTI(ext: String) -> String {
-    let cfUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext as CFString, nil)
-        .map { $0.takeRetainedValue() }
-        .map { $0 as String }
-    
-    return cfUTI ?? ""
-}
-
-private func isUTIVideo(uti: String) -> Bool {
-    return UTTypeConformsTo(uti as CFString, kUTTypeMovie)
-}
-
-private func isUTIPhoto(uti: String) -> Bool {
-    return UTTypeConformsTo(uti as CFString, kUTTypeImage)
-}
-
-private func isUTIAudio(uti: String) -> Bool {
-    return UTTypeConformsTo(uti as CFString, kUTTypeAudio)
 }

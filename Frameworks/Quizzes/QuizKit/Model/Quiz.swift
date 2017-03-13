@@ -21,28 +21,6 @@ import SoLazy
 
 /// The Canvas™ assessment tool of choice.
 struct Quiz {
-    init(id: String, title: String, description: String, due: Due, timeLimit: TimeLimit, scoring: Scoring, questionCount: Int, questionTypes: [Question.Kind], attemptLimit: AttemptLimit, oneQuestionAtATime: Bool, cantGoBack: Bool, hideResults: HideResults, lockAt: NSDate?, lockedForUser: Bool, lockExplanation: String?, ipFilter: String?, mobileURL: NSURL, shuffleAnswers: Bool, hasAccessCode: Bool) {
-        self.id = id
-        self.title = title
-        self.description = description
-        self.due = due
-        self.timeLimit = timeLimit
-        self.scoring = scoring
-        self.questionCount = questionCount
-        self.questionTypes = questionTypes
-        self.attemptLimit = attemptLimit
-        self.oneQuestionAtATime = oneQuestionAtATime
-        self.cantGoBack = cantGoBack
-        self.hideResults = hideResults
-        self.lockAt = lockAt
-        self.lockedForUser = lockedForUser
-        self.lockExplanation = lockExplanation
-        self.ipFilter = ipFilter
-        self.mobileURL = mobileURL
-        self.shuffleAnswers = shuffleAnswers
-        self.hasAccessCode = hasAccessCode
-    }
-    
     /// The id of the quiz.
     let id: String
 
@@ -81,7 +59,7 @@ struct Quiz {
     let hideResults: HideResults
     
     /// When to lock the quiz
-    let lockAt: NSDate?
+    let lockAt: Date?
     
     /// Whether or not this is locked for the user
     let lockedForUser: Bool
@@ -95,13 +73,19 @@ struct Quiz {
     /// A url suitable for loading the quiz in a mobile webview.  it will persiste the
     /// headless session and, for quizzes in courses, will force the user to
     /// login
-    let mobileURL: NSURL
+    let mobileURL: URL
     
     /// Whether or not the answers should be shuffled for the student
     let shuffleAnswers: Bool
     
     /// Whether or not the quiz has an access code
     let hasAccessCode: Bool
+
+    /// Whether or not lockdown browser is required
+    let requiresLockdownBrowser: Bool
+
+    /// Whether or not lockdown browser is required in order to view the results
+    let requiresLockdownBrowserForResults: Bool
     
     /**
         When is the quiz due?
@@ -110,27 +94,27 @@ struct Quiz {
         - Date: The date that the quiz is due.
     */
     enum Due {
-        init(date: NSDate?) {
+        init(date: Foundation.Date?) {
             if let d = date {
-                self = .Date(d)
+                self = .date(d)
             } else {
-                self = .NoDueDate
+                self = .noDueDate
             }
         }
         
-        case NoDueDate
-        case Date(NSDate)
+        case noDueDate
+        case date(Foundation.Date)
         
         
         var description: String {
             switch self {
-            case .Date(let d):
-                let dateFormatter = NSDateFormatter()
-                dateFormatter.dateStyle = .MediumStyle
-                dateFormatter.timeStyle = .MediumStyle
-                return dateFormatter.stringFromDate(d)
-            case .NoDueDate:
-                return NSLocalizedString("No Due Date", tableName: "Localizable", bundle: NSBundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "A quiz that has no due date")
+            case .date(let d):
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateStyle = .medium
+                dateFormatter.timeStyle = .medium
+                return dateFormatter.string(from: d)
+            case .noDueDate:
+                return NSLocalizedString("No Due Date", tableName: "Localizable", bundle: Bundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "A quiz that has no due date")
             }
         }
     }
@@ -144,35 +128,28 @@ struct Quiz {
     enum TimeLimit {
         init(minutes: Int) {
             if minutes < 0 {
-                self = .NoTimeLimit
+                self = .noTimeLimit
             } else {
-                self = .Minutes(minutes)
+                self = .minutes(minutes)
             }
         }
         
-        case NoTimeLimit
-        case Minutes(Int)
+        case noTimeLimit
+        case minutes(Int)
         
         
         var description: String {
-            let NoTimeLimit = NSLocalizedString("No time limit", tableName: "Localizable", bundle: NSBundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "when a quiz has no time limit")
+            let NoTimeLimit = NSLocalizedString("No time limit", tableName: "Localizable", bundle: Bundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "when a quiz has no time limit")
             
             switch self {
-            case .Minutes(let minutes):
-                let i18nHours = NSLocalizedString("hr", tableName: "Localizable", bundle: NSBundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "Hours label for time limit")
-                let i18nMin = NSLocalizedString("min", tableName: "Localizable", bundle: NSBundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "Minutes label localized")
-                
-                switch (minutes / 60, minutes % 60) {
-                case let (hours, minutes) where hours == 0:
-                    return "\(minutes) \(i18nMin)"
-                    
-                case let (hours, minutes) where minutes == 0:
-                    return "\(hours) \(i18nHours)"
-                    
-                case let (hours, minutes):
-                    return "\(hours) \(i18nHours) \(minutes) \(i18nMin)"
-                }
-            case .NoTimeLimit:
+            case .minutes(let minutes):
+                let components = DateComponents(minute: minutes)
+                let dateComponentsFormatter = DateComponentsFormatter()
+                dateComponentsFormatter.unitsStyle = .short
+                dateComponentsFormatter.allowedUnits = [.hour, .minute]
+
+                return dateComponentsFormatter.string(from: components) ?? ""
+            case .noTimeLimit:
                 return NoTimeLimit
             }
         }
@@ -187,29 +164,31 @@ struct Quiz {
     enum AttemptLimit {
         init(allowed: Int) {
             if allowed <= 0 {
-                self = .Unlimited
+                self = .unlimited
             } else {
-                self = .Count(allowed)
+                self = .count(allowed)
             }
         }
         
-        case Unlimited
-        case Count(Int)
+        case unlimited
+        case count(Int)
         
         var description: String {
             switch self {
-            case .Count(let limit):
-                return String(limit)
-            case .Unlimited:
-                return NSLocalizedString("Unlimited", tableName: "Localizable", bundle: NSBundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "When a quiz has no limit on the number of attempts")
+            case .count(let limit):
+                let formatter = NumberFormatter()
+                formatter.numberStyle = .none
+                return formatter.string(from: NSNumber(value: limit)) ?? ""
+            case .unlimited:
+                return NSLocalizedString("Unlimited", tableName: "Localizable", bundle: Bundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "When a quiz has no limit on the number of attempts")
             }
         }
         
-        func canRetakeAfterLatestAttemptNumber(attempt: Int) -> Bool {
+        func canRetakeAfterLatestAttemptNumber(_ attempt: Int) -> Bool {
             switch self {
-            case .Count(let limit):
+            case .count(let limit):
                 return attempt < limit
-            case .Unlimited:
+            case .unlimited:
                 return true
             }
         }
@@ -219,19 +198,22 @@ struct Quiz {
 
     */
     enum HideResults {
-        case Always
-        case UntilAfterLastAttempt
-        case Never
+        case always
+        case untilAfterLastAttempt
+        case never
     }
     
     enum Scoring: CustomStringConvertible {
-        case Ungraded
-        case PointsPossible(Int)
+        case ungraded
+        case pointsPossible(Int)
         
         var description: String {
             switch self {
-            case .PointsPossible(let points): return String(points)
-            default: return NSLocalizedString("Ungraded", tableName: "Localizable", bundle: NSBundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "Ungraded quiz")
+            case .pointsPossible(let points):
+                let formatter = NumberFormatter()
+                formatter.numberStyle = .none
+                return formatter.string(from: NSNumber(value: points)) ?? ""
+            default: return NSLocalizedString("Ungraded", tableName: "Localizable", bundle: Bundle(identifier: "com.instructure.QuizKit")!, value: "", comment: "Ungraded quiz")
             }
         }
     }
@@ -239,75 +221,77 @@ struct Quiz {
 
 
 extension Quiz.Due: JSONDecodable {
-    static func fromJSON(json: AnyObject?) -> Quiz.Due? {
-        return Quiz.Due(date: NSDate.fromJSON(json))
+    static func fromJSON(_ json: Any?) -> Quiz.Due? {
+        return Quiz.Due(date: Foundation.Date.fromJSON(json))
     }
 }
 
 extension Quiz.TimeLimit: JSONDecodable {
-    static func fromJSON(json: AnyObject?) -> Quiz.TimeLimit? {
+    static func fromJSON(_ json: Any?) -> Quiz.TimeLimit? {
         if let minutes = json as? Int {
             return Quiz.TimeLimit(minutes: minutes)
         }
-        return .NoTimeLimit
+        return .noTimeLimit
     }
 }
 
 extension Quiz.AttemptLimit: JSONDecodable {
-    static func fromJSON(json: AnyObject?) -> Quiz.AttemptLimit? {
+    static func fromJSON(_ json: Any?) -> Quiz.AttemptLimit? {
         if let count = json as? Int {
             return Quiz.AttemptLimit(allowed: count)
         }
         
-        return .Unlimited
+        return .unlimited
     }
 }
 
 extension Quiz.HideResults: JSONDecodable {
-    static func fromJSON(json: AnyObject?) -> Quiz.HideResults? {
+    static func fromJSON(_ json: Any?) -> Quiz.HideResults? {
         if let setting = json as? String {
             if setting == "always" {
-                return .Always
+                return .always
             } else if setting == "until_after_last_attempt" {
-                return .UntilAfterLastAttempt
+                return .untilAfterLastAttempt
             }
         }
         
-        return .Never
+        return .never
     }
 }
 
 extension Quiz.Scoring: JSONDecodable {
-    static func fromJSON(json: AnyObject?) -> Quiz.Scoring? {
+    static func fromJSON(_ json: Any?) -> Quiz.Scoring? {
         let points = json as? Int
-        return points.map({ .PointsPossible($0) }) ?? .Ungraded
+        return points.map({ .pointsPossible($0) }) ?? .ungraded
     }
 }
 
 extension Quiz: JSONDecodable {
-    static func fromJSON(json: AnyObject?) -> Quiz? {
-        if let json = json as? [String: AnyObject] {
+    static func fromJSON(_ json: Any?) -> Quiz? {
+        if let json = json as? [String: Any] {
             let id = idString(json["id"])
             let title = json["title"] as? String
-            let description = json["description"] as? String
+            let description = json["description"] as? String ?? ""
             let due = Quiz.Due.fromJSON(json["due_at"])
             let timeLimit = Quiz.TimeLimit.fromJSON(json["time_limit"])
             let scoring = Quiz.Scoring.fromJSON(json["points_possible"])
             let questionCount = json["question_count"] as? Int
-            let questionTypes: [Question.Kind] = decodeArray(json["question_types"] as? [AnyObject] ?? [])
+            let questionTypes: [Question.Kind] = decodeArray(json["question_types"] as? [Any] ?? [])
             let allowedAttempts = Quiz.AttemptLimit.fromJSON(json["allowed_attempts"])
             let oqqaat = json["one_question_at_a_time"] as? Bool
             let cantGoBack = json["cant_go_back"] as? Bool
             let hideResults = Quiz.HideResults.fromJSON(json["hide_results"])
             let lockedForUser = json["locked_for_user"] as? Bool
             let lockExplanation = json["lock_explanation"] as? String
-            let mobileURL = NSURL.fromJSON(json["mobile_url"])
+            let mobileURL = URL.fromJSON(json["mobile_url"])
             let shuffleAnswers = json["shuffle_answers"] as? Bool
             let hasAccessCode = json["has_access_code"] as? Bool ?? true
+            let requiresLockdownBrowser = json["require_lockdown_browser"] as? Bool ?? false
+            let requiresLockdownBrowserForResults = json["require_lockdown_browser_for_results"] as? Bool ?? false
             
-            if let id = id, title = title, description=description, due = due, timeLimit = timeLimit, scoring = scoring, questionCount = questionCount, allowedAttempts = allowedAttempts, oqqaat = oqqaat, cantGoBack = cantGoBack, hideResults=hideResults, lockedForUser = lockedForUser, mobileURL = mobileURL, shuffleAnswers = shuffleAnswers
+            if let id = id, let title = title, let due = due, let timeLimit = timeLimit, let scoring = scoring, let questionCount = questionCount, let allowedAttempts = allowedAttempts, let oqqaat = oqqaat, let cantGoBack = cantGoBack, let hideResults=hideResults, let lockedForUser = lockedForUser, let mobileURL = mobileURL, let shuffleAnswers = shuffleAnswers
             {
-                return Quiz(id: id, title: title, description: description, due: due, timeLimit: timeLimit, scoring: scoring, questionCount: questionCount, questionTypes: questionTypes, attemptLimit: allowedAttempts, oneQuestionAtATime: oqqaat, cantGoBack: cantGoBack, hideResults: hideResults, lockAt: NSDate.fromJSON(json["lock_at"]), lockedForUser: lockedForUser, lockExplanation: lockExplanation, ipFilter: json["ip_filter"] as? String, mobileURL: mobileURL, shuffleAnswers: shuffleAnswers, hasAccessCode: hasAccessCode)
+                return Quiz(id: id, title: title, description: description, due: due, timeLimit: timeLimit, scoring: scoring, questionCount: questionCount, questionTypes: questionTypes, attemptLimit: allowedAttempts, oneQuestionAtATime: oqqaat, cantGoBack: cantGoBack, hideResults: hideResults, lockAt: Date.fromJSON(json["lock_at"]), lockedForUser: lockedForUser, lockExplanation: lockExplanation, ipFilter: json["ip_filter"] as? String, mobileURL: mobileURL, shuffleAnswers: shuffleAnswers, hasAccessCode: hasAccessCode, requiresLockdownBrowser: requiresLockdownBrowser, requiresLockdownBrowserForResults: requiresLockdownBrowserForResults)
             }
         }
         

@@ -1,5 +1,5 @@
 /* grade details for points based grade i.e. \"10 of 12\" */
-"of (formatter(possible))" = "de (formatar(possível))";
+" of (formatter(possible))" = "de (formatar(possível))";
 
 /* grade details for points based grade i.e. \"10 of 12\" */
 "(formatter(points)) of (formatter(possible))" = "(formatar(pontos)) de (formatar(possível))";
@@ -16,19 +16,22 @@
 /* Title for 5 minutes assignment reminder */
 "5 minutes" = "5 minutos";
 
-/* Assignment label */
+/* URL submission option */
+"Add Website Address" = "Adicionar endereço de site";
+
+/* (No Commment) */
 "Assignment" = "Tarefa";
 
 /* Title for alert view for assignment reminders */
 "Assignment Reminder" = "Relembrar Tarefa";
 
-/* Message indicating that an assignment is currently be submitted */
+/* (No Commment) */
 "Assignment is currently being submitted" = "A tarefa está a ser entregue";
 
 /* This assignment hasn't been graded yet but can be graded */
 "Awaiting Grade" = "À espera de nota";
 
-/* cancel button */
+/* Cancel submission option */
 "Cancel" = "Cancelar";
 
 /* Title for reminder options for an assignment */
@@ -37,17 +40,26 @@
 /* Title for a rating that hasn't been graded but has a comment */
 "Comment" = "Comentário";
 
-/* Assignment submission comment placeholder text */
+/* (No Commment) */
 "Comment.." = "Comentário..";
 
 /* error displayed when submitting an assignment is unavailable */
 "Could not submit assignment. Invalid assignment or session." = "Não foi possível entregar a tarefa. Tarefa ou sessão inválida.";
 
-/* error displayed when submitting a submission is invalid. */
+/* (No Commment) */
 "Could not submit assignment. Invalid submission." = "Não foi possível entregar a tarefa. Entrega inválida.";
 
-/* String telling the user that the date is the due date */
+/* (No Commment) */
 "Due:" = "Data final:";
+
+/* String telling the user that the date is the due date */
+"Due: " = "Data final:";
+
+/* Text submission option */
+"Enter Text" = "Digitar texto";
+
+/* Prompt for text upload */
+"Enter your submission..." = "Digitar sua submissão...";
 
 /* Error title for parsing assignment data from server */
 "Error Updating Assignment" = "Erro ao Atualizar Tarefa";
@@ -55,7 +67,7 @@
 /* This assignment is excused */
 "Excused" = "Dispensado";
 
-/* Error when an upload failed to resume. */
+/* (No Commment) */
 "Failed to resume upload." = "Falhou cancelar o carregamento.";
 
 /* This assignment is late */
@@ -85,11 +97,14 @@
 /* title for submission button if student has submitted previously */
 "Re-submit Assignment" = "Voltar a Entregar Tarefa";
 
-/* Message indicating that a submission type is not supported for this assignment. */
+/* (No Commment) */
 "Submission type not allowed" = "Tipo de entrega não permitida";
 
 /* submission title for assignment that doesn't support submissions */
 "Submissions N/A" = "Entregas N/D";
+
+/* Submit assignment button */
+"Submit" = "Entregar";
 
 /* title for submission button if student has never submitted */
 "Submit Assignment" = "Entregar Tarefa";
@@ -103,13 +118,13 @@
 /* submission title for assignemnt that is submitted */
 "Turned in!" = "Entregue!";
 
-/* Error message when a course could not be selected */
+/* (No Commment) */
 "Unable to select a course." = "Impossível selecionar uma disciplina.";
 
-/* Error message when an assignment could not be selected */
+/* (No Commment) */
 "Unable to select an assignment." = "Impossível selecionar uma tarefa.";
 
-/* Error message when unable to submit assignment. */
+/* (No Commment) */
 "Unable to submit assignment." = "Impossível entregar tarefa.";
 
 /* Assignments with no dates */
@@ -121,6 +136,12 @@
 /* Upcoming assignments */
 "Upcoming" = "Em breve";
 
+/* File upload submission option */
+"Upload File" = "Carregar ficheiro";
+
 /* Title for button to see rubric from assignment detail */
 "View Rubric" = "Ver rubrica";
+
+/* (No Commment) */
+"of (formatter(possible))" = "de (formatador(possível))";
 

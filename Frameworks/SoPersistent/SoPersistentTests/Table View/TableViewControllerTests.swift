@@ -29,14 +29,15 @@ class TableViewControllerTests: XCTestCase {
 
         describe("selecting an item") {
             it("has a hook for when an item is selected") {
-                var indexPath: NSIndexPath?
+                var indexPath: IndexPath?
                 vc.didSelectItemAtIndexPath = { indexPath = $0 }
                 let tableView = vc.tableView
 
-                vc.tableView(tableView, didSelectRowAtIndexPath: NSIndexPath(forRow: 0, inSection: 0))
+                let delegate = vc as UITableViewDelegate
+                delegate.tableView?(tableView!, didSelectRowAt: IndexPath(row: 0, section: 0))
 
                 XCTAssertNotNil(indexPath)
-                XCTAssertEqual(NSIndexPath(forRow: 0, inSection: 0), indexPath)
+                XCTAssertEqual(IndexPath(row: 0, section: 0), indexPath)
             }
         }
 
@@ -63,35 +64,31 @@ class TableViewControllerTests: XCTestCase {
             }
 
             it("sets refreshCompleted to one that presents the error") {
-                class RefreshError: NSError {
-                    var presented = false
-                    private override func presentAlertFromViewController(viewController: UIViewController, alertDismissed: (()->())? = nil, reportError: (()->())? = nil) {
-                        presented = true
-                    }
+                var presented = false
+                ErrorReporter.setErrorHandler { _ in
+                    presented = true
                 }
-                let error = RefreshError(subdomain: "blah", description: "blah")
+                let error = NSError(subdomain: "blah", description: "blah")
 
                 let refresher = SimpleRefresher()
                 vc.refresher = refresher
-                refresher.refreshingCompletedObserver.sendNext(error)
+                refresher.refreshingCompletedObserver.send(value: error)
 
-                XCTAssert(error.presented)
+                XCTAssert(presented)
             }
 
             it("sets refreshCompleted to one that presents the error on init") {
-                class RefreshError: NSError {
-                    var presented = false
-                    private override func presentAlertFromViewController(viewController: UIViewController, alertDismissed: (()->())? = nil, reportError: (()->())? = nil) {
-                        presented = true
-                    }
+                var presented = false
+                ErrorReporter.setErrorHandler { _ in
+                    presented = true
                 }
-                let error = RefreshError(subdomain: "blah", description: "blah")
+                let error = NSError(subdomain: "blah", description: "blah")
 
                 let refresher = SimpleRefresher()
                 let vc = TableViewController(dataSource: dataSource, refresher: refresher)
-                refresher.refreshingCompletedObserver.sendNext(error)
+                refresher.refreshingCompletedObserver.send(value: error)
 
-                XCTAssert(error.presented)
+                XCTAssert(presented)
             }
         }
     }

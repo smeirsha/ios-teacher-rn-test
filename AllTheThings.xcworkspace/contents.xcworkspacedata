@@ -1,35 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workspace
    version = "1.0">
+   <FileRef
+      location = "group:Tinker.playground">
+   </FileRef>
    <Group
       location = "group:Carthage"
       name = "Carthage">
       <FileRef
-         location = "group:Checkouts/Armchair/Armchair.xcodeproj">
-      </FileRef>
-      <FileRef
-         location = "group:Checkouts/Masonry/Masonry.xcodeproj">
-      </FileRef>
-      <FileRef
-         location = "group:Checkouts/SVProgressHUD/SVProgressHUD.xcodeproj">
-      </FileRef>
-      <FileRef
-         location = "group:Checkouts/TBBModal/Modal.xcodeproj">
-      </FileRef>
-      <FileRef
          location = "group:Checkouts/AFNetworking/AFNetworking.xcodeproj">
       </FileRef>
       <FileRef
-         location = "group:Checkouts/canvaskeymaster-ios/CanvasKeymaster.xcodeproj">
-      </FileRef>
-      <FileRef
-         location = "group:Checkouts/CanvasKit/CanvasKit.xcodeproj">
+         location = "group:Checkouts/Armchair/Armchair.xcodeproj">
       </FileRef>
       <FileRef
          location = "group:Checkouts/Cartography/Cartography.xcodeproj">
       </FileRef>
       <FileRef
-         location = "group:Checkouts/CWStatusBarNotification/CWStatusBarNotification/CWStatusBarNotification.xcodeproj">
+         location = "group:Checkouts/CWStatusBarNotification/CWNotificationDemo.xcodeproj">
       </FileRef>
       <FileRef
          location = "group:Checkouts/DeviceKit/DeviceKit.xcodeproj">
@@ -62,6 +50,12 @@
          location = "group:Checkouts/Marshal/Marshal.xcodeproj">
       </FileRef>
       <FileRef
+         location = "group:Checkouts/Masonry/Masonry.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Checkouts/TBBModal/Modal.xcodeproj">
+      </FileRef>
+      <FileRef
          location = "group:Checkouts/Nimble/Nimble.xcodeproj">
       </FileRef>
       <FileRef
@@ -71,13 +65,35 @@
          location = "group:Checkouts/ReactiveCocoa/ReactiveCocoa.xcodeproj">
       </FileRef>
       <FileRef
+         location = "group:Checkouts/ReactiveObjC/ReactiveObjC.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Checkouts/ReactiveObjCBridge/ReactiveObjCBridge.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Checkouts/ReactiveSwift/ReactiveSwift.xcodeproj">
+      </FileRef>
+      <FileRef
          location = "group:Checkouts/Result/Result.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Checkouts/SVProgressHUD/SVProgressHUD.xcodeproj">
       </FileRef>
       <FileRef
          location = "group:Checkouts/TPKeyboardAvoiding/TPKeyboardAvoidingSample.xcodeproj">
       </FileRef>
+   </Group>
+   <Group
+      location = "container:Parent"
+      name = "Parent">
       <FileRef
-         location = "group:Checkouts/URITemplate.swift/URITemplate.xcodeproj">
+         location = "group:ObserverAlertKit/ObserverAlertKit.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Airwolf/Airwolf.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Parent.xcodeproj">
       </FileRef>
    </Group>
    <Group
@@ -101,16 +117,16 @@
       location = "container:Frameworks"
       name = "Frameworks">
       <FileRef
-         location = "group:SoThankful/SoThankful.xcodeproj">
-      </FileRef>
-      <FileRef
-         location = "group:Secrets/Secrets.xcodeproj">
-      </FileRef>
-      <FileRef
          location = "group:Assignments/Assignments.xcodeproj">
       </FileRef>
       <FileRef
          location = "group:Calendar/Calendar.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:CanvasKeymaster/CanvasKeymaster.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:CanvasKit/CanvasKit.xcodeproj">
       </FileRef>
       <FileRef
          location = "group:Discussions/Discussions.xcodeproj">
@@ -140,10 +156,19 @@
          location = "group:Pages/Pages.xcodeproj">
       </FileRef>
       <FileRef
+         location = "group:Pathetic/Pathetic.xcodeproj">
+      </FileRef>
+      <FileRef
          location = "group:Peeps/Peeps.xcodeproj">
       </FileRef>
       <FileRef
          location = "group:Quizzes/Quizzes.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Secrets/Secrets.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:SixtySix/SixtySix.xcodeproj">
       </FileRef>
       <FileRef
          location = "group:SoAnnotated/SoAnnotated.xcodeproj">
@@ -170,6 +195,15 @@
          location = "group:SoSupportive/SoSupportive.xcodeproj">
       </FileRef>
       <FileRef
+         location = "group:SoThankful/SoThankful.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:SuchActivity/SuchActivity.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:SwiftGrader/SwiftGrader.xcodeproj">
+      </FileRef>
+      <FileRef
          location = "group:Todo/Todo.xcodeproj">
       </FileRef>
       <FileRef
@@ -178,17 +212,8 @@
       <FileRef
          location = "group:WhizzyWig/WhizzyWig.xcodeproj">
       </FileRef>
-      <FileRef
-         location = "group:SwiftGrader/SwiftGrader.xcodeproj">
-      </FileRef>
    </Group>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:Canvas/Canvas.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:SpeedGrader/SpeedGrader.xcodeproj">
    </FileRef>
 </Workspace>

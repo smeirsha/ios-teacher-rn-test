@@ -18,8 +18,9 @@
 
 import XCTest
 import UIKit
+import SoPretty
 
-func Assert(hex: String, red: CGFloat, green: CGFloat, blue: CGFloat, file: StaticString = #file, line: UInt = #line) {
+func Assert(_ hex: String, red: CGFloat, green: CGFloat, blue: CGFloat, file: StaticString = #file, line: UInt = #line) {
 
     guard let color = UIColor.colorFromHexString(hex) else { XCTFail(file: file, line: line); return }
 

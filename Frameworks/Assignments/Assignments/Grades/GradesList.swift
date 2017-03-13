@@ -20,18 +20,19 @@ import UIKit
 import AssignmentKit
 import SoPersistent
 import TooLegit
-import ReactiveCocoa
+import ReactiveSwift
+import SoLazy
 
 struct GradeCellViewModel: TableViewCellViewModel {
     let name: String
     let grade: String
 
-    static func tableViewDidLoad(tableView: UITableView) {
-        tableView.registerNib(UINib(nibName: "AssignmentCell", bundle: NSBundle(forClass: AppDelegate.self)), forCellReuseIdentifier: "AssignmentCell")
+    static func tableViewDidLoad(_ tableView: UITableView) {
+        tableView.register(UINib(nibName: "AssignmentCell", bundle: Bundle(for: AppDelegate.self)), forCellReuseIdentifier: "AssignmentCell")
     }
 
-    func cellForTableView(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("AssignmentCell", forIndexPath: indexPath)
+    func cellForTableView(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "AssignmentCell", for: indexPath)
         cell.textLabel?.text = name
         cell.detailTextLabel?.text = grade
         return cell
@@ -59,13 +60,13 @@ class GradesList: Assignment.TableViewController {
         fatalError()
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let assignment = collection[indexPath]
         do {
             let deets = try AssignmentDetailViewController.new(session, courseID: assignment.courseID, assignmentID: assignment.id)
             navigationController?.pushViewController(deets, animated: true)
         } catch let e as NSError {
-            e.report(alertUserFrom: self)
+            ErrorReporter.reportError(e, from: self)
         }
     }
 }

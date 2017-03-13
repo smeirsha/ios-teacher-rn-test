@@ -20,7 +20,7 @@ import SoPersistent
 
 public final class MasteryPathAssignmentSet: NSManagedObject {
     @NSManaged internal (set) public var id: String
-    @NSManaged internal (set) public var position: Int
+    @NSManaged internal (set) public var position: Int64
     @NSManaged internal (set) public var masteryPathsItem: MasteryPathsItem
     @NSManaged internal (set) public var assignments: NSSet
 }
@@ -28,12 +28,12 @@ public final class MasteryPathAssignmentSet: NSManagedObject {
 import Marshal
 
 extension MasteryPathAssignmentSet: SynchronizedModel {
-    public static func uniquePredicateForObject(json: JSONObject) throws -> NSPredicate {
+    public static func uniquePredicateForObject(_ json: JSONObject) throws -> NSPredicate {
         let id: String = try json.stringID("id")
         return NSPredicate(format: "%K == %@", "id", id)
     }
 
-    public func updateValues(json: JSONObject, inContext context: NSManagedObjectContext) throws {
+    public func updateValues(_ json: JSONObject, inContext context: NSManagedObjectContext) throws {
         id              = try json.stringID("id")
         position        = try json <| "position"
 

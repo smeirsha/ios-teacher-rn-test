@@ -21,19 +21,19 @@ import TooLegit
 import SoPersistent
 import CoreData
 import SoLazy
-import ReactiveCocoa
+import ReactiveSwift
 import Result
+import SoPretty
 
-public class EnrollmentsDataSource: NSObject {
+open class EnrollmentsDataSource: NSObject {
     let enrollmentsObserver: ManagedObjectsObserver<Enrollment, ContextID>
     
-    
     init(context: NSManagedObjectContext) throws {
-        let fetch = NSFetchRequest(entityName: "Enrollment")
+        let fetch = NSFetchRequest<Enrollment>(entityName: "Enrollment")
         fetch.returnsObjectsAsFaults = false
         fetch.includesPropertyValues = true
         fetch.sortDescriptors = ["id".ascending]
-        let frc = NSFetchedResultsController(fetchRequest: fetch, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        let frc = NSFetchedResultsController<Enrollment>(fetchRequest: fetch, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         
         enrollmentsObserver = ManagedObjectsObserver(context: context, collection: try FetchedCollection(frc: frc)) { $0.contextID }
         
@@ -41,34 +41,56 @@ public class EnrollmentsDataSource: NSObject {
 
     }
     
-    public subscript(contextID: ContextID) -> Enrollment? {
+    open subscript(contextID: ContextID) -> Enrollment? {
         return enrollmentsObserver[contextID]
     }
     
-    public func producer(contextID: ContextID) -> SignalProducer<Enrollment?, NoError> {
+    open func producer(_ contextID: ContextID) -> SignalProducer<Enrollment?, NoError> {
         return enrollmentsObserver.producer(contextID)
     }
     
+    open func color(for contextID: ContextID) -> SignalProducer<UIColor, NoError> {
+        let prettyGray = SignalProducer<UIColor, NoError>(value: .prettyGray())
+        
+        return producer(contextID)
+            .flatMap(.latest) { (enrollment: Enrollment?) -> SignalProducer<UIColor, NoError> in
+                return enrollment?.color.producer.skipNil() ?? prettyGray
+            }
+    }
+    
+    open func fetchArcLTIToolID(for contextID: ContextID, inSession session: Session) throws -> SignalProducer<(), NSError> {
+        return try Enrollment.arcLTIToolID(session, for: contextID).observe(on: UIScheduler()).on(value: { [weak self] toolID in
+            let enrollment = self?.enrollmentsObserver[contextID]
+            enrollment?.arcLTIToolID = toolID
+            try? enrollment?.managedObjectContext?.saveFRD()
+        }).map { _ in }
+    }
+    
+    @objc open func arcLTIToolId(forCanvasContext canvasContext: String) -> String? {
+        guard let contextID = ContextID(canvasContext: canvasContext) else { return nil }
+        let enrollment = self.enrollmentsObserver[contextID]
+        return enrollment?.arcLTIToolID
+    }
     
     // MARK: Changing things 
-    public func setColor(color: UIColor, inSession session: Session, forContextID contextID: ContextID) -> SignalProducer<(), NSError> {
+    open func setColor(_ color: UIColor, inSession session: Session, forContextID contextID: ContextID) -> SignalProducer<(), NSError> {
         
         let updateColorAndSave: ()->SignalProducer<(), NSError> = {
             let enrollment = self.enrollmentsObserver[contextID]
-            enrollment?.color = color
+            enrollment?.color.value = color
             
             return attemptProducer { try enrollment?.managedObjectContext?.saveFRD() }
         }
         
         return Enrollment.put(session, color: color, forContextID: contextID)
             .concat(SignalProducer(value: ())) // this will trigger the save since put-ing the color has an empty reponse
-            .observeOn(UIScheduler())
-            .flatMap(.Merge, transform: updateColorAndSave)
+            .observe(on: UIScheduler())
+            .flatMap(.merge, transform: updateColorAndSave)
     }
 }
 
 extension Session {
-    private struct Associated {
+    fileprivate struct Associated {
         static var enrollmentsDataSource = "enrollmentsDataSource"
         static var scopedEnrollmentsDataSource = "scopedEnrollmentsDataSource"
     }
@@ -98,11 +120,11 @@ extension Session {
             return source
         }
 
-        guard let source = sources.objectForKey(scope) as? EnrollmentsDataSource else {
+        guard let source = sources.object(forKey: scope) as? EnrollmentsDataSource else {
 
             let context = try! enrollmentManagedObjectContext(scope)
             let source = try! EnrollmentsDataSource(context: context)
-            sources.setObject(source, forKey: scope)
+            sources.setObject(source, forKey: scope as NSString)
 
             setAssociatedObject(sources, forKey: &Associated.scopedEnrollmentsDataSource)
             return source

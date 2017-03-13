@@ -21,7 +21,7 @@ import AssignmentKit
 import SoPersistent
 import SoLazy
 import TooLegit
-import ReactiveCocoa
+import ReactiveSwift
 import SoPretty
 import CoreData
 import FileKit
@@ -51,32 +51,29 @@ class AssignmentDetailViewController: Assignment.DetailViewController {
     var disposable: Disposable?
     var uploadDisposable = CompositeDisposable()
     lazy var submissionBarButtonItem: UIBarButtonItem = {
-        let button = UIBarButtonItem(title: "", style: .Plain, target: self, action: #selector(AssignmentDetailViewController.turnIn(_:)))
-        button.tintColor = UIColor.whiteColor()
+        let button = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(AssignmentDetailViewController.turnIn(_:)))
+        button.tintColor = UIColor.white
         return button
     }()
     lazy var lockedButton: UIButton = {
-        let lockedImage = UIImage(named: "icon_locked_fill")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-        let lockedButton = UIButton(type: UIButtonType.Custom) as UIButton
-        lockedButton.frame = CGRectMake(0, 0, 40, 40)
-        lockedButton.setImage(lockedImage, forState: .Normal)
-        lockedButton.tintColor = UIColor.whiteColor()
+        let lockedImage = UIImage(named: "icon_locked_fill")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        let lockedButton = UIButton(type: UIButtonType.custom) as UIButton
+        lockedButton.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        lockedButton.setImage(lockedImage, for: UIControlState())
+        lockedButton.tintColor = UIColor.white
         return lockedButton
     }()
 
-    var uploadFRC: NSFetchedResultsController?
-
-    private var session: Session?
-    private var uploadBuilder: UploadBuilder?
-    private var beginDragY: CGFloat = 0
-    private let notificationHandler = LocalNotificationHandler.sharedInstance
+    fileprivate var session: Session?
+    fileprivate var beginDragY: CGFloat = 0
+    fileprivate let notificationHandler = LocalNotificationHandler.sharedInstance
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    static func new(session: Session, courseID: String, assignmentID: String) throws -> AssignmentDetailViewController {
-        guard let me = UIStoryboard(name: "Assignment", bundle: NSBundle(forClass: self)).instantiateInitialViewController() as? AssignmentDetailViewController else {
+    static func new(_ session: Session, courseID: String, assignmentID: String) throws -> AssignmentDetailViewController {
+        guard let me = UIStoryboard(name: "Assignment", bundle: Bundle(for: self)).instantiateInitialViewController() as? AssignmentDetailViewController else {
                 fatalError()
             }
         
@@ -93,7 +90,7 @@ class AssignmentDetailViewController: Assignment.DetailViewController {
                 } catch _ as NSError {
                     
                 }
-            }, viewSubmissionsHandler: { [weak me] in
+            }, viewSubmissionsHandler: { _ in
                 print("Once this is merged into iCanvas route to submissions view controller here.")
             }
         ))
@@ -101,8 +98,8 @@ class AssignmentDetailViewController: Assignment.DetailViewController {
         me.session = session
         
         me.disposable = observer.signal.map { $0.1 }
-            .observeOn(UIScheduler())
-            .observeNext { [weak me] assignment in
+            .observe(on: UIScheduler())
+            .observeValues { [weak me] assignment in
                 me?.updateReminderButton(assignment)
                 me?.updateTurnInButton(assignment)
             }
@@ -113,30 +110,21 @@ class AssignmentDetailViewController: Assignment.DetailViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-         notificationHandler.notificationApplication = UIApplication.sharedApplication()
+         notificationHandler.notificationApplication = UIApplication.shared
         
         // toolbar
-        let left = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
-        let right = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
+        let left = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let right = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         self.toolbarItems = [left, submissionBarButtonItem, right]
         self.navigationController?.setToolbarHidden(true, animated: false)
         self.navigationController?.toolbar.barTintColor = Brand.current().secondaryTintColor
 
-        guard let assignment = observer.object, session = session else {
+        guard let assignment = observer.object, let session = session else {
             return
-        }
-
-        do {
-            uploadFRC = try Upload.inProgressFRC(session, identifier: assignment.submissionUploadIdentifier)
-            uploadFRC?.delegate = self
-            try uploadFRC?.performFetch()
-            updateUploadProgress()
-        } catch let e as NSError {
-            e.presentAlertFromViewController(self)
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.hidesBarsOnSwipe = true
         
@@ -146,7 +134,7 @@ class AssignmentDetailViewController: Assignment.DetailViewController {
         }
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.hidesBarsOnSwipe = false
         navigationController?.setToolbarHidden(true, animated: false)
@@ -154,7 +142,7 @@ class AssignmentDetailViewController: Assignment.DetailViewController {
     
     // Mark: Turn In
     
-    func updateTurnInButton(assignment: Assignment?) {
+    func updateTurnInButton(_ assignment: Assignment?) {
         var title: String? = nil
         var customView: UIView? = nil
 
@@ -168,7 +156,7 @@ class AssignmentDetailViewController: Assignment.DetailViewController {
             }
         }
         
-        guard let assignment = assignment where assignment.allowsSubmissions else {
+        guard let assignment = assignment, assignment.allowsSubmissions else {
             return
         }
         
@@ -177,68 +165,54 @@ class AssignmentDetailViewController: Assignment.DetailViewController {
             return
         }
 
-        let resubmit = NSLocalizedString("Re-submit Assignment", tableName: "Localizable", bundle: NSBundle(identifier: "com.instructure.AssignmentKit")!, value: "", comment: "title for submission button if student has submitted previously")
-        let submit = NSLocalizedString("Submit Assignment", tableName: "Localizable", bundle: NSBundle(identifier: "com.instructure.AssignmentKit")!, value: "", comment: "title for submission button if student has never submitted")
+        let resubmit = NSLocalizedString("Re-submit Assignment", tableName: "Localizable", bundle: Bundle(identifier: "com.instructure.AssignmentKit")!, value: "", comment: "title for submission button if student has submitted previously")
+        let submit = NSLocalizedString("Submit Assignment", tableName: "Localizable", bundle: Bundle(identifier: "com.instructure.AssignmentKit")!, value: "", comment: "title for submission button if student has never submitted")
         
         title = assignment.hasSubmitted ? resubmit : submit
     }
     
-    func turnIn(button: UIBarButtonItem) {
+    func turnIn(_ button: UIBarButtonItem) {
         var turnInError: NSError?
         
         defer {
-            turnInError?.presentAlertFromViewController(self)
+            ErrorReporter.reportError(turnInError, from: self)
         }
 
-        guard let assignment = observer.object, session = session else {
-            turnInError = NSError(subdomain: "Assignments.submit", description: NSLocalizedString("Could not submit assignment. Invalid assignment or session.", tableName: "Localizable", bundle: NSBundle(identifier: "com.instructure.AssignmentKit")!, value: "", comment: "error displayed when submitting an assignment is unavailable"))
+        guard let assignment = observer.object, let session = session else {
+            turnInError = NSError(subdomain: "Assignments.submit", description: NSLocalizedString("Could not submit assignment. Invalid assignment or session.", tableName: "Localizable", bundle: Bundle(identifier: "com.instructure.AssignmentKit")!, value: "", comment: "error displayed when submitting an assignment is unavailable"))
             return
         }
-        let uploadTypes: UploadTypes = assignment.getUploadTypesFromSubmissionTypes()
-        let builder = UploadBuilder(viewController: self, barButtonItem: button, submissionTypes: uploadTypes, allowsAudio: assignment.allowsAudio, allowsPhotos: assignment.allowsPhotos, allowsVideo: assignment.allowsVideo, allowedUploadUTIs: assignment.allowedSubmissionUTIs, allowedImagePickerControllerMediaTypes: assignment.allowedImagePickerControllerMediaTypes)
-        //let builder = UploadBuilder(assignment: assignment, viewController: self, barButtonItem: button)
-        builder.uploadSelected = { newUpload in
-            do {
-                try assignment.uploadSubmission(newUpload, inSession: session)
-            } catch {
-                turnInError = NSError(subdomain: "Assignments.submit", description: NSLocalizedString("Could not submit assignment. Invalid submission.", tableName: "Localizable", bundle: NSBundle(identifier: "com.instructure.AssignmentKit")!, value: "", comment: "error displayed when submitting a submission is invalid."))
-            }
-        }
-        
-        self.uploadBuilder = builder
-
-        builder.beginUpload()
     }
 
     // Mark: Reminders
     
-    func updateReminderButton(assignment: Assignment?) {
+    func updateReminderButton(_ assignment: Assignment?) {
         //Don't show reminders for undated assignments
-        guard let assignment = assignment, dueDate = assignment.due else { return }
+        guard let assignment = assignment, let dueDate = assignment.due else { return }
         
         //Don't show reminders for past due assignments
-        if dueDate.compare(NSDate()) == NSComparisonResult.OrderedAscending {
+        if dueDate.compare(Date()) == ComparisonResult.orderedAscending {
             return
         } else {
             setReminderButton(notificationHandler.localNotificationExists(assignment.id))
         }
     }
     
-    private func setReminderButton(alarmExists: Bool) {
+    fileprivate func setReminderButton(_ alarmExists: Bool) {
         var alarmImage = UIImage(named: "icon_alarm")
         if (alarmExists) {
             alarmImage = UIImage(named: "icon_alarm_fill")
         }
         
         if (notificationHandler.canScheduleLocalNotifications()) {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(image: alarmImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(scheduleReminderTapped))
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: alarmImage, style: UIBarButtonItemStyle.plain, target: self, action: #selector(scheduleReminderTapped))
         } else {
             navigationItem.rightBarButtonItem = nil
             print("Local Notifications not allowed")
         }
     }
     
-    func scheduleReminderTapped(sender: UIBarButtonItem) {
+    func scheduleReminderTapped(_ sender: UIBarButtonItem) {
         guard let assignment = self.observer.object else { return }
         
         if (notificationHandler.localNotificationExists(assignment.id)) {
@@ -250,7 +224,7 @@ class AssignmentDetailViewController: Assignment.DetailViewController {
         setReminderButton(notificationHandler.localNotificationExists(assignment.id))
     }
     
-    private func presentActionSheet() {
+    fileprivate func presentActionSheet() {
         guard let assignment = self.observer.object else { return }
         guard let barButtonItem = self.navigationItem.rightBarButtonItem else { return }
         
@@ -265,28 +239,28 @@ class AssignmentDetailViewController: Assignment.DetailViewController {
             let oneDay = NSLocalizedString("1 day", tableName: "Localizable", bundle: .assignments(), comment: "Title for 1 day assignment reminder")
             let threeDays = NSLocalizedString("3 days", tableName: "Localizable", bundle: .assignments(), comment: "Title for 3 days assignment reminder")
             
-            let actionSheet = UIAlertController(title: title, message: message, preferredStyle: .ActionSheet)
+            let actionSheet = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
             
-            let cancelAction: UIAlertAction = UIAlertAction(title: cancel, style: .Cancel) { action -> Void in
-                actionSheet.dismissViewControllerAnimated(true, completion: nil)
+            let cancelAction: UIAlertAction = UIAlertAction(title: cancel, style: .cancel) { action -> Void in
+                actionSheet.dismiss(animated: true, completion: nil)
             }
             
-            let fiveMinutesAction: UIAlertAction = UIAlertAction(title: fiveMinutes, style: .Default) { action -> Void in
+            let fiveMinutesAction: UIAlertAction = UIAlertAction(title: fiveMinutes, style: .default) { action -> Void in
                 self.notificationHandler.scheduleLocaNotification(notifiableAssignment, offsetInMinutes: 5)
                 self.updateReminderButton(assignment)
             }
             
-            let oneHourAction: UIAlertAction = UIAlertAction(title: oneHour, style: .Default) { action -> Void in
+            let oneHourAction: UIAlertAction = UIAlertAction(title: oneHour, style: .default) { action -> Void in
                 self.notificationHandler.scheduleLocaNotification(notifiableAssignment, offsetInMinutes: LocalNotificationConstants.LocalNotificationNumberMinutesInHour)
                 self.updateReminderButton(assignment)
             }
             
-            let oneDayAction: UIAlertAction = UIAlertAction(title: oneDay, style: .Default) { action -> Void in
+            let oneDayAction: UIAlertAction = UIAlertAction(title: oneDay, style: .default) { action -> Void in
                 self.notificationHandler.scheduleLocaNotification(notifiableAssignment, offsetInMinutes: LocalNotificationConstants.LocalNotificationNumberMinutesInDay)
                 self.updateReminderButton(assignment)
             }
             
-            let threeDaysAction: UIAlertAction = UIAlertAction(title: threeDays, style: .Default) { action -> Void in
+            let threeDaysAction: UIAlertAction = UIAlertAction(title: threeDays, style: .default) { action -> Void in
                 self.notificationHandler.scheduleLocaNotification(notifiableAssignment, offsetInMinutes: LocalNotificationConstants.LocalNotificationNumberMinutesInDay * 3)
                 self.updateReminderButton(assignment)
             }
@@ -299,62 +273,13 @@ class AssignmentDetailViewController: Assignment.DetailViewController {
             
             if let popoverController = actionSheet.popoverPresentationController {
                 popoverController.sourceView = self.view
-                let buttonItemView = barButtonItem.valueForKey("view") as! UIView
+                let buttonItemView = barButtonItem.value(forKey: "view") as! UIView
                 
-                popoverController.sourceRect = CGRectMake(buttonItemView.frame.origin.x, 0, buttonItemView.frame.width, 0)
-                popoverController.permittedArrowDirections = UIPopoverArrowDirection.Up
+                popoverController.sourceRect = CGRect(x: buttonItemView.frame.origin.x, y: 0, width: buttonItemView.frame.width, height: 0)
+                popoverController.permittedArrowDirections = UIPopoverArrowDirection.up
             }
             
-            self.presentViewController(actionSheet, animated: true, completion: nil)
+            self.present(actionSheet, animated: true, completion: nil)
         }
     }
-}
-
-extension AssignmentDetailViewController: NSFetchedResultsControllerDelegate {
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        if controller == uploadFRC {
-            dispatch_async(dispatch_get_main_queue()) {
-                self.updateUploadProgress()
-            }
-        }
-    }
-
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-        if let submissionUpload = anObject as? SubmissionUpload where submissionUpload.hasCompleted {
-            self.refresher?.refresh(true)
-        }
-    }
-
-    private func updateUploadProgress() {
-        guard let uploads = uploadFRC?.fetchedObjects as? [Upload] where !uploads.isEmpty else {
-            self.submissionBarButtonItem.enabled = true
-            self.updateTurnInButton(self.observer.object)
-            return
-        }
-
-        self.submissionBarButtonItem.enabled = false
-
-        var bytesSent = 0
-        var bytesTotal = 0
-        for upload in uploads {
-            bytesSent += Int(upload.sent)
-            bytesTotal += Int(upload.total)
-        }
-
-        let progress = hashProgress(n: bytesSent, d: bytesTotal)
-        self.submissionBarButtonItem.title = progress
-    }
-}
-
-typealias ProgressBar = (n: Int, d: Int) -> String
-
-// [####      ] (40%)
-let hashProgress: ProgressBar = { n, d in
-    guard d > 0 && n <= d else { return "[] (0%)" }
-    let max = 10
-    let p = (n*100)/d
-    let x = (p*10)/100
-    let hss = Array(count: x, repeatedValue: "#").joinWithSeparator("")
-    let blanks = Array(count: 10 - x, repeatedValue: " ").joinWithSeparator("")
-    return "[\(hss)\(blanks)] (\(p)%)"
 }

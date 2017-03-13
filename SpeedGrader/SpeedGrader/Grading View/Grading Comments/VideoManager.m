@@ -115,7 +115,7 @@ static const NSString *ItemStatusContext;
 
 - (void)setupForVideoRecording {
     [self.playaLaya removeFromSuperlayer];
-    
+    [self cleanUpAfterPlayingVideo];
     [self.containerView.layer addSublayer:self.previewLayer];
     
     [self.captureSession removeOutput:self.videoFileOutput];
@@ -247,7 +247,8 @@ static const NSString *ItemStatusContext;
 
 - (void)cleanUpAfterPlayingVideo
 {
-    [self.playaLaya setPlayer:nil];
+    self.playaLaya.player = nil;
+    self.playaLaya = nil;
 }
 
 - (void)stopCaptureSession
@@ -315,20 +316,20 @@ static const NSString *ItemStatusContext;
         NSError *error = nil;
         AVKeyValueStatus status = [asset statusOfValueForKey:@"tracks" error:&error];
         if (status == AVKeyValueStatusLoaded) {
-            AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:asset];
-            AVPlayer *player = [AVPlayer playerWithPlayerItem:playerItem];
-            self.playaLaya = [AVPlayerLayer playerLayerWithPlayer:player];
-            self.playaLaya.player = player;
-            self.playaLaya.frame = self.containerView.bounds;
-            
-            [[NSNotificationCenter defaultCenter] addObserver:self
-                                                     selector:@selector(playerItemDidReachEnd:)
-                                                         name:AVPlayerItemDidPlayToEndTimeNotification
-                                                       object:[self.playaLaya.player currentItem]];
-            
-            
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.containerView.layer addSublayer:self.playaLaya]; 
+                AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:asset];
+                AVPlayer *player = [AVPlayer playerWithPlayerItem:playerItem];
+                self.playaLaya = [AVPlayerLayer playerLayerWithPlayer:player];
+                self.playaLaya.player = player;
+                self.playaLaya.frame = self.containerView.bounds;
+                
+                [[NSNotificationCenter defaultCenter] addObserver:self
+                                                         selector:@selector(playerItemDidReachEnd:)
+                                                             name:AVPlayerItemDidPlayToEndTimeNotification
+                                                           object:[self.playaLaya.player currentItem]];
+                
+                
+                [self.containerView.layer addSublayer:self.playaLaya];
                 if (success) {
                     success();
                 }
@@ -378,8 +379,10 @@ static const NSString *ItemStatusContext;
 
 //Rewind to beginning
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
-    AVPlayerItem *p = [notification object];
-    [p seekToTime:kCMTimeZero];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        AVPlayerItem *p = [notification object];
+        [p seekToTime:kCMTimeZero];
+    });
 }
 
 #pragma mark - AVCaptureFileOutputRecordingDelegate Methods

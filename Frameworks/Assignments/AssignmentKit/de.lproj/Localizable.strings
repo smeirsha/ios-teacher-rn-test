@@ -1,5 +1,5 @@
 /* grade details for points based grade i.e. \"10 of 12\" */
-"of (formatter(possible))" = "von (formatter(possible))";
+" of (formatter(possible))" = "von (formatter(possible))";
 
 /* grade details for points based grade i.e. \"10 of 12\" */
 "(formatter(points)) of (formatter(possible))" = "(formatter(points)) von (formatter(possible))";
@@ -16,19 +16,22 @@
 /* Title for 5 minutes assignment reminder */
 "5 minutes" = "5 Minuten";
 
-/* Assignment label */
+/* URL submission option */
+"Add Website Address" = "Website-Adresse hinzufügen";
+
+/* (No Commment) */
 "Assignment" = "Aufgabe";
 
 /* Title for alert view for assignment reminders */
 "Assignment Reminder" = "Aufgabenerinnerung";
 
-/* Message indicating that an assignment is currently be submitted */
+/* (No Commment) */
 "Assignment is currently being submitted" = "Die Aufgabe wird gerade eingereicht";
 
 /* This assignment hasn't been graded yet but can be graded */
 "Awaiting Grade" = "Erwarte Note";
 
-/* cancel button */
+/* Cancel submission option */
 "Cancel" = "Abbrechen";
 
 /* Title for reminder options for an assignment */
@@ -37,17 +40,26 @@
 /* Title for a rating that hasn't been graded but has a comment */
 "Comment" = "Kommentieren";
 
-/* Assignment submission comment placeholder text */
+/* (No Commment) */
 "Comment.." = "Kommentiere...";
 
 /* error displayed when submitting an assignment is unavailable */
 "Could not submit assignment. Invalid assignment or session." = "Aufgabe konnte nicht eingereicht werden: unzulässige Aufgabe oder Sitzung.";
 
-/* error displayed when submitting a submission is invalid. */
+/* (No Commment) */
 "Could not submit assignment. Invalid submission." = "Aufgabe konnte nicht eingereicht werden: unzulässige Einreichung.";
 
-/* String telling the user that the date is the due date */
+/* (No Commment) */
 "Due:" = "Fällig:";
+
+/* String telling the user that the date is the due date */
+"Due: " = "Fällig:";
+
+/* Text submission option */
+"Enter Text" = "Text eingeben";
+
+/* Prompt for text upload */
+"Enter your submission..." = "Geben Sie Ihre Abgabe ein ...";
 
 /* Error title for parsing assignment data from server */
 "Error Updating Assignment" = "Fehler beim Aktualisieren der Aufgabe";
@@ -55,7 +67,7 @@
 /* This assignment is excused */
 "Excused" = "Entschuldigt";
 
-/* Error when an upload failed to resume. */
+/* (No Commment) */
 "Failed to resume upload." = "Fehler beim Fortsetzen des Hochladevorgangs.";
 
 /* This assignment is late */
@@ -65,7 +77,7 @@
 "No Comment" = "Kein Kommentar";
 
 /* Default string for due date title */
-"No Due Date" = "Kein Abgabetermin";
+"No Due Date" = "Kein Abgabedatum";
 
 /* Section header for assignments without an assignment group */
 "None" = "Nichts";
@@ -85,11 +97,14 @@
 /* title for submission button if student has submitted previously */
 "Re-submit Assignment" = "Aufgabe neu einreichen";
 
-/* Message indicating that a submission type is not supported for this assignment. */
+/* (No Commment) */
 "Submission type not allowed" = "Einreichungstyp nicht erlaubt";
 
 /* submission title for assignment that doesn't support submissions */
 "Submissions N/A" = "Einreichung nicht verfügbar";
+
+/* Submit assignment button */
+"Submit" = "Einreichen";
 
 /* title for submission button if student has never submitted */
 "Submit Assignment" = "Aufgabe einreichen";
@@ -103,13 +118,13 @@
 /* submission title for assignemnt that is submitted */
 "Turned in!" = "Eingereicht!";
 
-/* Error message when a course could not be selected */
+/* (No Commment) */
 "Unable to select a course." = "Kursauswahl nicht möglich";
 
-/* Error message when an assignment could not be selected */
+/* (No Commment) */
 "Unable to select an assignment." = "Ausgabenauswahl nicht möglich";
 
-/* Error message when unable to submit assignment. */
+/* (No Commment) */
 "Unable to submit assignment." = "Aufgabeneinreichung nicht möglich";
 
 /* Assignments with no dates */
@@ -121,6 +136,12 @@
 /* Upcoming assignments */
 "Upcoming" = "Kommend";
 
+/* File upload submission option */
+"Upload File" = "Datei hochladen";
+
 /* Title for button to see rubric from assignment detail */
 "View Rubric" = "Rubrik ansehen";
+
+/* (No Commment) */
+"of (formatter(possible))" = "von (formatter(possible))";
 

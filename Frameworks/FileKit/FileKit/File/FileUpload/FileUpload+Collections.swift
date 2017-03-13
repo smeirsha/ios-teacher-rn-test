@@ -21,11 +21,11 @@ import TooLegit
 import SoPersistent
 
 extension FileUpload {
-    public static func contextIDPredicate(contextID: ContextID) -> NSPredicate {
+    public static func contextIDPredicate(_ contextID: ContextID) -> NSPredicate {
         return NSPredicate(format:"%K == %@", "rawContextID", contextID.canvasContextID)
     }
     
-    public static func folderIDPredicate(folderID: String?) -> NSPredicate {
+    public static func folderIDPredicate(_ folderID: String?) -> NSPredicate {
         if let folderID = folderID {
             return NSPredicate(format:"%K == %@", "parentFolderID", folderID)
         } else {
@@ -33,23 +33,57 @@ extension FileUpload {
         }
     }
     
-    public static func rootFolderPredicate(isInRootFolder: Bool) -> NSPredicate {
-        return NSPredicate(format:"%K == %@", "isInRootFolder", isInRootFolder)
+    public static func rootFolderPredicate(_ isInRootFolder: Bool) -> NSPredicate {
+        return NSPredicate(format:"%K == %@", "isInRootFolder", isInRootFolder as CVarArg)
     }
     
-    public static func predicate(contextID: ContextID, folderID: String?) -> NSPredicate {
+    public static func predicate(_ contextID: ContextID, folderID: String?) -> NSPredicate {
         let contextID = contextIDPredicate(contextID)
         let folder = folderIDPredicate(folderID)
         return NSCompoundPredicate(andPredicateWithSubpredicates: [contextID, folder])
+    }
+
+    public static func predicate(batch: FileUploadBatch) -> NSPredicate {
+        return NSPredicate(format: "%K == %@", "batch", batch)
+    }
+
+    public static func inProgressPredicate() -> NSPredicate {
+        return NSPredicate(format: "%K != nil && %K == nil", "startedAt", "terminatedAt")
+    }
+
+    public static func completedPredicate() -> NSPredicate {
+        return NSPredicate(format: "%K != nil", "completedAt")
+    }
+
+    public static func inProgressPredicate(batch: FileUploadBatch) -> NSPredicate {
+        return NSCompoundPredicate.init(andPredicateWithSubpredicates: [self.predicate(batch: batch), self.inProgressPredicate()])
+    }
+
+    public static func completedPredicate(batch: FileUploadBatch) -> NSPredicate {
+        return NSCompoundPredicate.init(andPredicateWithSubpredicates: [self.predicate(batch: batch), self.completedPredicate()])
     }
 }
 
 
 extension FileUpload {
-    public static func fetchCollection(session: Session, contextID: ContextID, folderID: String?) throws -> FetchedCollection<FileUpload> {
+    public static func fetchCollection(_ session: Session, contextID: ContextID, folderID: String?) throws -> FetchedCollection<FileUpload> {
         let context = try session.filesManagedObjectContext()
         let predicate = FileUpload.predicate(contextID, folderID: folderID)
-        let frc = FileUpload.fetchedResults(predicate, sortDescriptors: ["name".ascending], sectionNameKeypath: nil, inContext: context)
-        return try FetchedCollection<FileUpload>(frc: frc)
+        return try FetchedCollection<FileUpload>(frc:
+            context.fetchedResults(predicate, sortDescriptors: ["name".ascending])
+        )
     }
+
+    public static func fetchCollection(_ session: Session, batch: FileUploadBatch) throws -> FetchedCollection<FileUpload> {
+        let context = try session.filesManagedObjectContext()
+        let predicate = FileUpload.predicate(batch: batch)
+        return try FetchedCollection<FileUpload>(frc:
+            context.fetchedResults(predicate, sortDescriptors: ["name".ascending])
+        )
+    }
+}
+
+
+extension FileUpload {
+    public typealias TableViewController = FetchedTableViewController<FileUpload>
 }
