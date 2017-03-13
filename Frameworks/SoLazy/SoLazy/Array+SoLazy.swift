@@ -19,18 +19,18 @@
 import Foundation
 
 /// A glorious shuffle method to shuffle all the things
-public extension CollectionType {
+public extension Collection {
     /// Return a copy of `self` with its elements shuffled
-    public func shuffle() -> [Generator.Element] {
+    public func shuffle() -> [Iterator.Element] {
         var list = Array(self)
         list.shuffleInPlace()
         return list
     }
 }
 
-public extension CollectionType {
-    public func findFirst(test: (Generator.Element) throws -> Bool) rethrows -> Generator.Element? {
-        for (_, element) in enumerate() {
+public extension Collection {
+    public func findFirst(_ test: (Iterator.Element) throws -> Bool) rethrows -> Iterator.Element? {
+        for (_, element) in enumerated() {
             if try test(element) {
                 return element
             }
@@ -38,16 +38,20 @@ public extension CollectionType {
         return nil
     }
 
-    public func any(test: ((Generator.Element) throws -> Bool)) rethrows -> Bool {
+    public func any(_ test: ((Iterator.Element) throws -> Bool)) rethrows -> Bool {
         return try findFirst(test) != nil
     }
 
     public func any() -> Bool {
         return any { _ in true }
     }
+
+    public func all(_ test: ((Iterator.Element) throws -> Bool)) rethrows -> Bool {
+        return try filter { !(try test($0)) }.isEmpty
+    }
 }
 
-public extension MutableCollectionType where Index == Int {
+public extension Array {
     /// Shuffle the elements of `self` in-place.
     public mutating func shuffleInPlace() {
         // empty and single-element collections don't shuffle

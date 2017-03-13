@@ -1,5 +1,5 @@
 /* grade details for points based grade i.e. \"10 of 12\" */
-"of (formatter(possible))" = "de (formatter(possible))";
+" of (formatter(possible))" = "de (formatter(possible))";
 
 /* grade details for points based grade i.e. \"10 of 12\" */
 "(formatter(points)) of (formatter(possible))" = "(formatter(points)) de (formatter(possible))";
@@ -16,19 +16,22 @@
 /* Title for 5 minutes assignment reminder */
 "5 minutes" = "5 minutos";
 
-/* Assignment label */
+/* URL submission option */
+"Add Website Address" = "Agregar la dirección de un sitio web";
+
+/* (No Commment) */
 "Assignment" = "Tarea";
 
 /* Title for alert view for assignment reminders */
 "Assignment Reminder" = "Recordatorio de la tarea";
 
-/* Message indicating that an assignment is currently be submitted */
+/* (No Commment) */
 "Assignment is currently being submitted" = "La tarea está siendo enviaa en este momento";
 
 /* This assignment hasn't been graded yet but can be graded */
 "Awaiting Grade" = "En espera de la calificación";
 
-/* cancel button */
+/* Cancel submission option */
 "Cancel" = "Cancelar";
 
 /* Title for reminder options for an assignment */
@@ -37,17 +40,26 @@
 /* Title for a rating that hasn't been graded but has a comment */
 "Comment" = "Comentario";
 
-/* Assignment submission comment placeholder text */
+/* (No Commment) */
 "Comment.." = "Comentario..";
 
 /* error displayed when submitting an assignment is unavailable */
 "Could not submit assignment. Invalid assignment or session." = "No se pudo enviar la tarea. Tarea o sesión inválida.";
 
-/* error displayed when submitting a submission is invalid. */
+/* (No Commment) */
 "Could not submit assignment. Invalid submission." = "No se pudo enviar la tarea. Envío inválido.";
 
-/* String telling the user that the date is the due date */
+/* (No Commment) */
 "Due:" = "Fecha de entrega:";
+
+/* String telling the user that the date is the due date */
+"Due: " = "Fecha de entrega:";
+
+/* Text submission option */
+"Enter Text" = "Ingresar texto";
+
+/* Prompt for text upload */
+"Enter your submission..." = "Ingrese su envío...";
 
 /* Error title for parsing assignment data from server */
 "Error Updating Assignment" = "Error al subir la tarea";
@@ -55,7 +67,7 @@
 /* This assignment is excused */
 "Excused" = "Excusado";
 
-/* Error when an upload failed to resume. */
+/* (No Commment) */
 "Failed to resume upload." = "No se ha podido reanudar la carga.";
 
 /* This assignment is late */
@@ -65,7 +77,7 @@
 "No Comment" = "Sin comentario";
 
 /* Default string for due date title */
-"No Due Date" = "Sin fecha límite de entrega";
+"No Due Date" = "Sin fecha de entrega";
 
 /* Section header for assignments without an assignment group */
 "None" = "Ninguno";
@@ -83,13 +95,16 @@
 "Points Possible" = "Puntos posibles";
 
 /* title for submission button if student has submitted previously */
-"Re-submit Assignment" = "Reenviar tarea";
+"Re-submit Assignment" = "Reenviar la tarea";
 
-/* Message indicating that a submission type is not supported for this assignment. */
+/* (No Commment) */
 "Submission type not allowed" = "Tipo de envío no permitido";
 
 /* submission title for assignment that doesn't support submissions */
 "Submissions N/A" = "Presentaciones N/A";
+
+/* Submit assignment button */
+"Submit" = "Enviar";
 
 /* title for submission button if student has never submitted */
 "Submit Assignment" = "Enviar tarea";
@@ -103,13 +118,13 @@
 /* submission title for assignemnt that is submitted */
 "Turned in!" = "Entregado!";
 
-/* Error message when a course could not be selected */
+/* (No Commment) */
 "Unable to select a course." = "No se pudo seleccionar un curso.";
 
-/* Error message when an assignment could not be selected */
+/* (No Commment) */
 "Unable to select an assignment." = "No se pudo seleccionar una tarea.";
 
-/* Error message when unable to submit assignment. */
+/* (No Commment) */
 "Unable to submit assignment." = "No se pudo enviar una tarea.";
 
 /* Assignments with no dates */
@@ -121,6 +136,12 @@
 /* Upcoming assignments */
 "Upcoming" = "Próximo";
 
+/* File upload submission option */
+"Upload File" = "Cargar archivo";
+
 /* Title for button to see rubric from assignment detail */
 "View Rubric" = "Ver rúbrica";
+
+/* (No Commment) */
+"of (formatter(possible))" = "de (formatter(possible))";
 

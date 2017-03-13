@@ -34,21 +34,29 @@ public enum Icon: String {
 
     case announcement
     case assignment
+    case audio
     case calendar
+    case camera
+    case cancel
+    case code
     case collaboration
     case conference
     case course
     case discussion
+    case email
     case file
     case grades
     case home
+    case info
     case link
     case lti
     case module
     case outcome
     case page
+    case pdf
     case prerequisite
     case quiz
+    case refresh
     case settings
     case syllabus
     case user
@@ -63,10 +71,14 @@ public enum Icon: String {
     case empty
     case complete
     
+    case star
+    case check
+    case expand
+    case collapse
     
     /** name of the icon of the form "icon_lined"
      */
-    func imageName(filled: Bool, size: Size = .standard) -> String {
+    func imageName(_ filled: Bool, size: Size = .standard) -> String {
         var name = rawValue + (!filled ? "_line": "")
         if size != .standard {
             name += "_\(size.identifier)"

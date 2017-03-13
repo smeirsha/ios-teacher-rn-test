@@ -1,8 +1,17 @@
+/* Message for an error alert */
+"An unexpected error occured. %@(%@)" = "حدث خطأ غير متوقع. %1$@(%2$@)";
+
 /* Dismiss an error dialog */
-"Dismiss" = "Dismiss";
+"Dismiss" = "رفض";
 
 /* Data encoding error title */
 "Encoding Error" = "خطأ في الترميز";
+
+/* Title for an error alert */
+"Error" = "خطأ";
+
+/* attached to error explanation in dialog */
+"Explanation:" = "الشرح:";
 
 /* Option to report an error */
 "Report" = "إنشاء تقرير";
@@ -15,7 +24,4 @@
 
 /* SoLazy's fallback title for an unknown error */
 "Unknown Error" = "خطأ غير معروف";
-
-/* attached to error explanation in dialog */
-"Explanation:" = "الشرح:";
 

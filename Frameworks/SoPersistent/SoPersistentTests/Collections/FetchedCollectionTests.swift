@@ -45,25 +45,6 @@ class FetchedCollectionTests: XCTestCase {
 
         }
 
-        describe("init") {
-            context("when frc is invalid") {
-                it("throws an error") {
-                    let model = NSManagedObjectModel(named: "DataModel", inBundle: NSBundle(forClass: Panda.self))!
-                    let context = NSManagedObjectContext.errorProneContext(model)
-                    let frc = Panda.fetchedResults(nil, sortDescriptors: [], sectionNameKeypath: nil, inContext: context)
-                    var theError: ErrorType?
-
-                    do {
-                        let _ = try FetchedCollection<Panda>(frc: frc)
-                    } catch {
-                        theError = error
-                    }
-
-                    XCTAssertNotNil(theError)
-                }
-            }
-        }
-
         describe("frc sections") {
             context("when there are sections") {
                 beforeEach()
@@ -86,21 +67,21 @@ class FetchedCollectionTests: XCTestCase {
                 }
 
                 it("has a subscript for accessing an object at an indexPath") {
-                    XCTAssertEqual(one, collection[NSIndexPath(forRow: 0, inSection: 0)])
-                    XCTAssertEqual(two, collection[NSIndexPath(forRow: 0, inSection: 1)])
-                    XCTAssertEqual(three, collection[NSIndexPath(forRow: 0, inSection: 2)])
-                    XCTAssertEqual(four, collection[NSIndexPath(forRow: 1, inSection: 2)])
+                    XCTAssertEqual(one, collection[IndexPath(row: 0, section: 0)])
+                    XCTAssertEqual(two, collection[IndexPath(row: 0, section: 1)])
+                    XCTAssertEqual(three, collection[IndexPath(row: 0, section: 2)])
+                    XCTAssertEqual(four, collection[IndexPath(row: 1, section: 2)])
                 }
             }
 
             context("when sections are nil") {
-                class FRC: NSFetchedResultsController {
-                    private override func performFetch() throws {
+                class FRC: NSFetchedResultsController<Panda> {
+                    fileprivate override func performFetch() throws {
                         return // nil sections!
                     }
                 }
                 let frc = FRC(
-                    fetchRequest: Panda.fetch(nil, sortDescriptors: ["name".ascending], inContext: managedObjectContext),
+                    fetchRequest: managedObjectContext.fetch(nil, sortDescriptors: ["name".ascending]),
                     managedObjectContext: managedObjectContext,
                     sectionNameKeyPath: nil,
                     cacheName: nil)
@@ -135,13 +116,11 @@ class FetchedCollectionTests: XCTestCase {
 
                 it("notifies collectionUpdated") {
                     beforeEach()
-                    let expectation = self.expectationWithDescription("section was inserted")
-                    collection.collectionUpdates.observeNext { updates in
+                    let expectation = self.expectation(description: "section was inserted")
+                    collection.collectionUpdates.observeValues { updates in
                         for update in updates {
-                            if case .SectionInserted(let s) = update {
-                                if s == 3 {
-                                    expectation.fulfill()
-                                }
+                            if case .reload = update {
+                                expectation.fulfill()
                             }
                         }
                     }
@@ -149,7 +128,7 @@ class FetchedCollectionTests: XCTestCase {
                     Panda.build(managedObjectContext, name: "D")
                     managedObjectContext.processPendingChanges()
 
-                    self.waitForExpectationsWithTimeout(1, handler: nil)
+                    self.waitForExpectations(timeout: 1, handler: nil)
                 }
             }
 
@@ -160,17 +139,17 @@ class FetchedCollectionTests: XCTestCase {
                     managedObjectContext.processPendingChanges()
 
                     self.assertDifference({ collection.numberOfSections() }, -1) {
-                        managedObjectContext.deleteObject(d)
+                        managedObjectContext.delete(d)
                         managedObjectContext.processPendingChanges()
                     }
                 }
 
                 it("notifies collectionUpdated") {
                     beforeEach()
-                    let expectation = self.expectationWithDescription("section was deleted")
-                    collection.collectionUpdates.observeNext { updates in
+                    let expectation = self.expectation(description: "section was deleted")
+                    collection.collectionUpdates.observeValues { updates in
                         for update in updates {
-                            if case .SectionDeleted(let s) = update where s == 3 {
+                            if case .reload = update {
                                 expectation.fulfill()
                             }
                         }
@@ -178,10 +157,10 @@ class FetchedCollectionTests: XCTestCase {
                     let d = Panda.build(managedObjectContext, name: "D")
                     managedObjectContext.processPendingChanges()
 
-                    managedObjectContext.deleteObject(d)
+                    managedObjectContext.delete(d)
                     managedObjectContext.processPendingChanges()
 
-                    self.waitForExpectationsWithTimeout(1, handler: nil)
+                    self.waitForExpectations(timeout: 1, handler: nil)
                 }
             }
         }
@@ -199,13 +178,12 @@ class FetchedCollectionTests: XCTestCase {
 
                 it("notifies collectionUpdated") {
                     beforeEach()
-                    let expectedIndexPath = NSIndexPath(forRow: 1, inSection: 0)
-                    let expectation = self.expectationWithDescription("object was inserted")
+                    let expectedIndexPath = IndexPath(row: 1, section: 0)
+                    let expectation = self.expectation(description: "object was inserted")
 
-                    collection.collectionUpdates.observeNext { updates in
+                    collection.collectionUpdates.observeValues { updates in
                         for update in updates {
-                            if case .Inserted(let indexPath, let object) = update
-                                where indexPath == expectedIndexPath && object.name == "Alpha" {
+                            if case .reload = update {
                                     expectation.fulfill()
                             }
                         }
@@ -214,69 +192,65 @@ class FetchedCollectionTests: XCTestCase {
                     Panda.build(managedObjectContext, name: "Alpha")
                     managedObjectContext.processPendingChanges()
 
-                    self.waitForExpectationsWithTimeout(1, handler: nil)
+                    self.waitForExpectations(timeout: 1, handler: nil)
                 }
             }
 
             context("when an object is updated") {
                 it("notifies collectionUpdated") {
                     beforeEach()
-                    let updatedIndexPath = NSIndexPath(forRow: 0, inSection: 0)
-                    let expectation = self.expectationWithDescription("object was updated")
-                    collection.collectionUpdates.observeNext { updates in
-                        for update in updates {
-                            if case .Updated(let ip, let m) = update {
-                                if ip == updatedIndexPath &&  m.name == "Another 'A' name" {
-                                    expectation.fulfill()
-                                }
-                            }
-                        }
+                    let updatedIndexPath = IndexPath(row: 0, section: 0)
+                    let expectation = self.expectation(description: "object was updated")
+                    var updates: [CollectionUpdate<Panda>] = []
+                    collection.collectionUpdates.observeValues {
+                        updates = $0
+                        expectation.fulfill()
                     }
 
                     one.name = "Another 'A' name"
 
-                    self.waitForExpectationsWithTimeout(1, handler: nil)
+                    self.waitForExpectations(timeout: 1, handler: nil)
+
+                    XCTAssertEqual(updates, [.reload])
                 }
             }
 
             context("when an object is moved") {
                 it("notifies collectionUpdated") {
                     beforeEach()
-                    let originalIndexPath = NSIndexPath(forRow: 1, inSection: 2)
-                    let updatedIndexPath = NSIndexPath(forRow: 1, inSection: 0)
-                    let expectation = self.expectationWithDescription("object was moved")
-                    collection.collectionUpdates.observeNext { updates in
-                        for update in updates {
-                            if case .Moved(let i, let ii, let m) = update {
-                                if i == originalIndexPath && ii == updatedIndexPath && m.name == "Aapple" {
-                                    expectation.fulfill()
-                                }
-                            }
-                        }
+                    let originalIndexPath = IndexPath(row: 1, section: 2)
+                    let updatedIndexPath = IndexPath(row: 1, section: 0)
+                    let expectation = self.expectation(description: "object was moved")
+                    var updates: [CollectionUpdate<Panda>] = []
+                    collection.collectionUpdates.observeValues {
+                        updates = $0
+                        expectation.fulfill()
                     }
 
                     four.name = "Aapple"
 
-                    self.waitForExpectationsWithTimeout(1, handler: nil)
+                    self.waitForExpectations(timeout: 1, handler: nil)
+
+                    XCTAssertEqual(updates, [.reload])
                 }
             }
 
             context("when an object is deleted") {
                 it("notifies collectionUpdated") {
                     beforeEach()
-                    let deletedIndexPath = NSIndexPath(forRow: 0, inSection: 0)
-                    let expectation = self.expectationWithDescription("object was deleted")
-                    collection.collectionUpdates.observeNext { updates in
+                    let deletedIndexPath = IndexPath(row: 0, section: 0)
+                    let expectation = self.expectation(description: "object was deleted")
+                    collection.collectionUpdates.observeValues { updates in
                         for update in updates {
-                            if case .Deleted(let i, let m) = update where i == deletedIndexPath && m.name == one.name {
+                            if case .reload = update {
                                 expectation.fulfill()
                             }
                         }
                     }
 
-                    managedObjectContext.deleteObject(managedObjectContext.objectWithID(one.objectID))
+                    managedObjectContext.delete(managedObjectContext.object(with: one.objectID))
 
-                    self.waitForExpectationsWithTimeout(1, handler: nil)
+                    self.waitForExpectations(timeout: 1, handler: nil)
                 }
             }
 

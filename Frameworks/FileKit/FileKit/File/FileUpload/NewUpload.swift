@@ -18,18 +18,26 @@
 
 import Foundation
 import Photos
-import ReactiveCocoa
+import ReactiveSwift
 import MobileCoreServices
+import Result
 
-let dateFormatter: NSDateFormatter = {
-    let df = NSDateFormatter()
-    df.dateStyle = .MediumStyle
+private let dataErrorMessage = NSLocalizedString("Something went wrong. Check the file format and try again.",
+                                         tableName: "Localizable",
+                                         bundle: .fileKit,
+                                         value: "",
+                                         comment: "Error message displayed when the file is unrecognized.")
+let dataError = NSError(subdomain: "FileKit", description: dataErrorMessage)
+
+let dateFormatter: DateFormatter = {
+    let df = DateFormatter()
+    df.dateStyle = .medium
     return df
 }()
 
-private func MIMEType(fileExtension: String) -> String? {
+internal func MIMEType(_ fileExtension: String) -> String? {
     if !fileExtension.isEmpty {
-        guard let UTIRef = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, nil) else {
+        guard let UTIRef = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension as CFString, nil) else {
             return nil
         }
 
@@ -47,155 +55,146 @@ private func MIMEType(fileExtension: String) -> String? {
     return nil
 }
 
-public enum NewUploadFile {
-    case AudioFile(NSURL)
-    case FileURL(NSURL)
-    case CameraRollAsset(PHAsset)
-    case VideoURL(NSURL)
-    case Photo(UIImage)
-    case Data(NSData)
-    
-    public var name: String {
-        switch self {
-        case .FileURL(let url):
-            return url.lastPathComponent ?? ""
-        case .CameraRollAsset(let asset):
-            let type: String
-            switch asset.mediaType {
-            case .Video:
-                type = "Video"
-            default:
-                type = "Photo"
-            }
+public enum UploadType {
+    case audioFile(URL)
+    case fileURL(URL)
+    case videoURL(URL)
+    case photo(UIImage)
+    case data(Data)
+}
 
-            let formattedDate = dateFormatter.stringFromDate(asset.modificationDate ?? NSDate())
-            return "\(type) \(formattedDate)"
-        case .AudioFile(let url):
-            return url.lastPathComponent ?? ""
-        case .Photo(_):
-            return NSLocalizedString("Photo", tableName: "Localizable", bundle: NSBundle(identifier: "com.instructure.FileKit")!, value: "", comment: "name for a photo just taken")
-        case .VideoURL(_):
-            return NSLocalizedString("Video", tableName: "Localizable", bundle: NSBundle(identifier: "com.instructure.FileKit")!, value: "", comment: "name for a video just taken for upload")
-        case .Data(_):
-            return NSLocalizedString("Data", tableName: "Localizable", bundle: NSBundle(identifier: "com.instructure.FileKit")!, value: "", comment: "name for upload data")
+@objc public protocol Uploadable {
+    var name: String { get }
+    var contentType: String? { get }
+    var image: UIImage { get }
+    var data: Data { get }
+}
+
+public class Asset: Uploadable {
+    public let name: String
+    public let contentType: String?
+    public let data: Data
+    public let image: UIImage
+
+    public static func fromCameraRoll(asset: PHAsset, handler: @escaping (Result<Asset, NSError>) -> Void) {
+        let manager = PHCachingImageManager()
+        switch asset.mediaType {
+        case .image:
+            manager.requestImageData(for: asset, options: nil) { data, uti, _, info in
+                guard
+                    let data = data,
+                    let path = info?["PHImageFileSandboxExtensionTokenKey"] as? String
+                    else {
+                        handler(Result(error: dataError))
+                        return
+                }
+
+                let url = URL(fileURLWithPath: path)
+                let name = url.lastPathComponent
+                let contentType = MIMEType(url.pathExtension)
+
+                requestImage(for: asset) { result in
+                    guard let image = result.value else {
+                        handler(Result(error: result.error ?? dataError))
+                        return
+                    }
+
+                    let asset = Asset(name: name, data: data, contentType: contentType, image: image)
+                    handler(Result(value: asset))
+                }
+            }
+        case .video:
+            manager.requestAVAsset(forVideo: asset, options: nil) { avAsset, audioMix, info in
+                guard let videoAsset = avAsset as? AVURLAsset, let data = try? Data(contentsOf: videoAsset.url) else {
+                    handler(Result(error: dataError))
+                    return
+                }
+
+                let name = videoAsset.url.lastPathComponent
+                let contentType = "video/mpeg"
+
+                requestImage(for: asset) { result in
+                    guard let image = result.value else {
+                        handler(Result(error: result.error ?? dataError))
+                        return
+                    }
+
+                    let asset = Asset(name: name, data: data, contentType: contentType, image: image)
+                    handler(Result(value: asset))
+                }
+            }
+        default:
+            handler(Result(error: dataError))
+            break
+        }
+    }
+
+    private static func requestImage(for asset: PHAsset, handler: @escaping (Result<UIImage, NSError>)->Void) {
+        let size = CGSize(width: 34, height: 34)
+        let options = PHImageRequestOptions()
+        options.isSynchronous = true
+        PHImageManager.default().requestImage(for: asset, targetSize: size, contentMode: PHImageContentMode.aspectFill, options: options) { image, _ in
+            guard let image = image else {
+                handler(Result(error: dataError))
+                return
+            }
+            handler(Result(value: image))
+        }
+    }
+
+    private init(name: String, data: Data, contentType: String?, image: UIImage) {
+        self.name = name
+        self.data = data
+        self.contentType = contentType
+        self.image = image
+    }
+}
+
+public class NewFileUpload: Uploadable {
+    public let kind: UploadType
+    public let data: Data
+
+    public init(kind: UploadType, data: Data) {
+        self.kind = kind
+        self.data = data
+    }
+
+    public var name: String {
+        switch kind {
+        case .fileURL(let url):
+            return url.lastPathComponent
+        case .audioFile(let url):
+            return url.lastPathComponent
+        case .photo(_):
+            return NSLocalizedString("Photo", tableName: "Localizable", bundle: Bundle(identifier: "com.instructure.FileKit")!, value: "", comment: "name for a photo just taken")
+        case .videoURL(let url):
+            return url.lastPathComponent
+        case .data(_):
+            return NSLocalizedString("Data", tableName: "Localizable", bundle: Bundle(identifier: "com.instructure.FileKit")!, value: "", comment: "name for upload data")
         }
     }
 
     public var contentType: String? {
-        switch self {
-            case .FileURL(let url): return url.pathExtension.flatMap({ MIMEType($0) }) ?? nil
-        case .AudioFile(_):
+        switch kind {
+        case .fileURL(let url): return MIMEType(url.pathExtension)
+        case .audioFile(_):
             return "audio/mp4"
-        case .CameraRollAsset(let asset):
-            switch asset.mediaType {
-            case .Video: return "video/mpeg"
-            default: return "image/jpeg"
-            }
-        case .Photo(_): return "image/jpeg"
-        case .VideoURL(_): return "video/mpeg"
-        case .Data(_): return "text/plain"
+        case .photo(_): return "image/jpeg"
+        case .videoURL(_): return "video/mpeg"
+        case .data(_): return "text/plain"
         }
     }
-    
-    var image: UIImage {
+
+    public var image: UIImage {
         let size = CGSize(width: 34, height: 34)
         
-        switch self {
-        case .CameraRollAsset(let asset):
-            let options = PHImageRequestOptions()
-            options.synchronous = true
-            
-            var thumb: UIImage = UIImage()
-            PHImageManager.defaultManager().requestImageForAsset(asset, targetSize: size, contentMode: PHImageContentMode.AspectFill, options: options) { image, info in
-                if let image = image {
-                    thumb = image
-                }
-            }
-            
-            return thumb
-        case .AudioFile(_):
-            return UIImage(named: "icon_audio", inBundle: NSBundle(forClass: UploadBuilder.classForCoder()), compatibleWithTraitCollection: nil)!
-        case .Photo(let image):
+        switch kind {
+        case .audioFile(_):
+            return UIImage(named: "icon_audio", in: .fileKit, compatibleWith: nil)!
+        case .photo(let image):
             return image
         default:
-            return UIImage(named: "icon_document", inBundle: NSBundle(forClass: UploadBuilder.classForCoder()), compatibleWithTraitCollection: nil)!
-        }
-    }
-
-    public var extractDataProducer: SignalProducer<NSData?, NSError> {
-        return SignalProducer() { observer, disposable in
-            switch self {
-            case .FileURL(let url):
-                observer.sendNext(NSData(contentsOfURL: url))
-            case .AudioFile(let url):
-                observer.sendNext(NSData(contentsOfURL: url))
-            case .VideoURL(let url):
-                observer.sendNext(NSData(contentsOfURL: url))
-            case .Photo(let image):
-                observer.sendNext(UIImagePNGRepresentation(image))
-            case .CameraRollAsset(let asset):
-                let manager = PHCachingImageManager()
-                switch asset.mediaType {
-                case .Image:
-                    manager.requestImageDataForAsset(asset, options: nil) { (data, _, _, _) in
-                        observer.sendNext(data)
-                    }
-                case .Video:
-                    manager.requestAVAssetForVideo(asset, options: nil) { asset, audioMix, info in
-                        if let asset = asset as? AVURLAsset, data = NSData(contentsOfURL: asset.URL) {
-                            observer.sendNext(data)
-                        }
-                    }
-                default: observer.sendNext(nil)
-                }
-            case .Data(let data):
-                observer.sendNext(data)
-            }
-        }
-    }
-}
-
-public enum NewUpload {
-    case None
-    case Text(String)
-    case URL(NSURL)
-    case MediaComment(NewUploadFile)
-    case FileUpload([NewUploadFile])
-
-    var fileCount: Int {
-        switch self {
-        case .FileUpload(let urls):
-            return urls.count
-        case .MediaComment(_):
-            return 1
-        default:
-            return 0
-        }
-    }
-
-    func uploadByDeletingFileAtIndex(row: Int) -> NewUpload {
-        switch self {
-        case .FileUpload(var urls) where row < urls.count:
-            urls.removeAtIndex(row)
-            return .FileUpload(urls)
-        default:
-            return self
-        }
-    }
-
-    func uploadByAppendingFile(file: NewUploadFile) -> NewUpload {
-        switch (self, file) {
-        case (.FileUpload(var files), _):
-            files.append(file)
-            return .FileUpload(files)
-        case (.MediaComment(let mediaCommentFile), _):
-            return .FileUpload([mediaCommentFile, file])
-        case (.None, .VideoURL), (.None, .AudioFile):
-            return .MediaComment(file)
-        case (.None, _):
-            return .FileUpload([file])
-        default:
-            return self
+            return UIImage(named: "icon_document", in: .fileKit, compatibleWith: nil)!
         }
     }
 }

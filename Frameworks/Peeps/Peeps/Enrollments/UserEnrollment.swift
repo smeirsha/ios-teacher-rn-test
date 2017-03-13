@@ -20,44 +20,52 @@ import SoPersistent
 import TooLegit
 
 // Groups don't technically have enrollments, so for the case of groups the role may be []
-public struct UserEnrollmentRoles: OptionSetType {
-    public let rawValue: Int32
-    public init(rawValue: Int32) { self.rawValue = rawValue}
+public enum UserEnrollmentRole: String {
+    case student  = "StudentEnrollment"
+    case teacher  = "TeacherEnrollment"
+    case observer = "TaEnrollment"
+    case ta       = "ObserverEnrollment"
+    case designer = "DesignerEnrollment"
     
-    public static let Student  = UserEnrollmentRoles(rawValue: 1)
-    public static let Teacher  = UserEnrollmentRoles(rawValue: 2)
-    public static let Observer = UserEnrollmentRoles(rawValue: 4)
-    public static let TA       = UserEnrollmentRoles(rawValue: 8)
-    public static let Designer = UserEnrollmentRoles(rawValue: 16)
-}
-
-public class UserEnrollment: NSManagedObject {
-    @NSManaged internal(set) public var user: User?
-    @NSManaged private var primitiveContextID: String
-    
-    internal(set) public var contextID: ContextID {
-        get {
-            willAccessValueForKey("context")
-            defer { didAccessValueForKey("context") }
-            return ContextID(canvasContext: primitiveContextID)!
-        } set {
-            willChangeValueForKey("context")
-            defer { didChangeValueForKey("context") }
-            primitiveContextID = newValue.canvasContextID
+    var title: String {
+        switch self {
+        case .student: return NSLocalizedString("Student", comment: "Student role")
+        case .teacher: return NSLocalizedString("Teacher", comment: "Teacher role")
+        case .observer: return NSLocalizedString("Observer", comment: "Observer role")
+        case .ta: return NSLocalizedString("TA", comment: "TA role")
+        case .designer: return NSLocalizedString("Designer", comment: "Designer role")
         }
     }
     
-    @NSManaged private var primitiveRoles: NSNumber
+    var order: Int16 {
+        switch self {
+        case .student: return 2
+        case .teacher: return 0
+        case .observer: return 3
+        case .ta: return 1
+        case .designer: return -1
+        }
+    }
+}
+
+open class UserEnrollment: NSManagedObject {
+    @NSManaged fileprivate(set) public var id: String
+    @NSManaged fileprivate(set) public var url: URL
+    @NSManaged fileprivate(set) public var user: User?
+    @NSManaged fileprivate(set) public var courseID: String
+    @NSManaged fileprivate(set) internal var roleOrder: Int16
     
-    internal(set) public var roles: UserEnrollmentRoles {
+    @NSManaged fileprivate var primitiveRole: String
+    
+    fileprivate(set) open var role: UserEnrollmentRole {
         get {
-            willAccessValueForKey("enrollmentType")
-            defer { didAccessValueForKey("enrollmentType") }
-            return UserEnrollmentRoles(rawValue: Int32(primitiveRoles.integerValue))
+            willAccessValue(forKey: "role")
+            defer { didAccessValue(forKey: "role") }
+            return UserEnrollmentRole(rawValue: primitiveRole) ?? .student
         } set {
-            willChangeValueForKey("enrollmentType")
-            defer { didChangeValueForKey("enrollmentType") }
-            primitiveRoles = Int(newValue.rawValue)
+            willChangeValue(forKey: "role")
+            defer { didChangeValue(forKey: "role") }
+            primitiveRole = newValue.rawValue
         }
     }
 }
@@ -65,41 +73,26 @@ public class UserEnrollment: NSManagedObject {
 import Marshal
 
 extension UserEnrollment: SynchronizedModel {
-    public static func uniquePredicateForObject(json: JSONObject) throws -> NSPredicate {
-        let userID: String = try json.stringID("id")
-        let enrolments: [JSONObject] = try json <| "enrollments" ?? []
-        let courseID: String = try (enrolments.first).map { try $0.stringID("course_id") } ?? ""
+    public static func uniquePredicateForObject(_ json: JSONObject) throws -> NSPredicate {
         
-        
-        return NSPredicate(format: "%K == %@ && %K == %@",
-            "user.id", userID,
-            "contextID", ContextID(id: courseID, context: .Course).canvasContextID
-        )
+        let id: String = try json.stringID("id")
+        return NSPredicate(format: "%K == %@", "id", id)
     }
     
-    public func updateValues(json: JSONObject, inContext context: NSManagedObjectContext) throws {
-        user = try context.findOne(withPredicate: try User.uniquePredicateForObject(json)) ?? User.create(inContext: context)
-        try user?.updateValues(json, inContext: context)
+    public func updateValues(_ json: JSONObject, inContext context: NSManagedObjectContext) throws {
         
-        let enrollments: [JSONObject] = try json <| "enrollments" ?? []
-        var roles = UserEnrollmentRoles()
-        for eJSON in enrollments {
-            contextID = ContextID(id: try eJSON.stringID("course_id"), context: .Course)
-            let type: String = try eJSON <| "type"
-            switch type {
-            case "StudentEnrollment":
-                roles.insert(.Student)
-            case "TeacherEnrollment":
-                roles.insert(.Teacher)
-            case "TaEnrollment":
-                roles.insert(.TA)
-            case "ObserverEnrollment":
-                roles.insert(.Observer)
-            case "DesignerEnrollment":
-                roles.insert(.Designer)
-            default: break
-            }
-            self.roles = roles
+        id = try json.stringID("id")
+        courseID = try json.stringID("course_id")
+        role = try json <| "role"
+        roleOrder = role.order
+        let urlString: String = try json <| "html_url"
+        guard let url = URL(string: urlString) else {
+            throw MarshalError.typeMismatchWithKey(key: "html_url", expected: URL.self, actual: type(of: urlString))
         }
+        self.url = url
+        
+        let userJSON: JSONObject = try json <| "user"
+        user = try context.findOne(withPredicate: try User.uniquePredicateForObject(userJSON)) ?? User.create(inContext: context)
+        try user?.updateValues(userJSON, inContext: context)
     }
 }

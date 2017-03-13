@@ -21,47 +21,40 @@ import UIKit
 import SoLazy
 import EnrollmentKit
 import CalendarKit
-import ReactiveCocoa
+import ReactiveSwift
 import Kingfisher
 import TechDebt
 import TooLegit
 import Peeps
+import SoPretty
 
 
-func rootViewController(session: Session) -> UIViewController {
-    let tabs = CanvasTabBar()
+func rootViewController(_ session: Session) -> UIViewController {
+    let tabs = CanvasTabBarController()
     
     do {
-        // ENROLLMENTS
-        let enrollments = try EnrollmentsViewController(session: session) { vc, url in
-            Router.sharedRouter().routeFromController(vc, toURL: url)
-        }
-
-        addProfileButton(session, viewController: enrollments)
-        let enrollmentsNav = UINavigationController(rootViewController: enrollments)
-
         // CALENDAR
         let calendar = try CalendarTabViewController(session: session) { vc, url in
-            Router.sharedRouter().routeFromController(vc, toURL: url)
+            Router.shared().route(from: vc, to: url)
         }
         let calendarNav = UINavigationController(rootViewController: calendar)
 
         // TODO
         let todo = try ToDoTabViewController(session: session) { vc, url in
-            Router.sharedRouter().routeFromController(vc, toURL: url)
+            Router.shared().route(from: vc, to: url)
         }
-        let todoNav = UINavigationController(rootViewController: todo)
+
 
         tabs.viewControllers = [
-            enrollmentsNav,
+            try EnrollmentsTab(session: session),
             calendarNav,
-            todoNav,
-            NotificationsTab(),
+            todo,
+            try NotificationsTab(session: session),
             MessagesTab()
         ]
     } catch let e as NSError {
         delay(0.1) {
-            e.report(alertUserFrom: tabs)
+            ErrorReporter.reportError(e, from: tabs)
         }
     }
     

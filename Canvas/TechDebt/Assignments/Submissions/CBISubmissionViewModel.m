@@ -48,7 +48,7 @@ static UIImage *(^iconForSubmissionType)(NSString *) = ^(NSString *submissionTyp
         iconName = @"icon_discussions";
     } else if ([submissionType isEqualToString:CKISubmissionTypeQuiz]) {
         iconName = @"icon_quizzes";
-    } else if ([submissionType isEqualToString:CKISubmissionTypeExternalTool]) {
+    } else if ([submissionType isEqualToString:CKISubmissionTypeExternalTool] || [submissionType isEqualToString:CKISubmissionTypeLTILaunch]) {
         iconName = @"icon_tools";
     }
     
@@ -68,6 +68,7 @@ static UIImage *(^iconForSubmissionType)(NSString *) = ^(NSString *submissionTyp
                 CKISubmissionTypeOnlineTextEntry : NSLocalizedString(@"Text Submission", @"Title for a text submission cell"),
                 CKISubmissionTypeQuiz: NSLocalizedString(@"Quiz", @"A short test taken by students"),
                 CKISubmissionTypeExternalTool: NSLocalizedString(@"External Tool", @"Title for an external tool submission"),
+                CKISubmissionTypeLTILaunch: NSLocalizedString(@"LTI Tool", @"Title for an LTI launch submitted as an assignment"),
                 CKISubmissionTypeMediaRecording: NSLocalizedString(@"Media Submission", @"Title for a media submission"),
                 CKISubmissionTypeDiscussion: NSLocalizedString(@"Discussion Entry", @"Title for discussion entry submission"),
             };
@@ -83,6 +84,7 @@ static UIImage *(^iconForSubmissionType)(NSString *) = ^(NSString *submissionTyp
                 return [submission.attachments[0] name];
             }
             else if (submission.attachments.count > 1) {
+                // TODO: use localizeable pluralization plist stuffs
                 NSString *template = NSLocalizedString(@"%u files", @"Label indicating multiple files are attached to a single homework submission. %u will be a positive number, and will not be '1'");
                 return [NSString stringWithFormat:template, submission.attachments.count];
             }
@@ -171,6 +173,9 @@ static UIImage *(^iconForSubmissionType)(NSString *) = ^(NSString *submissionTyp
         } else {
             [self presentSubmissionURL:attachment.url fromViewController:controller];
         }
+    } else if ([self.model.submissionType isEqualToString:CKISubmissionTypeLTILaunch]) {
+        // For now we don't do anything
+        [controller.tableView deselectRowAtIndexPath:indexPath animated:YES];
     } else if ([self.assignment.submissionTypes containsObject:CKISubmissionTypeExternalTool]) {
         CKIExternalTool *tool = [CKIExternalTool new];
         tool.name = self.assignment.name;

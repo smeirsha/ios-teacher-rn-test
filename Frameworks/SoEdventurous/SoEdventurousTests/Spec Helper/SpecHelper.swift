@@ -17,8 +17,9 @@
 import Marshal
 @testable import SoEdventurous
 
-private class Bundle {}
-let currentBundle = NSBundle(forClass: Bundle.self)
+extension Bundle {
+    static var current: Bundle { return Bundle(identifier: "com.instructure.SoEdventurousTests")! }
+}
 
 extension Module {
     static var validJSON: JSONObject {
@@ -31,8 +32,8 @@ extension Module {
     }
 
     static var jsonWithQuizModuleItem: JSONObject {
-        let path = NSBundle(forClass: Bundle.self).pathForResource("module__quiz_module_item", ofType: "json")!
-        let data = NSData(contentsOfURL: NSURL(fileURLWithPath: path))!
+        let path = Bundle.current.path(forResource: "module__quiz_module_item", ofType: "json")!
+        let data = try! Data(contentsOf: URL(fileURLWithPath: path))
         var json = try! JSONParser.JSONObjectWithData(data)
         json["course_id"] = 1
         return json
@@ -45,11 +46,22 @@ extension ModuleItem {
             "id": 1,
             "course_id": 1,
             "module_id": 1,
-            "type": "SubHeader"
+            "type": "SubHeader",
+            "content_details": [
+                "locked_for_user": false
+            ]
         ]
     }
 
-    static func jsonWithMasteryPaths(locked locked: Bool = true) -> JSONObject {
+    static func jsonWithLockedForUser(_ lockedForUser: Bool = false) -> JSONObject {
+        var json = validJSON
+        json["content_details"] = [
+            "locked_for_user": lockedForUser
+        ]
+        return json
+    }
+
+    static func jsonWithMasteryPaths(_ locked: Bool = true) -> JSONObject {
         var json = validJSON
         json["mastery_paths"] = [
             "locked": locked,

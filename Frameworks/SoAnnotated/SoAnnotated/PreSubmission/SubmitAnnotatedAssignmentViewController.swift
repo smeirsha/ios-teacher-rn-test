@@ -24,44 +24,50 @@ import FileKit
 import TooLegit
 import SoPersistent
 import SoPretty
+import ReactiveSwift
 import ReactiveCocoa
 
 class SubmitAnnotatedAssignmentViewController: UITableViewController {
 
-    var annotatedFileURL: NSURL!
+    var annotatedFileURL: URL!
     var session: Session!
     var defaultCourseID: String?
     var defaultAssignmentID: String?
     var didSubmitAssignment: (Void)->Void = { }
     var observer: ManagedObjectObserver<Upload>?
 
+    let newSubmissionViewModel: NewSubmissionViewModelType = NewSubmissionViewModel()
+
     @IBOutlet var courseCell: UITableViewCell!
     @IBOutlet var assignmentCell: UITableViewCell!
 
-    private var submissionUploadCompletedDisposable: Disposable?
-    private var submissionUploadFailedDisposable: Disposable?
+    fileprivate var submissionUploadCompletedDisposable: Disposable?
+    fileprivate var submissionUploadFailedDisposable: Disposable?
 
     var course: Course? {
         didSet {
             if course == nil {
                 assignment = nil
-                assignmentCell.userInteractionEnabled = false
-                assignmentCell.textLabel?.textColor = UIColor.lightGrayColor()
+                assignmentCell.isUserInteractionEnabled = false
+                assignmentCell.textLabel?.textColor = UIColor.lightGray
                 courseCell.detailTextLabel?.text = ""
             } else {
-                assignmentCell.userInteractionEnabled = true
-                assignmentCell.textLabel?.textColor = UIColor.blackColor()
+                assignmentCell.isUserInteractionEnabled = true
+                assignmentCell.textLabel?.textColor = UIColor.black
                 courseCell.detailTextLabel?.text = course!.name
             }
 
-            navigationItem.rightBarButtonItem?.enabled = (course != nil && assignment != nil)
+            navigationItem.rightBarButtonItem?.isEnabled = (course != nil && assignment != nil)
         }
     }
     // The picked assignment to display
     var assignment: Assignment? {
         didSet {
             assignmentCell.detailTextLabel?.text = assignment?.name ?? ""
-            navigationItem.rightBarButtonItem?.enabled = (course != nil && assignment != nil)
+            navigationItem.rightBarButtonItem?.isEnabled = (course != nil && assignment != nil)
+            if let assignment = assignment {
+                newSubmissionViewModel.inputs.configureWith(session: session, assignment: assignment)
+            }
         }
     }
 
@@ -71,7 +77,7 @@ class SubmitAnnotatedAssignmentViewController: UITableViewController {
         showSubmitButton()
 
         if let defaultCourseID = defaultCourseID {
-            let contextID = ContextID(id: defaultCourseID, context: .Course)
+            let contextID = ContextID(id: defaultCourseID, context: .course)
             do {
                 let course = try Course.findOne(contextID, inContext: try session.enrollmentManagedObjectContext()) as? Course
                 self.course = course
@@ -83,7 +89,7 @@ class SubmitAnnotatedAssignmentViewController: UITableViewController {
                         let context = try session.assignmentsManagedObjectContext()
                         let predicate = NSPredicate(format: "%K == %@ AND %K == %@", "id", defaultAssignmentID, "courseID", defaultCourseID)
                         if let assignment: Assignment = try context.findOne(withPredicate: predicate) {
-                            let submittable = assignment.allowsSubmissions && assignment.submissionTypes.contains(SubmissionTypes.Upload) && isStudent
+                            let submittable = assignment.allowsSubmissions && assignment.submissionTypes.contains(.upload) && isStudent
                             if submittable {
                                 self.assignment = assignment
                             }
@@ -96,109 +102,103 @@ class SubmitAnnotatedAssignmentViewController: UITableViewController {
         } else {
             course = nil
         }
+
+        bindViewModel()
     }
 
-    private func showSubmitButton() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Submit", comment: ""), style: .Done, target: self, action: #selector(SubmitAnnotatedAssignmentViewController.submit(_:)))
+    fileprivate func bindViewModel() {
+        self.newSubmissionViewModel.outputs.showError
+            .observe(on: UIScheduler())
+            .observeValues { [weak self] in
+                self?.handleSubmitError($0)
+            }
+
+        self.newSubmissionViewModel.outputs.submission
+            .observe(on: UIScheduler())
+            .observeValues { [weak self] _ in
+                self?.uploadSubmitted()
+            }
     }
 
-    @IBAction func cancel(button: UIBarButtonItem) {
-        dismissViewControllerAnimated(true, completion: nil)
+    fileprivate func showSubmitButton() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Submit", comment: ""), style: .done, target: self, action: #selector(SubmitAnnotatedAssignmentViewController.submit(_:)))
     }
 
-    func submit(button: UIBarButtonItem) {
+    @IBAction func cancel(_ button: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
+    }
+
+    func submit(_ button: UIBarButtonItem) {
         guard let assignment = assignment else { return }
 
-        navigationItem.leftBarButtonItem?.enabled = false
+        navigationItem.leftBarButtonItem?.isEnabled = false
         navigationItem.title = NSLocalizedString("Submitting", comment: "")
-        courseCell.userInteractionEnabled = false
-        courseCell.textLabel?.textColor = UIColor.lightGrayColor()
-        assignmentCell.userInteractionEnabled = false
-        assignmentCell.textLabel?.textColor = UIColor.lightGrayColor()
+        courseCell.isUserInteractionEnabled = false
+        courseCell.textLabel?.textColor = UIColor.lightGray
+        assignmentCell.isUserInteractionEnabled = false
+        assignmentCell.textLabel?.textColor = UIColor.lightGray
 
-        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .White)
+        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
         activityIndicator.startAnimating()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
 
         flattenDocument() { url in
-            let newUpload = NewUpload.FileUpload([NewUploadFile.FileURL(url)])
             do {
-                try assignment.uploadForNewSubmission(newUpload, inSession: self.session) { submissionUpload in
-                    guard let submissionUpload = submissionUpload else { print("Failed to begin the submission upload"); return }
+                let data = try Data(contentsOf: url)
+                let newUpload = NewFileUpload(kind: .fileURL(url), data: data)
+                let context = try self.session.filesManagedObjectContext()
+                let fileUpload = FileUpload(inContext: context, uploadable: newUpload, path: assignment.submissionsPath)
+                let predicate = NSPredicate(format: "self == %@", fileUpload)
 
-                    let handleError: (String) -> Void = { [weak self] message in
-                        let alert = UIAlertController(title: NSLocalizedString("Failed to Submit", comment: "Error when submitting an assignment"), message: message, preferredStyle: .Alert)
-                        let action = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .Default, handler: nil)
-                        alert.addAction(action)
-                        self?.presentViewController(alert, animated: true, completion: nil)
+                let uploadChanges = ManagedObjectObserver<FileUpload>.object(predicate: predicate, context: context)
+                    .take(during: self.reactive.lifetime)
 
-                        self?.navigationItem.title = nil
-                        self?.showSubmitButton()
-                        self?.navigationItem.leftBarButtonItem?.enabled = true
-                        self?.courseCell.userInteractionEnabled = true
-                        self?.courseCell.textLabel?.textColor = UIColor.blackColor()
-                        self?.assignmentCell.userInteractionEnabled = true
-                        self?.assignmentCell.textLabel?.textColor = UIColor.blackColor()
+                uploadChanges
+                    .filter { $0.failedAt != nil }
+                    .map { $0.errorMessage }
+                    .take(first: 1)
+                    .observeValues { [weak self] in
+                        self?.handleSubmitError($0)
                     }
 
-                    do {
-                        self.observer = try Upload.observer(self.session, id: submissionUpload.id)
-                        self.submissionUploadCompletedDisposable = self.observer!.signal.observeNext { [weak self] change, upload in
-                            if let upload = upload {
-                                guard upload.failedAt == nil else {
-                                    let message = NSLocalizedString("There was a problem submitting your assignment. Please try again later.", comment: "Message when fails to submit an assignment")
-                                    handleError(upload.errorMessage ?? message)
-                                    return
-                                }
-
-                                if upload.hasCompleted {
-                                    self?.navigationItem.title = NSLocalizedString("Submitted!", comment: "")
-                                    self?.navigationItem.rightBarButtonItem = nil
-                                    self?.navigationItem.leftBarButtonItem = nil
-
-                                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * Int64(NSEC_PER_SEC)), dispatch_get_main_queue()) {
-                                        self?.didSubmitAssignment()
-                                        self?.dismissViewControllerAnimated(true, completion: nil)
-                                    }
-                                }
-                            }
-                        }
-
-                        submissionUpload.begin(inSession: self.session, inContext: try self.session.assignmentsManagedObjectContext())
-                    } catch let e as NSError {
-                        handleError(e.localizedDescription)
+                uploadChanges
+                    .filter { $0.hasCompleted }
+                    .map { NewSubmission.fileUpload([$0.file!]) }
+                    .take(first: 1)
+                    .observeValues { [weak self] in
+                        self?.newSubmissionViewModel.inputs.submit(newSubmission: $0)
                     }
 
-                }
+                fileUpload.begin(inSession: self.session, inContext: context)
             } catch {
-                print("Error starting upload for assignment submission: \(error)")
+                self.handleSubmitError("Error starting upload: \(error)")
             }
         }
     }
 
-    private func flattenDocument(completion: (NSURL)->Void) {
-        guard let course = course, assignment = assignment else { return }
+    fileprivate func flattenDocument(_ completion: @escaping (URL)->Void) {
+        guard let course = course, let assignment = assignment else { return }
 
-        let document = PSPDFDocument(URL: self.annotatedFileURL)
+        let document = PSPDFDocument(url: self.annotatedFileURL)
         guard let configuration = PSPDFProcessorConfiguration(document: document) else { return }
-        configuration.modifyAnnotationsOfTypes(.All, change: .Flatten)
+        configuration.modifyAnnotations(ofTypes: .all, change: .flatten)
 
-        let queue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
-        dispatch_async(queue) {
-            let cacheDirPath = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true).first!
-            let outputPath = (cacheDirPath as NSString).stringByAppendingPathComponent("\(self.session.user.id)_\(course.id)_\(assignment.id)_submission.pdf")
-            if NSFileManager.defaultManager().fileExistsAtPath(outputPath) {
+        let queue = DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated)
+        queue.async {
+            let cacheDirPath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
+            let outputPath = (cacheDirPath as NSString).appendingPathComponent("\(self.session.user.id)_\(course.id)_\(assignment.id)_submission.pdf")
+            if FileManager.default.fileExists(atPath: outputPath) {
                 do {
-                    try NSFileManager.defaultManager().removeItemAtPath(outputPath)
+                    try FileManager.default.removeItem(atPath: outputPath)
                 } catch {
                     print("Error removing file at path: \(outputPath), error: \(error)")
                 }
             }
 
             do {
-                let outputURL = NSURL(fileURLWithPath: outputPath)
-                try PSPDFProcessor.generatePDFFromConfiguration(configuration, saveOptions: nil, outputFileURL: outputURL, progressBlock: nil)
-                dispatch_async(dispatch_get_main_queue()) {
+                let outputURL = URL(fileURLWithPath: outputPath)
+                try PSPDFProcessor.generatePDF(from: configuration, saveOptions: nil, outputFileURL: outputURL, progressBlock: nil)
+                DispatchQueue.main.async {
                     completion(outputURL)
                 }
             } catch {
@@ -207,10 +207,37 @@ class SubmitAnnotatedAssignmentViewController: UITableViewController {
         }
     }
 
+    fileprivate func handleSubmitError(_ message: String?) {
+        let defaultMessage = NSLocalizedString("There was a problem submitting your assignment. Please try again later.", comment: "Message when fails to submit an assignment")
+        let alert = UIAlertController(title: NSLocalizedString("Failed to Submit", comment: "Error when submitting an assignment"), message: message ?? defaultMessage, preferredStyle: .alert)
+        let action = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: nil)
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
+
+        self.navigationItem.title = nil
+        self.showSubmitButton()
+        self.navigationItem.leftBarButtonItem?.isEnabled = true
+        self.courseCell.isUserInteractionEnabled = true
+        self.courseCell.textLabel?.textColor = UIColor.black
+        self.assignmentCell.isUserInteractionEnabled = true
+        self.assignmentCell.textLabel?.textColor = UIColor.black
+    }
+
+    fileprivate func uploadSubmitted() {
+        self.navigationItem.title = NSLocalizedString("Submitted!", comment: "")
+        self.navigationItem.rightBarButtonItem = nil
+        self.navigationItem.leftBarButtonItem = nil
+
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+            self.didSubmitAssignment()
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+
     // MARK: - Table view delegate
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if indexPath == tableView.indexPathForCell(courseCell) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath == tableView.indexPath(for: courseCell) {
             do {
                 let collection = try Course.allCoursesCollection(session)
                 let dataSource = CollectionTableViewDataSource(collection: collection) { course -> CoursePickerCellViewModel in
@@ -221,13 +248,13 @@ class SubmitAnnotatedAssignmentViewController: UITableViewController {
                 coursePicker.didSelectItemAtIndexPath = { [weak self] indexPath in
                     let course = collection[indexPath]
                     self?.course = course
-                    self?.navigationController?.popViewControllerAnimated(true)
+                    let _ = self?.navigationController?.popViewController(animated: true)
                 }
                 navigationController?.pushViewController(coursePicker, animated: true)
             } catch {
                 print("Error setting up courses collection: \(error)")
             }
-        } else if indexPath == tableView.indexPathForCell(assignmentCell) {
+        } else if indexPath == tableView.indexPath(for: assignmentCell) {
             guard let course = course else { return }
             do {
                 let collection = try Assignment.collectionByDueStatus(session, courseID: course.id)
@@ -239,7 +266,7 @@ class SubmitAnnotatedAssignmentViewController: UITableViewController {
                 assignmentPicker.didSelectItemAtIndexPath = { [weak self] indexPath in
                     let assignment = collection[indexPath]
                     self?.assignment = assignment
-                    self?.navigationController?.popViewControllerAnimated(true)
+                    let _ = self?.navigationController?.popViewController(animated: true)
                 }
                 navigationController?.pushViewController(assignmentPicker, animated: true)
             } catch {
@@ -253,12 +280,12 @@ class SubmitAnnotatedAssignmentViewController: UITableViewController {
 struct CoursePickerCellViewModel: TableViewCellViewModel {
     let course: Course
 
-    static func tableViewDidLoad(tableView: UITableView) {
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "PickCourseCell")
+    static func tableViewDidLoad(_ tableView: UITableView) {
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "PickCourseCell")
     }
 
-    func cellForTableView(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCellWithIdentifier("PickCourseCell") else {
+    func cellForTableView(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PickCourseCell") else {
             fatalError("Incorrect cell type found; expected: PickCourseCell")
         }
 
@@ -272,23 +299,23 @@ struct AssignmentPickerCellViewModel: TableViewCellViewModel {
     let assignment: Assignment
     let session: Session
 
-    static func tableViewDidLoad(tableView: UITableView) {
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "PickAssignmentCell")
+    static func tableViewDidLoad(_ tableView: UITableView) {
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "PickAssignmentCell")
     }
 
-    func cellForTableView(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCellWithIdentifier("PickAssignmentCell") else {
+    func cellForTableView(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PickAssignmentCell") else {
             fatalError("Incorrect cell type found; expected: PickAssignmentCell")
         }
 
         cell.textLabel?.text = assignment.name
 
-        let enrollmentDataSource = session.enrollmentsDataSource[ContextID(id: assignment.courseID, context: .Course)]
+        let enrollmentDataSource = session.enrollmentsDataSource[ContextID(id: assignment.courseID, context: .course)]
         let isStudent = enrollmentDataSource?.roles?.contains(EnrollmentRoles.Student) ?? false
 
-        let submittable = assignment.allowsSubmissions && assignment.submissionTypes.contains(SubmissionTypes.Upload) && isStudent
-        cell.textLabel?.textColor = submittable ? UIColor.blackColor() : UIColor.lightGrayColor()
-        cell.userInteractionEnabled = submittable
+        let submittable = assignment.allowsSubmissions && assignment.submissionTypes.contains(.upload) && isStudent
+        cell.textLabel?.textColor = submittable ? UIColor.black : UIColor.lightGray
+        cell.isUserInteractionEnabled = submittable
 
         return cell
     }

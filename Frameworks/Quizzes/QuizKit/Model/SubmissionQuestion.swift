@@ -31,7 +31,7 @@ struct SubmissionQuestion {
     let answer: SubmissionAnswer
     
     
-    func selectAnswer(answer: SubmissionAnswer) -> SubmissionQuestion {
+    func selectAnswer(_ answer: SubmissionAnswer) -> SubmissionQuestion {
         return SubmissionQuestion(question: question, flagged: flagged, answer: answer)
     }
     
@@ -48,39 +48,39 @@ struct SubmissionQuestion {
 // MARK: JSON
 
 extension SubmissionQuestion: JSONDecodable {
-    static func fromJSON(json: AnyObject?) -> SubmissionQuestion? {
-        if let json = json as? [String: AnyObject] {
+    static func fromJSON(_ json: Any?) -> SubmissionQuestion? {
+        if let json = json as? [String: Any] {
             let flagged = json["flagged"] as? Bool ?? false
             
-            if let question = Question.fromJSON(json), answerJSON: AnyObject = json["answer"] {
-                var answer: SubmissionAnswer = .Unanswered
+            if let question = Question.fromJSON(json), let answerJSON: Any = json["answer"] {
+                var answer: SubmissionAnswer = .unanswered
                 switch question.kind {
                     case .TextOnly:
-                        answer = .NA
-                    case .TrueFalse, .MultipleChoice:
+                        answer = .na
+                    case .TrueFalse, .MultipleChoice, .FileUpload:
                         if let id = idString(answerJSON) {
-                            answer = .ID(id)
+                            answer = .id(id)
                         }
                     case .MultipleAnswers:
-                        if let ids = answerJSON as? [AnyObject] {
+                        if let ids = answerJSON as? [Any] {
                             let newIDs: [String] = decodeArray(ids)
-                            answer = .IDs(newIDs)
+                            answer = .ids(newIDs)
                     }
                     case .Essay, .ShortAnswer:
                         if let text = answerJSON as? String {
-                            answer = .Text(text)
+                            answer = .text(text)
                         }
                     case .Numerical:
                         if let numberStr = answerJSON as? String {
-                            answer = .Text(numberStr)
+                            answer = .text(numberStr)
                         } else if let number = answerJSON as? Double {
-                            answer = .Text(String(format: "%f", number))
+                            answer = .text(String(format: "%f", number))
                         }
                     case .Matching:
-                        if let answers = answerJSON as? [AnyObject] {
+                        if let answers = answerJSON as? [Any] {
                             var answerMatchMap: [String: String] = [:]
                             for obj in answers {
-                                if let dict = obj as? [String:AnyObject] {
+                                if let dict = obj as? [String:Any] {
                                     if let answerID = idString(dict["answer_id"]), let matchID = idString(dict["match_id"]) {
                                         answerMatchMap[answerID] = matchID
                                     }
@@ -90,8 +90,20 @@ extension SubmissionQuestion: JSONDecodable {
                                 answer = .Matches(answerMatchMap)
                             }
                         }
+                    case .MultipleDropdowns:
+                        if let answers = answerJSON as? [String: Any] {
+                            var answerMap: [String: String] = [:]
+                            for obj in answers {
+                                if let id = idString(obj.value) {
+                                    answerMap[obj.key] = idString(obj.value)
+                                }
+                            }
+                            if answerMap.keys.count > 0 {
+                                answer = .idsHash(answerMap)
+                            }
+                        }
                     default:
-                        answer = .Unanswered
+                        answer = .unanswered
                 }
                 
                 return SubmissionQuestion(question: question, flagged: flagged, answer: answer)

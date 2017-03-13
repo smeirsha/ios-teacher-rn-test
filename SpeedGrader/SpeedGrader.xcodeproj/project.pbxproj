@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		2C6DC3DD1DC3A31100F3E8C2 /* Secrets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6DC3DC1DC3A31100F3E8C2 /* Secrets.framework */; };
 		2C6DC3DE1DC3A31100F3E8C2 /* Secrets.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6DC3DC1DC3A31100F3E8C2 /* Secrets.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C73C9CC1E0337C20064A19D /* SoPretty.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C73C9CB1E0337C10064A19D /* SoPretty.framework */; };
+		2C73C9CD1E0337C20064A19D /* SoPretty.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C73C9CB1E0337C10064A19D /* SoPretty.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2C73C9D51E0338B60064A19D /* FixerUpper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C73C9D41E0338B60064A19D /* FixerUpper.swift */; };
 		5E0FECA61A1E683D00B612F2 /* actionscript.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5E0FEC521A1E683D00B612F2 /* actionscript.plist */; };
 		5E0FECA71A1E683D00B612F2 /* actionscript3.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5E0FEC531A1E683D00B612F2 /* actionscript3.plist */; };
 		5E0FECA81A1E683D00B612F2 /* active4d.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5E0FEC541A1E683D00B612F2 /* active4d.plist */; };
@@ -185,19 +188,13 @@
 		6145A4C31DAC3DA400DFE0AA /* CanvasKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6145A4A61DAC30BE00DFE0AA /* CanvasKit.framework */; };
 		6145A4C41DAC3DA400DFE0AA /* CanvasKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6145A4A61DAC30BE00DFE0AA /* CanvasKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6145A4C51DAC430800DFE0AA /* Pods_SpeedGrader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FB7129EA3276CC744B88C5A /* Pods_SpeedGrader.framework */; };
-		6145A4C61DAC430800DFE0AA /* Pods_SpeedGrader.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7FB7129EA3276CC744B88C5A /* Pods_SpeedGrader.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		614D2E541A47B5D700164097 /* CSGFlyingPandaRefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 614D2E531A47B5D700164097 /* CSGFlyingPandaRefreshControl.m */; };
 		615B771C1A44C74E00AAEE2C /* CSGFlyingPandaActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 615B771B1A44C74E00AAEE2C /* CSGFlyingPandaActivityView.m */; };
 		61A97E0C1A659022004C2007 /* CSGAudioPlaybackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 61A97E0B1A659022004C2007 /* CSGAudioPlaybackManager.m */; };
-		61C2E9681DAD411700073F62 /* SpeedGrader-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BA6E871C2A886BAC8EFA512D /* SpeedGrader-Info.plist */; };
 		61C2E96A1DAD42F000073F62 /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E9691DAD42EA00073F62 /* AFNetworking.framework */; };
 		61C2E96B1DAD42F000073F62 /* AFNetworking.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E9691DAD42EA00073F62 /* AFNetworking.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		61C2E96D1DAD431F00073F62 /* CWStatusBarNotification.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E96C1DAD431300073F62 /* CWStatusBarNotification.framework */; };
-		61C2E96E1DAD431F00073F62 /* CWStatusBarNotification.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E96C1DAD431300073F62 /* CWStatusBarNotification.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		61C2E9701DAD435500073F62 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E96F1DAD434F00073F62 /* CocoaLumberjack.framework */; };
 		61C2E9711DAD435500073F62 /* CocoaLumberjack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E96F1DAD434F00073F62 /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		61C2E9731DAD438800073F62 /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E9721DAD438100073F62 /* ReactiveCocoa.framework */; };
-		61C2E9741DAD438800073F62 /* ReactiveCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E9721DAD438100073F62 /* ReactiveCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		61C2E9761DAD43B400073F62 /* Kingfisher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E9751DAD43AB00073F62 /* Kingfisher.framework */; };
 		61C2E9771DAD43B400073F62 /* Kingfisher.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E9751DAD43AB00073F62 /* Kingfisher.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		61C2E9791DAD43DF00073F62 /* SoLazy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E9781DAD43D900073F62 /* SoLazy.framework */; };
@@ -208,8 +205,6 @@
 		61C2E9811DAD444B00073F62 /* FileKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E97F1DAD444000073F62 /* FileKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		61C2E9821DAD445000073F62 /* AssignmentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E97E1DAD443900073F62 /* AssignmentKit.framework */; };
 		61C2E9831DAD445000073F62 /* AssignmentKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E97E1DAD443900073F62 /* AssignmentKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		61C2E9851DAD447900073F62 /* SoPretty.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E9841DAD447300073F62 /* SoPretty.framework */; };
-		61C2E9861DAD447900073F62 /* SoPretty.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E9841DAD447300073F62 /* SoPretty.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		61C2E9881DAD44A200073F62 /* Cartography.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E9871DAD449A00073F62 /* Cartography.framework */; };
 		61C2E9891DAD44A200073F62 /* Cartography.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E9871DAD449A00073F62 /* Cartography.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		61C2E98D1DAD454400073F62 /* WhizzyWig.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E98C1DAD453400073F62 /* WhizzyWig.framework */; };
@@ -228,8 +223,16 @@
 		61C2E99E1DAD460900073F62 /* Mantle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E99C1DAD45FB00073F62 /* Mantle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		61C2E9A01DAD463000073F62 /* Reachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E99F1DAD462A00073F62 /* Reachability.framework */; };
 		61C2E9A11DAD463000073F62 /* Reachability.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 61C2E99F1DAD462A00073F62 /* Reachability.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		800C77787D3A8CF4FAD668C2 /* Pods_SpeedGrader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FB7129EA3276CC744B88C5A /* Pods_SpeedGrader.framework */; };
 		B18B34821DB5A30400355EDD /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B18B34811DB5A30400355EDD /* Masonry.framework */; };
+		B1E526311E369FA100BDDAD8 /* ReactiveObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1E5262F1E369FA100BDDAD8 /* ReactiveObjC.framework */; };
+		B1E526321E36AE5400BDDAD8 /* ReactiveObjC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1E5262F1E369FA100BDDAD8 /* ReactiveObjC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B1E526331E36AE5400BDDAD8 /* Masonry.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B18B34811DB5A30400355EDD /* Masonry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B1E526351E36B20200BDDAD8 /* CWNotification.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1E526341E36B20200BDDAD8 /* CWNotification.framework */; };
+		B1E526361E36B21800BDDAD8 /* CWNotification.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1E526341E36B20200BDDAD8 /* CWNotification.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B1E526381E36B25E00BDDAD8 /* ReactiveSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1E526371E36B25E00BDDAD8 /* ReactiveSwift.framework */; };
+		B1E526391E36B26A00BDDAD8 /* ReactiveSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1E526371E36B25E00BDDAD8 /* ReactiveSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B1E5263B1E36B2A300BDDAD8 /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1E5263A1E36B2A300BDDAD8 /* ReactiveCocoa.framework */; };
+		B1E5263C1E36B2AF00BDDAD8 /* ReactiveCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1E5263A1E36B2A300BDDAD8 /* ReactiveCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B50356611A5B4C7600387BB2 /* CSGMoviePlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B50356601A5B4C7600387BB2 /* CSGMoviePlayerViewController.m */; };
 		B504D8671A118513002F0153 /* CSGNotificationPermissionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B504D8661A118513002F0153 /* CSGNotificationPermissionHandler.m */; };
 		B509A7231A813BB500A7ACFA /* CSGAudioUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = B509A7221A813BB500A7ACFA /* CSGAudioUtils.m */; };
@@ -270,7 +273,6 @@
 		BA6E8AA9702CB38B5FCC47FE /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA6E888430D296ACAFECA951 /* XCTest.framework */; };
 		BA6E8AFC59ECA4148E3156E7 /* CSGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BA6E86D60D46113180F38E3C /* CSGAppDelegate.m */; };
 		BA6E8C9995F977574B5DD166 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BA6E8D64760A00F2E750AEAB /* main.m */; };
-		BD84D7151A239B1C0065F3F2 /* VideoPlaybackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BD84D7141A239B1C0065F3F2 /* VideoPlaybackManager.m */; };
 		BD84D7181A23A77B0065F3F2 /* VideoPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = BD84D7171A23A77B0065F3F2 /* VideoPlayerView.m */; };
 		BD88B6431A128EE900A89DD7 /* VideoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BD88B6421A128EE900A89DD7 /* VideoManager.m */; };
 		BD88B6501A13C7AB00A89DD7 /* VideoRecorderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD88B64F1A13C7AB00A89DD7 /* VideoRecorderView.xib */; };
@@ -310,12 +312,16 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				B1E5263C1E36B2AF00BDDAD8 /* ReactiveCocoa.framework in Embed Frameworks */,
+				B1E526391E36B26A00BDDAD8 /* ReactiveSwift.framework in Embed Frameworks */,
+				B1E526361E36B21800BDDAD8 /* CWNotification.framework in Embed Frameworks */,
+				B1E526321E36AE5400BDDAD8 /* ReactiveObjC.framework in Embed Frameworks */,
+				B1E526331E36AE5400BDDAD8 /* Masonry.framework in Embed Frameworks */,
 				613A9D5D1DAC5C3100AB4C6D /* TooLegit.framework in Embed Frameworks */,
 				61C2E9831DAD445000073F62 /* AssignmentKit.framework in Embed Frameworks */,
 				6145A4BC1DAC3DA400DFE0AA /* PSPDFKit.framework in Embed Frameworks */,
 				61C2E98E1DAD454400073F62 /* WhizzyWig.framework in Embed Frameworks */,
 				61C2E9A11DAD463000073F62 /* Reachability.framework in Embed Frameworks */,
-				6145A4C61DAC430800DFE0AA /* Pods_SpeedGrader.framework in Embed Frameworks */,
 				61C2E97D1DAD440700073F62 /* Marshal.framework in Embed Frameworks */,
 				61C2E9951DAD457200073F62 /* MediaKit.framework in Embed Frameworks */,
 				6145A4BE1DAC3DA400DFE0AA /* Result.framework in Embed Frameworks */,
@@ -326,13 +332,11 @@
 				61C2E9901DAD454600073F62 /* FXKeychain.framework in Embed Frameworks */,
 				61C2E9711DAD435500073F62 /* CocoaLumberjack.framework in Embed Frameworks */,
 				61C2E99B1DAD45D300073F62 /* SoProgressive.framework in Embed Frameworks */,
-				61C2E96E1DAD431F00073F62 /* CWStatusBarNotification.framework in Embed Frameworks */,
 				61C2E97A1DAD43DF00073F62 /* SoLazy.framework in Embed Frameworks */,
-				61C2E9861DAD447900073F62 /* SoPretty.framework in Embed Frameworks */,
-				61C2E9741DAD438800073F62 /* ReactiveCocoa.framework in Embed Frameworks */,
 				61C2E9891DAD44A200073F62 /* Cartography.framework in Embed Frameworks */,
 				613A9D601DAC5C7C00AB4C6D /* SoPersistent.framework in Embed Frameworks */,
 				6145A4C01DAC3DA400DFE0AA /* SoAnnotated.framework in Embed Frameworks */,
+				2C73C9CD1E0337C20064A19D /* SoPretty.framework in Embed Frameworks */,
 				61C2E9921DAD454700073F62 /* EnrollmentKit.framework in Embed Frameworks */,
 				61C2E9981DAD45B100073F62 /* SoIconic.framework in Embed Frameworks */,
 				61C2E96B1DAD42F000073F62 /* AFNetworking.framework in Embed Frameworks */,
@@ -347,6 +351,9 @@
 /* Begin PBXFileReference section */
 		292EF160D866B939F89B3665 /* Pods-SpeedGrader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeedGrader.release.xcconfig"; path = "../Pods/Target Support Files/Pods-SpeedGrader/Pods-SpeedGrader.release.xcconfig"; sourceTree = "<group>"; };
 		2C6DC3DC1DC3A31100F3E8C2 /* Secrets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Secrets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C73C9CB1E0337C10064A19D /* SoPretty.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SoPretty.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C73C9D11E0338410064A19D /* SpeedGrader-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SpeedGrader-Bridging-Header.h"; sourceTree = "<group>"; };
+		2C73C9D41E0338B60064A19D /* FixerUpper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FixerUpper.swift; sourceTree = "<group>"; };
 		2EFD6FE90AB70B68AA8EB761 /* Pods-SpeedGrader.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeedGrader.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-SpeedGrader/Pods-SpeedGrader.debug.xcconfig"; sourceTree = "<group>"; };
 		53E37FFA1C18C3392E83CCCB /* Pods-SpeedGrader.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeedGrader.beta.xcconfig"; path = "../Pods/Target Support Files/Pods-SpeedGrader/Pods-SpeedGrader.beta.xcconfig"; sourceTree = "<group>"; };
 		5711250E217919EA115D2348 /* libPods-SpeedGraderTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SpeedGraderTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -585,15 +592,12 @@
 		61A97E0A1A659022004C2007 /* CSGAudioPlaybackManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSGAudioPlaybackManager.h; sourceTree = "<group>"; };
 		61A97E0B1A659022004C2007 /* CSGAudioPlaybackManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSGAudioPlaybackManager.m; sourceTree = "<group>"; };
 		61C2E9691DAD42EA00073F62 /* AFNetworking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AFNetworking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		61C2E96C1DAD431300073F62 /* CWStatusBarNotification.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CWStatusBarNotification.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		61C2E96F1DAD434F00073F62 /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CocoaLumberjack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		61C2E9721DAD438100073F62 /* ReactiveCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ReactiveCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		61C2E9751DAD43AB00073F62 /* Kingfisher.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Kingfisher.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		61C2E9781DAD43D900073F62 /* SoLazy.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SoLazy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		61C2E97B1DAD440200073F62 /* Marshal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Marshal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		61C2E97E1DAD443900073F62 /* AssignmentKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AssignmentKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		61C2E97F1DAD444000073F62 /* FileKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FileKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		61C2E9841DAD447300073F62 /* SoPretty.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SoPretty.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		61C2E9871DAD449A00073F62 /* Cartography.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Cartography.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		61C2E98A1DAD452400073F62 /* EnrollmentKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = EnrollmentKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		61C2E98B1DAD452F00073F62 /* FXKeychain.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FXKeychain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -605,6 +609,10 @@
 		61C2E99F1DAD462A00073F62 /* Reachability.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reachability.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FB7129EA3276CC744B88C5A /* Pods_SpeedGrader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpeedGrader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B18B34811DB5A30400355EDD /* Masonry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Masonry.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1E5262F1E369FA100BDDAD8 /* ReactiveObjC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ReactiveObjC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1E526341E36B20200BDDAD8 /* CWNotification.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CWNotification.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1E526371E36B25E00BDDAD8 /* ReactiveSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ReactiveSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1E5263A1E36B2A300BDDAD8 /* ReactiveCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ReactiveCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B503565F1A5B4C7600387BB2 /* CSGMoviePlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSGMoviePlayerViewController.h; sourceTree = "<group>"; };
 		B50356601A5B4C7600387BB2 /* CSGMoviePlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSGMoviePlayerViewController.m; sourceTree = "<group>"; };
 		B504D8651A118513002F0153 /* CSGNotificationPermissionHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSGNotificationPermissionHandler.h; sourceTree = "<group>"; };
@@ -1881,8 +1889,6 @@
 		BA6E8FF79C55231FEF355A1D /* icon_compose_sml.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_compose_sml.png; sourceTree = "<group>"; };
 		BA6E8FFA5B059143FE181C35 /* icon_move_fill@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_move_fill@2x.png"; sourceTree = "<group>"; };
 		BA6E8FFA9D046A85748B8757 /* icon_trash@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_trash@2x.png"; sourceTree = "<group>"; };
-		BD84D7131A239B1C0065F3F2 /* VideoPlaybackManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlaybackManager.h; sourceTree = "<group>"; };
-		BD84D7141A239B1C0065F3F2 /* VideoPlaybackManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlaybackManager.m; sourceTree = "<group>"; };
 		BD84D7161A23A77B0065F3F2 /* VideoPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayerView.h; sourceTree = "<group>"; };
 		BD84D7171A23A77B0065F3F2 /* VideoPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlayerView.m; sourceTree = "<group>"; };
 		BD88B6411A128EE900A89DD7 /* VideoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoManager.h; sourceTree = "<group>"; };
@@ -1910,7 +1916,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				61C2E9851DAD447900073F62 /* SoPretty.framework in Frameworks */,
 				BD88B6531A1426F100A89DD7 /* AudioToolbox.framework in Frameworks */,
 				613A9D5C1DAC5C3100AB4C6D /* TooLegit.framework in Frameworks */,
 				61C2E9A01DAD463000073F62 /* Reachability.framework in Frameworks */,
@@ -1918,12 +1923,13 @@
 				2C6DC3DD1DC3A31100F3E8C2 /* Secrets.framework in Frameworks */,
 				6145A4C51DAC430800DFE0AA /* Pods_SpeedGrader.framework in Frameworks */,
 				61C2E99D1DAD460900073F62 /* Mantle.framework in Frameworks */,
+				B1E526311E369FA100BDDAD8 /* ReactiveObjC.framework in Frameworks */,
 				61C2E9761DAD43B400073F62 /* Kingfisher.framework in Frameworks */,
-				61C2E9731DAD438800073F62 /* ReactiveCocoa.framework in Frameworks */,
+				B1E526351E36B20200BDDAD8 /* CWNotification.framework in Frameworks */,
 				5E303C381A5F3F8E00104915 /* Fabric.framework in Frameworks */,
 				61C2E9821DAD445000073F62 /* AssignmentKit.framework in Frameworks */,
 				6145A4BB1DAC3DA400DFE0AA /* PSPDFKit.framework in Frameworks */,
-				61C2E96D1DAD431F00073F62 /* CWStatusBarNotification.framework in Frameworks */,
+				2C73C9CC1E0337C20064A19D /* SoPretty.framework in Frameworks */,
 				5E1AB6D719DB579300197E1D /* QuickLook.framework in Frameworks */,
 				B18B34821DB5A30400355EDD /* Masonry.framework in Frameworks */,
 				6145A4BF1DAC3DA400DFE0AA /* SoAnnotated.framework in Frameworks */,
@@ -1937,14 +1943,15 @@
 				5EFC62601975BB1D00B1EA6F /* Crashlytics.framework in Frameworks */,
 				61C2E96A1DAD42F000073F62 /* AFNetworking.framework in Frameworks */,
 				BA6E81E74E54F6337D0BDC6B /* CoreGraphics.framework in Frameworks */,
+				B1E526381E36B25E00BDDAD8 /* ReactiveSwift.framework in Frameworks */,
 				6145A4B71DAC315600DFE0AA /* Result.framework in Frameworks */,
 				61C2E97C1DAD440700073F62 /* Marshal.framework in Frameworks */,
 				BA6E83F215B1051E4DBC706F /* UIKit.framework in Frameworks */,
 				613A9D5F1DAC5C7C00AB4C6D /* SoPersistent.framework in Frameworks */,
+				B1E5263B1E36B2A300BDDAD8 /* ReactiveCocoa.framework in Frameworks */,
 				61C2E98F1DAD454600073F62 /* FXKeychain.framework in Frameworks */,
 				61C2E9911DAD454700073F62 /* EnrollmentKit.framework in Frameworks */,
 				61C2E9941DAD457200073F62 /* MediaKit.framework in Frameworks */,
-				800C77787D3A8CF4FAD668C2 /* Pods_SpeedGrader.framework in Frameworks */,
 				61C2E9701DAD435500073F62 /* CocoaLumberjack.framework in Frameworks */,
 				61C2E9971DAD45B000073F62 /* SoIconic.framework in Frameworks */,
 				61C2E9791DAD43DF00073F62 /* SoLazy.framework in Frameworks */,
@@ -2209,8 +2216,6 @@
 				B5E0A9B71A36722600659333 /* CSGGradingCommentsViewController.storyboard */,
 				BD88B6411A128EE900A89DD7 /* VideoManager.h */,
 				BD88B6421A128EE900A89DD7 /* VideoManager.m */,
-				BD84D7131A239B1C0065F3F2 /* VideoPlaybackManager.h */,
-				BD84D7141A239B1C0065F3F2 /* VideoPlaybackManager.m */,
 				BD84D7161A23A77B0065F3F2 /* VideoPlayerView.h */,
 				BD84D7171A23A77B0065F3F2 /* VideoPlayerView.m */,
 				B5134F1C1A1E8C32001B6FE2 /* CSGAudioManager.h */,
@@ -2446,6 +2451,11 @@
 		6145A49A1DAC2F9300DFE0AA /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
+				B1E5263A1E36B2A300BDDAD8 /* ReactiveCocoa.framework */,
+				B1E526371E36B25E00BDDAD8 /* ReactiveSwift.framework */,
+				B1E526341E36B20200BDDAD8 /* CWNotification.framework */,
+				B1E5262F1E369FA100BDDAD8 /* ReactiveObjC.framework */,
+				2C73C9CB1E0337C10064A19D /* SoPretty.framework */,
 				2C6DC3DC1DC3A31100F3E8C2 /* Secrets.framework */,
 				61C2E99F1DAD462A00073F62 /* Reachability.framework */,
 				61C2E99C1DAD45FB00073F62 /* Mantle.framework */,
@@ -2456,16 +2466,13 @@
 				61C2E98B1DAD452F00073F62 /* FXKeychain.framework */,
 				61C2E98A1DAD452400073F62 /* EnrollmentKit.framework */,
 				61C2E9871DAD449A00073F62 /* Cartography.framework */,
-				61C2E9841DAD447300073F62 /* SoPretty.framework */,
 				61C2E97F1DAD444000073F62 /* FileKit.framework */,
 				61C2E97E1DAD443900073F62 /* AssignmentKit.framework */,
 				B18B34811DB5A30400355EDD /* Masonry.framework */,
 				61C2E97B1DAD440200073F62 /* Marshal.framework */,
 				61C2E9781DAD43D900073F62 /* SoLazy.framework */,
 				61C2E9751DAD43AB00073F62 /* Kingfisher.framework */,
-				61C2E9721DAD438100073F62 /* ReactiveCocoa.framework */,
 				61C2E96F1DAD434F00073F62 /* CocoaLumberjack.framework */,
-				61C2E96C1DAD431300073F62 /* CWStatusBarNotification.framework */,
 				61C2E9691DAD42EA00073F62 /* AFNetworking.framework */,
 				613A9D5E1DAC5C7100AB4C6D /* SoPersistent.framework */,
 				613A9D5B1DAC5C2100AB4C6D /* TooLegit.framework */,
@@ -6638,12 +6645,14 @@
 		BA6E8F36A7E2D90461F49A87 = {
 			isa = PBXGroup;
 			children = (
+				2C73C9D41E0338B60064A19D /* FixerUpper.swift */,
 				6145A49A1DAC2F9300DFE0AA /* Dependencies */,
 				BA6E8D019C99157A765BC4A7 /* SpeedGrader */,
 				BA6E89BBE2C83F82C326A4C4 /* SpeedGraderTests */,
 				BA6E8094ECB0844836A73DBC /* Products */,
 				BA6E822CFACDAAE861D675DD /* Frameworks */,
 				D09D601A5416405020E60EB5 /* Pods */,
+				2C73C9D11E0338410064A19D /* SpeedGrader-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -7315,14 +7324,18 @@
 			attributes = {
 				CLASSPREFIX = "";
 				LastSwiftUpdateCheck = 0710;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = Instructure;
 				TargetAttributes = {
 					BA6E867087F7F3176A0FC858 = {
 						DevelopmentTeam = B6333T4PXQ;
+						LastSwiftMigration = 0810;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Keychain = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 						};
@@ -7402,7 +7415,6 @@
 				5E8B55EE19C8EC7E0070D6F3 /* CSGGradingViewController.storyboard in Resources */,
 				5E0FECDD1A1E683D00B612F2 /* ox.plist in Resources */,
 				5E0FECD11A1E683D00B612F2 /* lsl.plist in Resources */,
-				61C2E9681DAD411700073F62 /* SpeedGrader-Info.plist in Resources */,
 				5E0FECBC1A1E683D00B612F2 /* d.plist in Resources */,
 				5E0FECBF1A1E683D00B612F2 /* erl.plist in Resources */,
 				5E0FECF41A1E683D00B612F2 /* udo.plist in Resources */,
@@ -7552,6 +7564,7 @@
 				5E59A1D719D9F92800CA416B /* CSGFileTypes.m in Sources */,
 				5E8B560019C8EC7E0070D6F3 /* CSGStudentPickerTableViewController.m in Sources */,
 				5EC3BD2A1A729F1B0082F9C9 /* CSGVideoPlayerView.m in Sources */,
+				2C73C9D51E0338B60064A19D /* FixerUpper.swift in Sources */,
 				5E3DBECA19D5B1810092F224 /* CSGNoResultsView.m in Sources */,
 				B5A5E93A1B055823004E3425 /* Router+Routes.m in Sources */,
 				5E8B55F119C8EC7E0070D6F3 /* CSGGradingCommentsTableViewController.m in Sources */,
@@ -7571,7 +7584,6 @@
 				B5B233F61A083EFA00973C72 /* CSGColorManager.m in Sources */,
 				5E8B55F719C8EC7E0070D6F3 /* CSGGradingRubricCell.m in Sources */,
 				5E8B55F019C8EC7E0070D6F3 /* CSGGradingCommentCell.m in Sources */,
-				BD84D7151A239B1C0065F3F2 /* VideoPlaybackManager.m in Sources */,
 				5E8B560319C8EC7E0070D6F3 /* CSGBadgeView.m in Sources */,
 				B50356611A5B4C7600387BB2 /* CSGMoviePlayerViewController.m in Sources */,
 				5E8B55F919C8EC7E0070D6F3 /* CSGPickFileTableViewController.m in Sources */,
@@ -7728,7 +7740,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 53E37FFA1C18C3392E83CCCB /* Pods-SpeedGrader.beta.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APP_BUNDLE_ID = "com.instructure.grader-enterprise";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -7756,6 +7767,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "SpeedGrader-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 2;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -7766,6 +7779,7 @@
 		5E35133D19636DA9002B6B26 /* Beta */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/SpeedGrader.app/SpeedGrader";
 				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7788,6 +7802,7 @@
 		BA6E80ACE00387FD964E6D21 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/SpeedGrader.app/SpeedGrader";
 				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7858,6 +7873,7 @@
 		BA6E86AE0D23C1A3578FEA9A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/SpeedGrader.app/SpeedGrader";
 				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7922,7 +7938,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 292EF160D866B939F89B3665 /* Pods-SpeedGrader.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APP_BUNDLE_ID = com.instructure.grader;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -7950,6 +7965,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "SpeedGrader-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 2;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -7961,7 +7978,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2EFD6FE90AB70B68AA8EB761 /* Pods-SpeedGrader.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APP_BUNDLE_ID = com.instructure.grader;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -7990,7 +8006,9 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "SpeedGrader-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 2;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VERSIONING_SYSTEM = "apple-generic";
