@@ -13,14 +13,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-    
-    
+
+import EarlGrey
+
+// Set screenshot folder so that app reset doesn't delete the contents.
+public func grey_setConfiguration() throws {
+  enum DocumentError: Error {
+    case NoDocumentDirectory
+    case FailedToCreateDirectory
+  }
+
+  guard let documentDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+      throw DocumentError.NoDocumentDirectory
+  }
+
+  let screenshotDir = documentDir.appendingPathComponent("earlgrey_screenshots").path
+
+  do {
+    try FileManager.default.createDirectory(atPath: screenshotDir, withIntermediateDirectories: true, attributes: nil)
+  } catch {
+    throw DocumentError.FailedToCreateDirectory
+  }
+
+  GREYConfiguration.sharedInstance().setValue(screenshotDir, forConfigKey: kGREYConfigKeyScreenshotDirLocation)
+}
 
 // Don't set line number in EarlGreyUtils.
 // Must be invoked via the calling method inside the page object.
 
-
-import EarlGrey
 
 // Must use wrapper class to force pass by reference in block.
 // inout params won't work. http://stackoverflow.com/a/28252105
