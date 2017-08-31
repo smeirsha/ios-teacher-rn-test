@@ -1,6 +1,6 @@
 //
 // Copyright (C) 2016-present Instructure, Inc.
-//   
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 3 of the License.
@@ -68,7 +68,7 @@ extension Assignment {
     }
 }
 
-class AssignmentsTableViewController: Assignment.TableViewController, UISearchResultsUpdating, UISearchBarDelegate, UISearchControllerDelegate {
+class AssignmentsTableViewController: FetchedTableViewController<Assignment>, UISearchResultsUpdating, UISearchBarDelegate, UISearchControllerDelegate {
     let session: Session
     let courseID: String
     let route: (UIViewController, URL)->()

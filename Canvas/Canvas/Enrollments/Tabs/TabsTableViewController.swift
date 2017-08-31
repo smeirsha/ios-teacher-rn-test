@@ -1,6 +1,6 @@
 //
 // Copyright (C) 2016-present Instructure, Inc.
-//   
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 3 of the License.
@@ -49,7 +49,7 @@ extension ColorfulViewModel {
     }
 }
 
-class TabsTableViewController: Tab.TableViewController {
+class TabsTableViewController: FetchedTableViewController<Tab> {
     
     let route: (UIViewController, URL)->()
     let session: Session
@@ -82,6 +82,14 @@ class TabsTableViewController: Tab.TableViewController {
         super.viewWillAppear(animated)
         if let selectedTabURL = selectedTabURL, let tab = collection.filter({ $0.routingURL(session) == selectedTabURL }).first, let indexPath = collection.indexPath(forObject: tab), self.splitViewController?.isCollapsed == false {
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .top)
+        }
+        
+        var courses = session.enrollmentsDataSource.enrollmentsObserver.collection.makeIterator()
+        while let course = courses.next() {
+            let contextID = ContextID(id: course.id, context: .course)
+            if self.contextID == contextID {
+                _ = try? session.enrollmentsDataSource.fetchArcLTIToolID(for: contextID, inSession: session).start()
+            }
         }
     }
     

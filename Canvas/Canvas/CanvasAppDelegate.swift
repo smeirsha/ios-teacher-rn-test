@@ -1,6 +1,6 @@
 //
 // Copyright (C) 2016-present Instructure, Inc.
-//   
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 3 of the License.
@@ -28,12 +28,12 @@ import CanvasKeymaster
 import Fabric
 import Crashlytics
 import Secrets
+import AttendanceLE
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         if unitTesting {
             return true
@@ -97,7 +97,7 @@ extension AppDelegate {
 extension AppDelegate {
     func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
         if let assignmentURL = (notification.userInfo?[CBILocalNotificationAssignmentURLKey] as? String).flatMap({ URL(string: $0) }) {
-            openCanvasURL(assignmentURL)
+            _ = openCanvasURL(assignmentURL)
         }
     }
 }
@@ -106,6 +106,7 @@ extension AppDelegate {
 extension AppDelegate {
     func makeAWindow() {
         window = UIWindow(frame: UIScreen.main.bounds)
+        window?.rootViewController = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateViewController(withIdentifier: "LaunchScreen")
         window?.makeKeyAndVisible()
     }
     
@@ -130,16 +131,14 @@ extension AppDelegate {
 
         Session.logoutSignalProducer
             .startWithValues(didLogout)
-        
+
         Session.loginSignalProducer
             .startWithValues(didLogin)
     }
     
     func didLogin(_ session: Session) {
-
         LegacyModuleProgressShim.observeProgress(session)
         ModuleItem.beginObservingProgress(session)
-        self.setupCrashlyitcsDebugInformation()
         ConversationUpdater.shared().updateUnreadConversationCount()
         CKCanvasAPI.updateCurrentAPI() // set's currenAPI from CKIClient.currentClient()
         
@@ -174,15 +173,17 @@ extension AppDelegate {
     func alertUser(of error: NSError, from presentingViewController: UIViewController?) {
         guard let presentFrom = presentingViewController else { return }
         
-        let alertDetails = error.alertDetails(reportAction: {
-            let support = SupportTicketViewController.present(from: presentingViewController, supportTicketType: SupportTicketTypeProblem)
-            support?.reportedError = error
-        })
-        
-        if let deets = alertDetails {
-            let alert = UIAlertController(title: deets.title, message: deets.description, preferredStyle: .alert)
-            deets.actions.forEach(alert.addAction)
-            presentFrom.present(alert, animated: true, completion: nil)
+        DispatchQueue.main.async {
+            let alertDetails = error.alertDetails(reportAction: {
+                let support = SupportTicketViewController.present(from: presentingViewController, supportTicketType: SupportTicketTypeProblem)
+                support?.reportedError = error
+            })
+            
+            if let deets = alertDetails {
+                let alert = UIAlertController(title: deets.title, message: deets.description, preferredStyle: .alert)
+                deets.actions.forEach(alert.addAction)
+                presentFrom.present(alert, animated: true, completion: nil)
+            }
         }
     }
     
@@ -220,17 +221,6 @@ extension AppDelegate {
         }
         
         Fabric.with([Crashlytics.self])
-    }
-    
-    func setupCrashlyitcsDebugInformation() {
-        let client = CKIClient.current()
-        let baseURLString = client?.baseURL?.absoluteString
-        guard Secrets.featureEnabled(.protectedUserInformation, domain: baseURLString) == true else { return }
-        guard let user = client?.currentUser else { return }
-        
-        Crashlytics.sharedInstance().setObjectValue(client?.actAsUserID, forKey: "MASQUERADE_AS_USER_ID")
-        Crashlytics.sharedInstance().setObjectValue(baseURLString, forKey: "DOMAIN")
-        Crashlytics.sharedInstance().setUserIdentifier(user.id)
     }
 }
 

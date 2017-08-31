@@ -1,6 +1,6 @@
 //
 // Copyright (C) 2016-present Instructure, Inc.
-//   
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 3 of the License.
@@ -17,9 +17,11 @@
     
 
 #import <UIKit/UIKit.h>
+@import WebKit;
 
 @class CKIExternalTool;
 @interface LTIViewController : UIViewController
 @property (nonatomic) CKIExternalTool *externalTool;
-@property (weak, nonatomic) IBOutlet UIWebView *webView;
+@property (strong, nonatomic) WKWebView *webView;
+@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @end

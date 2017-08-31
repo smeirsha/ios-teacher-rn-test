@@ -1,6 +1,6 @@
 //
 // Copyright (C) 2016-present Instructure, Inc.
-//   
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 3 of the License.
@@ -123,7 +123,8 @@
     }
     self.arcLTIToolID = [TheKeymaster.currentClient.authSession.enrollmentsDataSource arcLTIToolIdForCanvasContext:canvasContext];
     
-    if (numberOfPossibleTypes > 1) {
+    BOOL submissionTypesIncludesArc = (submissionTypes & CKSubmissionTypeOnlineUpload) && self.arcLTIToolID != nil;
+    if (numberOfPossibleTypes > 1 || (numberOfPossibleTypes == 1 && submissionTypesIncludesArc)) {
         [self showSubmissionTypePicker];
     }
     else {

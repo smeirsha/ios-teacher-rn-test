@@ -28,6 +28,8 @@
 		2C73C9BA1E031ECD0064A19D /* CWNotification.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C73C9B91E031ECD0064A19D /* CWNotification.framework */; };
 		2C73C9BB1E031ECD0064A19D /* CWNotification.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2C73C9B91E031ECD0064A19D /* CWNotification.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2CA548321DCB8C1000A05E0F /* Secrets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6DC3D91DC39FDF00F3E8C2 /* Secrets.framework */; };
+		47F5B1391F293D9000B03DAC /* AttendanceLE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47F5B1381F293D7A00B03DAC /* AttendanceLE.framework */; };
+		47F5B13A1F293D9000B03DAC /* AttendanceLE.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 47F5B1381F293D7A00B03DAC /* AttendanceLE.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4902E1251CF4C8890069E043 /* Analytics.h in Headers */ = {isa = PBXBuildFile; fileRef = 4902E1231CF4C8890069E043 /* Analytics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4902E1261CF4C8890069E043 /* Analytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 4902E1241CF4C8890069E043 /* Analytics.m */; };
 		490687941D02151E0072DBEA /* PushNotificationPreauthorizationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490687901D02151E0072DBEA /* PushNotificationPreauthorizationCell.swift */; };
@@ -124,8 +126,6 @@
 		492705A31CF4B73200C631C6 /* CKIUser+SwiftCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 4927055E1CF4B73200C631C6 /* CKIUser+SwiftCompatibility.m */; };
 		492705A61CF4B73200C631C6 /* CKIClient+CBIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 492705611CF4B73200C631C6 /* CKIClient+CBIClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		492705A71CF4B73200C631C6 /* CKIClient+CBIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 492705621CF4B73200C631C6 /* CKIClient+CBIClient.m */; };
-		492705AA1CF4B73200C631C6 /* Crashlytics+CrashContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 492705661CF4B73200C631C6 /* Crashlytics+CrashContext.h */; };
-		492705AB1CF4B73200C631C6 /* Crashlytics+CrashContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 492705671CF4B73200C631C6 /* Crashlytics+CrashContext.m */; };
 		492705AC1CF4B73200C631C6 /* MKNumberBadgeView+CanvasStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 492705681CF4B73200C631C6 /* MKNumberBadgeView+CanvasStyle.h */; };
 		492705AD1CF4B73200C631C6 /* MKNumberBadgeView+CanvasStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 492705691CF4B73200C631C6 /* MKNumberBadgeView+CanvasStyle.m */; };
 		492705B21CF4B73200C631C6 /* NSURL+RemoveFragment.h in Headers */ = {isa = PBXBuildFile; fileRef = 492705701CF4B73200C631C6 /* NSURL+RemoveFragment.h */; };
@@ -862,12 +862,16 @@
 		6181F13D1DFF6FB300B94488 /* ReactiveSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6181F13B1DFF6FB300B94488 /* ReactiveSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6181F13F1DFF705600B94488 /* Reachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6181F13E1DFF705600B94488 /* Reachability.framework */; };
 		6181F1401DFF705600B94488 /* Reachability.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6181F13E1DFF705600B94488 /* Reachability.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6199E55D1F16D672007F77C0 /* SoAnnotated_PreSubmission.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6199FD441EE37D3600240D4E /* SoAnnotated_PreSubmission.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6199E55E1F16D696007F77C0 /* SoAnnotated_PreSubmission.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6199FD441EE37D3600240D4E /* SoAnnotated_PreSubmission.framework */; };
+		6199FD461EE37D3600240D4E /* SoAnnotated_PreSubmission.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6199FD441EE37D3600240D4E /* SoAnnotated_PreSubmission.framework */; };
 		61A6747D1DB58990008A27FD /* ModuleItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15738061D95AA7600ADBB85 /* ModuleItemViewModel.swift */; };
 		61A6747E1DB589A3008A27FD /* ModuleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FF7EDE1D8758720069C9BE /* ModuleViewModel.swift */; };
 		61A6747F1DB589C5008A27FD /* ModulesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E3D6E01D8305D900B4AC11 /* ModulesTableViewController.swift */; };
 		61CF10A71DBFB6C200B68E45 /* MasteryPathAssignmentPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61CF10A61DBFB6C200B68E45 /* MasteryPathAssignmentPreviewViewController.swift */; };
 		61CF10AB1DBFF93A00B68E45 /* MasteryPathAssignmentInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61CF10AA1DBFF93A00B68E45 /* MasteryPathAssignmentInfoCell.xib */; };
 		61CF10AD1DBFF98800B68E45 /* MasteryPathAssignmentInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61CF10AC1DBFF98800B68E45 /* MasteryPathAssignmentInfoCell.swift */; };
+		61D4A2241EE36CAC008D2528 /* AssignmentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61D4A2231EE36CAC008D2528 /* AssignmentKit.framework */; };
 		61F438E31DD4E60B00552D14 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61F438E21DD4E60B00552D14 /* AVFoundation.framework */; };
 		61F438E61DD667D900552D14 /* MLVCCollectionController+CBIRefresh.h in Headers */ = {isa = PBXBuildFile; fileRef = 61F438E41DD667D900552D14 /* MLVCCollectionController+CBIRefresh.h */; };
 		61F438E71DD667D900552D14 /* MLVCCollectionController+CBIRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F438E51DD667D900552D14 /* MLVCCollectionController+CBIRefresh.m */; };
@@ -945,6 +949,7 @@
 				492708771CF4C38100C631C6 /* CalendarKit.framework in Embed Frameworks */,
 				4927089D1CF4C38100C631C6 /* TooLegit.framework in Embed Frameworks */,
 				2C6DC3DB1DC39FDF00F3E8C2 /* Secrets.framework in Embed Frameworks */,
+				6199E55D1F16D672007F77C0 /* SoAnnotated_PreSubmission.framework in Embed Frameworks */,
 				61681E9F1D58E5410011E75D /* PSPDFKit.framework in Embed Frameworks */,
 				2C4762341DD0D2FB0003BEAE /* SoThankful.framework in Embed Frameworks */,
 				491A66091D9057530092CDE9 /* TBBModal.framework in Embed Frameworks */,
@@ -960,6 +965,7 @@
 				492708851CF4C38100C631C6 /* Marshal.framework in Embed Frameworks */,
 				4985D3C11CFE35BE00BA3685 /* Mantle.framework in Embed Frameworks */,
 				6181F1351DFF548400B94488 /* SuchActivity.framework in Embed Frameworks */,
+				47F5B13A1F293D9000B03DAC /* AttendanceLE.framework in Embed Frameworks */,
 				4927087B1CF4C38100C631C6 /* CocoaLumberjack.framework in Embed Frameworks */,
 				496FFEAC1E00B35D00F1742E /* ReactiveObjC.framework in Embed Frameworks */,
 				61681E9C1D58E5130011E75D /* SoAnnotated.framework in Embed Frameworks */,
@@ -1025,6 +1031,7 @@
 		2C73C9B91E031ECD0064A19D /* CWNotification.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CWNotification.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		396B37BFEED26519D8237DA7 /* Pods_Canvas.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Canvas.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E3C1D72C08DB705A5532B30 /* Pods-Canvas.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Canvas.release.xcconfig"; path = "../Pods/Target Support Files/Pods-Canvas/Pods-Canvas.release.xcconfig"; sourceTree = "<group>"; };
+		47F5B1381F293D7A00B03DAC /* AttendanceLE.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AttendanceLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4902E1231CF4C8890069E043 /* Analytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Analytics.h; sourceTree = "<group>"; };
 		4902E1241CF4C8890069E043 /* Analytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Analytics.m; sourceTree = "<group>"; };
 		490687901D02151E0072DBEA /* PushNotificationPreauthorizationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushNotificationPreauthorizationCell.swift; sourceTree = "<group>"; };
@@ -1119,8 +1126,6 @@
 		4927055E1CF4B73200C631C6 /* CKIUser+SwiftCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CKIUser+SwiftCompatibility.m"; sourceTree = "<group>"; };
 		492705611CF4B73200C631C6 /* CKIClient+CBIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKIClient+CBIClient.h"; sourceTree = "<group>"; };
 		492705621CF4B73200C631C6 /* CKIClient+CBIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CKIClient+CBIClient.m"; sourceTree = "<group>"; };
-		492705661CF4B73200C631C6 /* Crashlytics+CrashContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Crashlytics+CrashContext.h"; sourceTree = "<group>"; };
-		492705671CF4B73200C631C6 /* Crashlytics+CrashContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Crashlytics+CrashContext.m"; sourceTree = "<group>"; };
 		492705681CF4B73200C631C6 /* MKNumberBadgeView+CanvasStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MKNumberBadgeView+CanvasStyle.h"; sourceTree = "<group>"; };
 		492705691CF4B73200C631C6 /* MKNumberBadgeView+CanvasStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKNumberBadgeView+CanvasStyle.m"; sourceTree = "<group>"; };
 		492705701CF4B73200C631C6 /* NSURL+RemoveFragment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+RemoveFragment.h"; sourceTree = "<group>"; };
@@ -1488,10 +1493,10 @@
 		49A04E601CF64D130051E1E7 /* EnrollmentCardViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnrollmentCardViewModel.swift; sourceTree = "<group>"; };
 		49A04E621CF64D130051E1E7 /* GroupCardCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GroupCardCell.xib; sourceTree = "<group>"; };
 		49A04E641CF64D130051E1E7 /* GroupsCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupsCollectionViewController.swift; sourceTree = "<group>"; };
-		49A04E661CF64D130051E1E7 /* TabsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabsTableViewController.swift; sourceTree = "<group>"; };
+		49A04E661CF64D130051E1E7 /* TabsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TabsTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		49A04E701CF64E210051E1E7 /* ProfileButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileButton.swift; sourceTree = "<group>"; };
 		49A04E731CF64ED90051E1E7 /* CalendarTabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarTabViewController.swift; sourceTree = "<group>"; };
-		49A04E761CF6504D0051E1E7 /* ToDoListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoListViewController.swift; sourceTree = "<group>"; };
+		49A04E761CF6504D0051E1E7 /* ToDoListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ToDoListViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		49A04E7A1CF650EE0051E1E7 /* UserPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserPreferences.swift; sourceTree = "<group>"; };
 		49A04E7C1CF653050051E1E7 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		49A04E7F1CF654AB0051E1E7 /* LoginConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginConfiguration.swift; sourceTree = "<group>"; };
@@ -1743,7 +1748,7 @@
 		49F9FA461CF7B6F600654758 /* TechDebt.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = TechDebt.xcassets; sourceTree = "<group>"; };
 		49F9FA4A1CF7B73100654758 /* Canvas.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Canvas.xcassets; sourceTree = "<group>"; };
 		49F9FA4C1CF89F8600654758 /* Router+Canvas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Router+Canvas.swift"; sourceTree = "<group>"; };
-		49F9FA4F1CF8CA8300654758 /* AssignmentsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssignmentsTableViewController.swift; sourceTree = "<group>"; };
+		49F9FA4F1CF8CA8300654758 /* AssignmentsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AssignmentsTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		49F9FA531CF8CB3B00654758 /* GradesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradesTableViewController.swift; sourceTree = "<group>"; };
 		49F9FA581CF8CDC400654758 /* UIImage+TechDebt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+TechDebt.h"; sourceTree = "<group>"; };
 		49F9FA591CF8CDC400654758 /* UIImage+TechDebt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+TechDebt.m"; sourceTree = "<group>"; };
@@ -1787,18 +1792,20 @@
 		6137294F1D54E91800C020A0 /* UIImage+CanvasKit1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+CanvasKit1.h"; sourceTree = "<group>"; };
 		613729501D54E91800C020A0 /* UIImage+CanvasKit1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+CanvasKit1.m"; sourceTree = "<group>"; };
 		61592F761DA7F0A200552B44 /* ModuleDetailDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModuleDetailDataSource.swift; sourceTree = "<group>"; };
-		61592F781DA83C4900552B44 /* ModuleDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModuleDetailsViewController.swift; sourceTree = "<group>"; };
+		61592F781DA83C4900552B44 /* ModuleDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ModuleDetailsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		61681E9A1D58E5000011E75D /* SoAnnotated.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SoAnnotated.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		61681E9D1D58E5380011E75D /* PSPDFKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PSPDFKit.framework; path = ../ExternalFrameworks/PSPDFKit.framework; sourceTree = "<group>"; };
 		6181F12E1DFF41AD00B94488 /* ToDoTab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoTab.swift; sourceTree = "<group>"; };
-		6181F1301DFF47AF00B94488 /* ActivityStreamTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityStreamTableViewController.swift; sourceTree = "<group>"; };
+		6181F1301DFF47AF00B94488 /* ActivityStreamTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ActivityStreamTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		6181F1321DFF547400B94488 /* SuchActivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SuchActivity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6181F1361DFF6CFB00B94488 /* ReactiveObjC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ReactiveObjC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6181F13B1DFF6FB300B94488 /* ReactiveSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ReactiveSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6181F13E1DFF705600B94488 /* Reachability.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reachability.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6199FD441EE37D3600240D4E /* SoAnnotated_PreSubmission.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SoAnnotated_PreSubmission.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		61CF10A61DBFB6C200B68E45 /* MasteryPathAssignmentPreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasteryPathAssignmentPreviewViewController.swift; sourceTree = "<group>"; };
 		61CF10AA1DBFF93A00B68E45 /* MasteryPathAssignmentInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MasteryPathAssignmentInfoCell.xib; sourceTree = "<group>"; };
 		61CF10AC1DBFF98800B68E45 /* MasteryPathAssignmentInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasteryPathAssignmentInfoCell.swift; sourceTree = "<group>"; };
+		61D4A2231EE36CAC008D2528 /* AssignmentKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssignmentKit.framework; path = "../../../Library/Developer/Xcode/DerivedData/AllTheThings-cnvuxgbwglwsnibwgtfbmdnnbmsc/Build/Products/Debug-iphonesimulator/AssignmentKit.framework"; sourceTree = "<group>"; };
 		61D7185C1DB7CA070081D56A /* MasteryPathSelectOptionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasteryPathSelectOptionViewController.swift; sourceTree = "<group>"; };
 		61F438E21DD4E60B00552D14 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		61F438E41DD667D900552D14 /* MLVCCollectionController+CBIRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MLVCCollectionController+CBIRefresh.h"; sourceTree = "<group>"; };
@@ -2014,7 +2021,7 @@
 		B1E0C7AE1DB7BBE90086B0A2 /* RouterSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterSpec.swift; sourceTree = "<group>"; };
 		B1E0C7B01DB7CF680086B0A2 /* ModuleItemDetailViewControllerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModuleItemDetailViewControllerSpec.swift; sourceTree = "<group>"; };
 		B1E351F71DB97055003473B3 /* ModuleViewModelSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModuleViewModelSpec.swift; sourceTree = "<group>"; };
-		B1E3D6E01D8305D900B4AC11 /* ModulesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModulesTableViewController.swift; sourceTree = "<group>"; };
+		B1E3D6E01D8305D900B4AC11 /* ModulesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ModulesTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		B1FF7EDE1D8758720069C9BE /* ModuleViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModuleViewModel.swift; sourceTree = "<group>"; };
 		B5A790A71D8C743400ACA9FE /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B5A790A81D8C743400ACA9FE /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2086,6 +2093,7 @@
 				6181F13F1DFF705600B94488 /* Reachability.framework in Frameworks */,
 				61F8ED861D999F0500DFAC6E /* SoIconic.framework in Frameworks */,
 				4985D3C01CFE35BE00BA3685 /* Mantle.framework in Frameworks */,
+				47F5B1391F293D9000B03DAC /* AttendanceLE.framework in Frameworks */,
 				49A04E591CF64CCF0051E1E7 /* NotificationKit.framework in Frameworks */,
 				4927088A1CF4C38100C631C6 /* Peeps.framework in Frameworks */,
 				492708981CF4C38100C631C6 /* SoProgressive.framework in Frameworks */,
@@ -2124,6 +2132,7 @@
 				492708861CF4C38100C631C6 /* MediaKit.framework in Frameworks */,
 				492708881CF4C38100C631C6 /* MyLittleViewController.framework in Frameworks */,
 				49AA291E1CF4D1880055862D /* CanvasKit1.framework in Frameworks */,
+				6199E55E1F16D696007F77C0 /* SoAnnotated_PreSubmission.framework in Frameworks */,
 				492708761CF4C38100C631C6 /* CalendarKit.framework in Frameworks */,
 				4972CBDB2B8CB711A3B56911 /* Pods_Canvas.framework in Frameworks */,
 			);
@@ -2133,6 +2142,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				61D4A2241EE36CAC008D2528 /* AssignmentKit.framework in Frameworks */,
 				491A660B1D9057570092CDE9 /* SVProgressHUD.framework in Frameworks */,
 				6122B9B61D58E6B6001282BF /* SoAnnotated.framework in Frameworks */,
 				492708AF1CF4C38500C631C6 /* SoLazy.framework in Frameworks */,
@@ -2165,6 +2175,7 @@
 				491A660C1D9057570092CDE9 /* TBBModal.framework in Frameworks */,
 				492708A51CF4C38500C631C6 /* EnrollmentKit.framework in Frameworks */,
 				49A04E4E1CF6420C0051E1E7 /* CanvasKit1.framework in Frameworks */,
+				6199FD461EE37D3600240D4E /* SoAnnotated_PreSubmission.framework in Frameworks */,
 				6122B9B71D58E6DA001282BF /* PSPDFKit.framework in Frameworks */,
 				2CA548321DCB8C1000A05E0F /* Secrets.framework in Frameworks */,
 				C8D39A611751A5F521221CFA /* Pods_TechDebt.framework in Frameworks */,
@@ -2470,7 +2481,6 @@
 				4927055C1CF4B73200C631C6 /* CanvasKit */,
 				492705611CF4B73200C631C6 /* CKIClient+CBIClient.h */,
 				492705621CF4B73200C631C6 /* CKIClient+CBIClient.m */,
-				492705631CF4B73200C631C6 /* Crashlytics */,
 				492705681CF4B73200C631C6 /* MKNumberBadgeView+CanvasStyle.h */,
 				492705691CF4B73200C631C6 /* MKNumberBadgeView+CanvasStyle.m */,
 				4927056A1CF4B73200C631C6 /* MLVC */,
@@ -2522,15 +2532,6 @@
 				4927055E1CF4B73200C631C6 /* CKIUser+SwiftCompatibility.m */,
 			);
 			path = CanvasKit;
-			sourceTree = "<group>";
-		};
-		492705631CF4B73200C631C6 /* Crashlytics */ = {
-			isa = PBXGroup;
-			children = (
-				492705661CF4B73200C631C6 /* Crashlytics+CrashContext.h */,
-				492705671CF4B73200C631C6 /* Crashlytics+CrashContext.m */,
-			);
-			path = Crashlytics;
 			sourceTree = "<group>";
 		};
 		4927056A1CF4B73200C631C6 /* MLVC */ = {
@@ -2985,6 +2986,8 @@
 		4927085D1CF4C33700C631C6 /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
+				47F5B1381F293D7A00B03DAC /* AttendanceLE.framework */,
+				6199FD441EE37D3600240D4E /* SoAnnotated_PreSubmission.framework */,
 				2C67B0D81E01F25800DDD191 /* BuddyBuildSDK.framework */,
 				2C73C9B91E031ECD0064A19D /* CWNotification.framework */,
 				496FFEA91E00B34C00F1742E /* ReactiveObjC.framework */,
@@ -3666,6 +3669,7 @@
 		5B0FCCDFB07A88D993D5871D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				61D4A2231EE36CAC008D2528 /* AssignmentKit.framework */,
 				2C67B0D31E01F08A00DDD191 /* BuddyBuildSDK.framework */,
 				2C67B0D11E01F07C00DDD191 /* SystemConfiguration.framework */,
 				2C67B0CF1E01F07800DDD191 /* QuartzCore.framework */,
@@ -3971,7 +3975,6 @@
 				49AA2D321CF4DC540055862D /* ProfileViewController.h in Headers */,
 				492705D21CF4B73300C631C6 /* UIView+FloatingView.h in Headers */,
 				492704BF1CF4B6F100C631C6 /* AnnouncementCreationIPhoneStrategy.h in Headers */,
-				492705AA1CF4B73200C631C6 /* Crashlytics+CrashContext.h in Headers */,
 				492706401CF4B7A800C631C6 /* CBIDiscussionsTabViewModel.h in Headers */,
 				49AA2D251CF4DC540055862D /* AboutViewController.h in Headers */,
 				4927084C1CF4BC3200C631C6 /* CBIURLParser.h in Headers */,
@@ -4751,7 +4754,6 @@
 				492707C41CF4BBBA00C631C6 /* PagedItemsViewController.m in Sources */,
 				492707381CF4BACB00C631C6 /* AttachmentsTableViewController.m in Sources */,
 				4927072A1CF4BACB00C631C6 /* CBIMessagesListViewController.m in Sources */,
-				492705AB1CF4B73200C631C6 /* Crashlytics+CrashContext.m in Sources */,
 				49AA2D2C1CF4DC540055862D /* CBIPeopleDetailViewController.m in Sources */,
 				492706561CF4B7A800C631C6 /* DiscussionEntryHeightCalculationQueue.m in Sources */,
 				4927052D1CF4B70600C631C6 /* CBISubmissionCell.m in Sources */,
@@ -5345,7 +5347,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -5389,7 +5391,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -5413,7 +5415,7 @@
 					Dependencies,
 				);
 				INFOPLIST_FILE = Canvas/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.instructure.icanvas;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5439,7 +5441,7 @@
 					Dependencies,
 				);
 				INFOPLIST_FILE = Canvas/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.instructure.icanvas;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5467,7 +5469,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = TechDebt/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.instructure.TechDebt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5496,7 +5498,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = TechDebt/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.instructure.TechDebt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5520,7 +5522,7 @@
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = CanvasKit1/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5549,7 +5551,7 @@
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = CanvasKit1/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5571,7 +5573,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = B6333T4PXQ;
 				INFOPLIST_FILE = CanvasTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.instructure.CanvasTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5587,7 +5589,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				DEVELOPMENT_TEAM = B6333T4PXQ;
 				INFOPLIST_FILE = CanvasTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.instructure.CanvasTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

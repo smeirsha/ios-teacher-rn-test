@@ -1,6 +1,6 @@
 //
 // Copyright (C) 2016-present Instructure, Inc.
-//   
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 3 of the License.
@@ -26,6 +26,7 @@ import WebKit
 public struct Airwolf {
     public static func authenticate(email: String, password: String) throws -> SignalProducer<JSONObject, NSError> {
         let request = try AirwolfAPI.authenticateRequest(email: email, password: password)
+        print("authenticating: \(request.url?.absoluteString ?? "wut!?")")
         return Session.unauthenticated.JSONSignalProducer(request)
     }
 

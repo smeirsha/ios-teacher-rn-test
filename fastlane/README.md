@@ -27,6 +27,7 @@ xcode-select --install
 <td width="33%"><code>sudo gem install fastlane -NV</code></td>
 </tr>
 </table>
+
 # Available Actions
 ## iOS
 ### ios pull_frameworks
@@ -88,6 +89,21 @@ Requires fbsimctl
 
 brew tap facebook/fb
 brew install fbsimctl --HEAD
+### ios seed_teacher
+```
+fastlane ios seed_teacher
+```
+Seed data into Canvas LMS for testing.
+### ios test_earlgrey_teacher
+```
+fastlane ios test_earlgrey_teacher
+```
+Test teacher app with Earl Grey,
+### ios bluepill_teacher
+```
+fastlane ios bluepill_teacher
+```
+Test teacher app with Earl Grey,
 
 ----
 

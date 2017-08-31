@@ -1,6 +1,6 @@
 //
 // Copyright (C) 2016-present Instructure, Inc.
-//   
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 3 of the License.
@@ -40,6 +40,7 @@
 @import CanvasKeymaster;
 @import AssignmentKit;
 @import SoPersistent;
+@import SoAnnotated_PreSubmission;
 
 // TODO: REMOVE
 
@@ -199,6 +200,8 @@
     [super viewWillDisappear:animated];
     
     [RatingsController appLoadedOnViewController:self];
+    
+    [pdfDocPresenter savePDFAnnotations];
     
     if (_progressToolbar.cancelBlock && [self.presentedViewController isBeingPresented] == NO) {
         _progressToolbar.cancelBlock();

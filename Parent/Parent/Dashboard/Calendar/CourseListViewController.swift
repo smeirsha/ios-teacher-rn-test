@@ -1,6 +1,6 @@
 //
 // Copyright (C) 2016-present Instructure, Inc.
-//   
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 3 of the License.
@@ -24,7 +24,7 @@ import Airwolf
 
 typealias CourseListSelectCourseAction = (_ session: Session, _ observeeID: String, _ course: Course)->Void
 
-class CourseListViewController: Course.TableViewController {
+class CourseListViewController: FetchedTableViewController<Course> {
 
     fileprivate let session: Session
     fileprivate let observeeID: String

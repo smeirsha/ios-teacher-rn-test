@@ -30,6 +30,7 @@ import SoLazy
     case parentAppStoreID
     case parentKeychainService
     case parentKeychainAccessGroup
+    case teacherPSPDFKit
     
     func toString() -> String {
         switch self {
@@ -49,6 +50,8 @@ import SoLazy
             return "ParentKeychainService"
         case .parentKeychainAccessGroup:
             return "ParentKeychainAccessGroup"
+        case .teacherPSPDFKit:
+            return "TeacherPSPDFKitLicenseKey"
         }
     }
 }
@@ -57,10 +60,15 @@ import SoLazy
 @objc public enum FeatureToggleKey: Int {
     case protectedUserInformation
     
+    // External resources are URLs that should be redirected to safari outside of the app instead of displaying it in the app
+    case externalResources
+    
     func toString() -> String {
         switch self {
         case .protectedUserInformation:
             return "ProtectedUserInformation"
+        case .externalResources:
+            return "ExternalResources"
         }
     }
 }
@@ -122,5 +130,24 @@ open class Secrets: NSObject {
     
     open static func featureEnabled(_ toggle: FeatureToggleKey, domain: String?) -> Bool {
         return Secrets._shared.internalFeatureEnabled(toggle, domain: domain)
+    }
+}
+
+extension Secrets {
+    
+    // Quick way to check if a url is a external resource from one central place
+    open static func urlIsExternalResource(_ aURL: URL?) -> Bool {
+        guard let url = aURL?.absoluteString else { return false }
+        guard let toggles = Secrets._shared.toggles else { return false }
+        guard let externalURLs = toggles[FeatureToggleKey.externalResources.toString()] else { return false }
+        return externalURLs.filter({ (value) -> Bool in
+            return url.contains(value)
+        }).count > 0
+    }
+    
+    open static func openExternalResourceIfNecessary(aURL: URL?) -> Bool {
+        guard let url = aURL else { return false }
+        guard urlIsExternalResource(url) else { return false }
+        return UIApplication.shared.openURL(url)
     }
 }

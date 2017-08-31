@@ -128,7 +128,7 @@ class CourseCollectionsTests: UnitTestCase {
             let count = Course.observeCount(inSession: session)
             expect {
                 refresher.playback("refresh-all-courses", in: currentBundle, with: self.session)
-            }.to(change({ count.currentCount }, from: 0, to: 2))
+            }.to(change({ count.currentCount }, from: 0, to: 4))
         }
     }
 
@@ -148,7 +148,7 @@ class CourseCollectionsTests: UnitTestCase {
 
 class CourseTableViewControllerTests: UnitTestCase {
     let session = Session.nas
-    let tvc = Course.TableViewController()
+    let tvc = FetchedTableViewController<Course>()
     let viewModelFactory = ViewModelFactory<Course>.new { _ in UITableViewCell() }
 
     func testTableViewController_prepare_setsCollection() {

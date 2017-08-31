@@ -1,6 +1,6 @@
 //
 // Copyright (C) 2016-present Instructure, Inc.
-//   
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 3 of the License.
@@ -21,7 +21,7 @@ import Airwolf
 
 extension AppDelegate {
     static func resetRegionForTesting() {
-      RegionPicker.defaultPicker.beta.value = true
+      RegionPicker.shared.isBeta.value = true
     }
 
     static func logout() {
@@ -79,7 +79,11 @@ extension AppDelegate {
         for dirURL in [libURL, docURL] {
             let files = try! fileManager.contentsOfDirectory(at: dirURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
             for file in files {
-                try! fileManager.removeItem(at: file)
+              let notEarlGreyScreenshot = !file.absoluteString.contains("earlgrey_screenshots")
+
+              if notEarlGreyScreenshot {
+                try? fileManager.removeItem(at: file)
+              }
             }
         } 
     }
