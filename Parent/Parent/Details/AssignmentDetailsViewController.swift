@@ -1,6 +1,6 @@
 //
 // Copyright (C) 2016-present Instructure, Inc.
-//   
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 3 of the License.
@@ -46,7 +46,7 @@ extension EventDetailsViewModel {
     }
 }
 
-class AssignmentDetailsViewController: Assignment.DetailViewController {
+class AssignmentDetailsViewController: AssignmentKit.AssignmentDetailViewController {
     var disposable: Disposable?
     let courseID: String
     let assignmentID: String

@@ -27,6 +27,8 @@
 @property(nonatomic, copy) NSString *secondaryButtonBackgroundColor;
 @property(nonatomic, copy) NSString *secondaryButtonTextColor;
 @property(nonatomic, copy) NSString *navigationBackground;
+@property(nonatomic, copy) NSString *navigationButtonColor;
+@property(nonatomic, copy) NSString *navigationTextColor;
 @property(nonatomic, copy) NSString *headerImageURL;
 
 @end

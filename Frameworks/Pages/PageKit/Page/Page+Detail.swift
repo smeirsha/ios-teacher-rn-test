@@ -23,6 +23,7 @@ import CoreData
 import ReactiveSwift
 import Marshal
 import SoLazy
+import Secrets
 
 extension Page {
     public static func detailCacheKey(context: NSManagedObjectContext, contextID: ContextID, url: String) -> String {
@@ -113,9 +114,10 @@ extension Page {
         // MARK: - Initializers
 
         public init(session: Session, contextID: ContextID, url: String, route: @escaping (UIViewController, URL) -> Void) throws {
-            self.refresher = try Page.refresher(session, contextID: contextID, url: url)
-            self.observer = try Page.observer(session, contextID: contextID, url: url)
-            self.url = url
+            let urlFRD = url.removingPercentEncoding ?? ""
+            self.refresher = try Page.refresher(session, contextID: contextID, url: urlFRD)
+            self.observer = try Page.observer(session, contextID: contextID, url: urlFRD)
+            self.url = urlFRD
             self.contextID = contextID
             self.session = session
             self.route = route
@@ -151,11 +153,19 @@ extension Page {
             if let page = observer.object {
                 renderBodyForPage(page: page)
             }
+
+            HTTPCookieStorage.shared.cookieAcceptPolicy = .always
         }
 
         open override func viewWillAppear(_ animated: Bool) {
             super.viewWillAppear(animated)
             refresher.refresh(false)
+        }
+
+        open override func viewWillDisappear(_ animated: Bool) {
+            super.viewWillDisappear(animated)
+
+            HTTPCookieStorage.shared.cookieAcceptPolicy = .onlyFromMainDocumentDomain
         }
 
         // MARK: - Helpers
@@ -213,13 +223,13 @@ extension Page {
                 print("No url provided in request")
                 return false
             }
-            
-            if navigationType != .linkClicked {
-                return true
-            }
 
             if requestURL.scheme == "mailto" {
                 return true
+            }
+            
+            if Secrets.openExternalResourceIfNecessary(aURL: requestURL) {
+                return false
             }
             
             if requestURL.absoluteString.localizedCaseInsensitiveContains("slideshare.net") {
@@ -230,7 +240,11 @@ extension Page {
                 self.relaunchRequest(requestWithReferer, webView: self.webView)
                 return false
             }
-            
+
+            if navigationType != .linkClicked {
+                return true
+            }
+
             if requestURL.absoluteString.contains("external_tools/retrieve?") {
                 return true
             }

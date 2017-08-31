@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SubmissionGrader can render the handle content 1`] = `
+<View
+  style={
+    Object {
+      "borderBottomColor": "lightgray",
+      "borderBottomWidth": 0.5,
+      "paddingBottom": 8,
+      "paddingHorizontal": 16,
+    }
+  }
+>
+  <SegmentedControlIOS
+    onChange={[Function]}
+    selectedIndex={-1}
+    testID="speedgrader.segment-control"
+    tintColor="#374A59"
+    values={
+      Array [
+        "Grades",
+        "Comments",
+        "Files",
+      ]
+    }
+  />
+</View>
+`;

@@ -26,7 +26,7 @@ import Result
 import SoPretty
 
 open class EnrollmentsDataSource: NSObject {
-    let enrollmentsObserver: ManagedObjectsObserver<Enrollment, ContextID>
+    public let enrollmentsObserver: ManagedObjectsObserver<Enrollment, ContextID>
     
     init(context: NSManagedObjectContext) throws {
         let fetch = NSFetchRequest<Enrollment>(entityName: "Enrollment")
@@ -70,6 +70,12 @@ open class EnrollmentsDataSource: NSObject {
         guard let contextID = ContextID(canvasContext: canvasContext) else { return nil }
         let enrollment = self.enrollmentsObserver[contextID]
         return enrollment?.arcLTIToolID
+    }
+    
+    @objc open func getGaugeLTILaunchURL(inSession session: Session, completion: @escaping (URL?)->Void) {
+        let _ = try? Enrollment.getGaugeLTILaunchURL(session).observe(on: UIScheduler()).on(value: { url in
+            completion(url)
+        }).start()
     }
     
     // MARK: Changing things 

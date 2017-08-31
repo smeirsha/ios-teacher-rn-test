@@ -255,6 +255,7 @@
 				610AF2E11D79E6BB00386E81 /* SoEdventurous */,
 				49500BAD1E0C67B7007180BD /* SoEdventurousTests */,
 				610AF2E01D79E6BB00386E81 /* Products */,
+				619C944A1ED8E04B00AC7D7B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -359,6 +360,13 @@
 				61CF10A81DBFC39600B68E45 /* MasteryPathAssignment+Details.swift */,
 			);
 			path = MasteryPaths;
+			sourceTree = "<group>";
+		};
+		619C944A1ED8E04B00AC7D7B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		B13338881D832E6C00E95011 /* Dependencies */ = {
@@ -750,6 +758,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../../ExternalFrameworks",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = SoEdventurous/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -771,6 +784,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../../ExternalFrameworks",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = SoEdventurous/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;

@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2017-present Instructure, Inc.
+// Copyright (C) 2016-present Instructure, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,11 @@ import EarlGrey
 
 // DSL that auto waits for elements to exist. Enables react-native compatability.
 
+// MARK: Element timeout and poll
+
+public let elementTimeout:TimeInterval = 30.0 // seconds
+public let elementPoll:TimeInterval = 1.0 // seconds
+
 // MARK: Element selectors
 
 open class e {
@@ -31,6 +36,11 @@ open class e {
     return EarlGrey.select(elementWithMatcher: grey_accessibilityLabel(label), file: file, line: line)
   }
 
+  open static func selectBy(matchers:[GREYMatcher], file:StaticString = #file, line:UInt = #line) -> GREYElementInteraction {
+    return EarlGrey.select(elementWithMatcher: grey_allOf(matchers), file: file, line: line)
+  }
+
+  @available(*, deprecated, message: "Only you can prevent memory leaks 🔥🐻")
   open static func firstElement(_ matcher:GREYElementInteraction) -> GREYElementInteraction {
     return matcher.atIndex(0)
   }
@@ -52,20 +62,47 @@ public func waitFor(_ seconds:TimeInterval) {
 }
 
 public func grey_dismissKeyboard(_ file: StaticString = #file, _ line: UInt = #line) {
-  grey_invokedFromFile(file, line)
+  grey_fromFile(file, line)
 
   UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
 }
 
-let elementTimeout:TimeInterval = 30.0 // seconds
-
 // MARK: Element actions
 
+struct Stopwatch {
+  var startTime:CFTimeInterval;
+
+  init() {
+    startTime = CACurrentMediaTime()
+  }
+
+  mutating func start() {
+    startTime = CACurrentMediaTime()
+  }
+
+  // stopwatch.stop(#function)
+  func stop(_ methodName:String)  {
+    let elapsedTime = CACurrentMediaTime() - startTime
+    print("\(methodName) Polled for \(elapsedTime) seconds. Timeout: \(elementTimeout), Poll: \(elementPoll)")
+  }
+}
+
 extension GREYInteraction {
+  public func exists(file:StaticString = #file, line:UInt = #line) -> Bool {
+    grey_fromFile(file, line)
+
+    var errorOrNil: NSError?
+    self.assert(with: grey_notNil(), error: &errorOrNil)
+    let success = errorOrNil == nil
+
+    return success
+  }
+
   public func tap(file:StaticString = #file, line:UInt = #line) {
     grey_fromFile(file, line)
     self.assertExists(file: file, line: line)
 
+    let stopwatch = Stopwatch()
     // condition does not raise error on failure.
     let success = GREYCondition(name: "Tapping element", block: { _ in
       var errorOrNil: NSError?
@@ -73,20 +110,65 @@ extension GREYInteraction {
       let success = errorOrNil == nil
 
       return success
-    }).wait(withTimeout: elementTimeout)
+    }).wait(withTimeout: elementTimeout, pollInterval: elementPoll)
+    stopwatch.stop(#function)
 
     if (!success) { self.perform(grey_tap()) }
   }
 
+  public func tapUntilHidden(file:StaticString = #file, line:UInt = #line) {
+    grey_fromFile(file, line)
+    self.assertExists(file: file, line: line)
+
+    let stopwatch = Stopwatch()
+    let success = GREYCondition(name: "Waiting for element to activate", block: { _ in
+      var ignoredError: NSError?
+      self.perform(grey_tap(), error: &ignoredError)
+      return !self.exists()
+    }).wait(withTimeout: elementTimeout, pollInterval: elementPoll)
+    stopwatch.stop(#function)
+
+    if !success { self.assert(with: grey_nil()) }
+  }
+
   public func assertExists(file:StaticString = #file, line:UInt = #line) {
     grey_fromFile(file, line)
+    let stopwatch = Stopwatch()
     let success = GREYCondition(name: "Waiting for element to exist", block: { _ in
       var errorOrNil: NSError?
       self.assert(with: grey_notNil(), error: &errorOrNil)
       let success = errorOrNil == nil
       return success
-    }).wait(withTimeout: elementTimeout)
+    }).wait(withTimeout: elementTimeout, pollInterval: elementPoll)
+    stopwatch.stop(#function)
 
     if (!success) { self.assert(with: grey_notNil()) }
+  }
+
+  public func assertHidden(file:StaticString = #file, line:UInt = #line) {
+    grey_fromFile(file, line)
+
+    let stopwatch = Stopwatch()
+    let success = GREYCondition(name: "Waiting for element to disappear", block: { _ in
+      var errorOrNil: NSError?
+      self.assert(with: grey_nil(), error: &errorOrNil)
+      let success = errorOrNil == nil
+      return success
+    }).wait(withTimeout: elementTimeout, pollInterval: elementPoll)
+    stopwatch.stop(#function)
+
+    if (!success) { self.assert(with: grey_nil()) }
+  }
+
+  public func assertContains(text:String, file:StaticString = #file, line:UInt = #line) {
+    grey_fromFile(file, line)
+    let assertionBlock = GREYAssertionBlock(name: "Contains Text", assertionBlockWithError: { element, errorOrNil -> Bool in
+      let elementObject = element as? NSObject
+      if let labelText = elementObject?.accessibilityLabel {
+        return labelText.range(of:text) != nil
+      }
+        return false
+    })
+    self.assert(assertionBlock)
   }
 }

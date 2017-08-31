@@ -1,6 +1,6 @@
 //
 // Copyright (C) 2016-present Instructure, Inc.
-//   
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 3 of the License.
@@ -31,6 +31,7 @@
 #import "CBILog.h"
 @import CanvasKeymaster;
 @import PageKit;
+@import Secrets;
 
 @interface AssignmentDetailsViewController () <UIWebViewDelegate>
 @end
@@ -63,6 +64,8 @@
     }
     
     [self.webView removeShadow];
+
+    [NSHTTPCookieStorage sharedHTTPCookieStorage].cookieAcceptPolicy = NSHTTPCookieAcceptPolicyAlways;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -75,6 +78,13 @@
 {
     [super viewDidAppear:animated];
     DDLogVerbose(@"%@ - viewDidAppear", NSStringFromClass([self class]));
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+
+    [NSHTTPCookieStorage sharedHTTPCookieStorage].cookieAcceptPolicy = NSHTTPCookieAcceptPolicyOnlyFromMainDocumentDomain;
 }
 
 #pragma mark - Assignment Management
@@ -105,7 +115,7 @@
             details = [assignmentInfo stringByAppendingString:details];       
         }
     }
-    
+
     NSString *htmlContents = [PageTemplateRenderer htmlStringWithTitle:self.assignment.name ?: @"" body:details ?: @""];
     NSURL *baseURL = TheKeymaster.currentClient.baseURL;
     [self.webView loadHTMLString:htmlContents baseURL:baseURL];
@@ -126,10 +136,28 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
+    if ([Secrets openExternalResourceIfNecessaryWithAURL:request.URL]) {
+        return NO;
+    }
+    
     if (navigationType == UIWebViewNavigationTypeOther
         || navigationType == UIWebViewNavigationTypeFormSubmitted
         || navigationType == UIWebViewNavigationTypeFormResubmitted) {
         return YES;
+    }
+    
+    NSArray<NSString *> *components = request.URL.pathComponents;
+    if (components.lastObject != nil && request.URL.fragment != nil && components.count > 0) {
+        NSString *selfReferencingFragment = [NSString stringWithFormat:@"%@#%@", TheKeymaster.currentClient.baseURL.absoluteString, request.URL.fragment];
+        NSString *jsScrollToAnchor = [NSString stringWithFormat:@"window.location.href=\'#%@\';", request.URL.fragment];
+        
+        if ([request.URL.absoluteString isEqualToString:selfReferencingFragment]) {
+            [webView stringByEvaluatingJavaScriptFromString:jsScrollToAnchor];
+            return NO;
+        }
+    } else if (request.URL.fragment != nil && request.URL.pathComponents.count == 0 && [request.URL.scheme isEqualToString: @"applewebdata"]) {
+        [webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"window.location.href=\'#%@\';", request.URL.fragment]];
+        return NO;
     }
     
     [[Router sharedRouter] routeFromController:self.parentViewController toURL:request.URL];

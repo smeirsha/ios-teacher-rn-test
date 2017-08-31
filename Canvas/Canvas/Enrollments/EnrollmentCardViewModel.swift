@@ -1,6 +1,6 @@
 //
 // Copyright (C) 2016-present Instructure, Inc.
-//   
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 3 of the License.
@@ -27,7 +27,7 @@ private let CourseNibAndReuseID = "CourseCardCell"
 private let GroupNibAndReuseID = "GroupCardCell"
 
 
-class EnrollmentCardViewModel: Enrollment.ViewModel, CollectionViewCellViewModel {
+class EnrollmentCardViewModel: EnrollmentViewModel, CollectionViewCellViewModel {
     
     var showingGrades = MutableProperty(false)
     var shortcutTabs = MutableProperty<[Tab]>([])

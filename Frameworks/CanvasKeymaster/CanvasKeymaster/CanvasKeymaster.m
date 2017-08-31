@@ -56,7 +56,7 @@ static NSString *const DELETE_EXTRA_CLIENTS_USER_PREFS_KEY = @"delete_extra_clie
     if (self) {
         _subjectForClientLogin = [RACSubject new];
         _subjectForClientLogout = [RACSubject new];
-        
+        self.fetchesBranding = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accessTokenExpired:) name:CKIClientAccessTokenExpiredNotification object:nil];
     }
     return self;
@@ -256,7 +256,7 @@ static NSString *const DELETE_EXTRA_CLIENTS_USER_PREFS_KEY = @"delete_extra_clie
 
 - (RACSignal *)signalForLogout
 {
-    return _subjectForClientLogout;
+    return [_subjectForClientLogout deliverOn:[RACScheduler mainThreadScheduler]];
 }
 
 - (RACSignal *)signalForLogin
@@ -274,13 +274,17 @@ static NSString *const DELETE_EXTRA_CLIENTS_USER_PREFS_KEY = @"delete_extra_clie
         return nil;
     }];
     
-    return [[signalForInitialClient concat:_subjectForClientLogin] flattenMap:^__kindof RACSignal * _Nullable(CKIClient * _Nullable client) {
+    if (self.fetchesBranding == NO) {
+        return [[signalForInitialClient concat:_subjectForClientLogin] deliverOn:[RACScheduler mainThreadScheduler]];
+    }
+        
+    return [[[signalForInitialClient concat:_subjectForClientLogin] flattenMap:^__kindof RACSignal * _Nullable(CKIClient * _Nullable client) {
         RACSignal *brandingSignal = [client fetchBranding];
         return [brandingSignal map:^id _Nullable(CKIBrand *  _Nullable brand) {
             client.branding = brand;
             return client;
         }];
-    }];
+    }] deliverOn:[RACScheduler mainThreadScheduler]];
 }
 
 - (RACSignal *)signalForLoginWithDomain:(NSString *)host
@@ -288,7 +292,7 @@ static NSString *const DELETE_EXTRA_CLIENTS_USER_PREFS_KEY = @"delete_extra_clie
     // logged into the correct domain
     if ([self.currentClient.baseURL.host isEqualToString:host]) {
         //same domain, return current client as signal
-        return [RACSignal return:self.currentClient];
+        return [[RACSignal return:self.currentClient] deliverOn:[RACScheduler mainThreadScheduler]];
     }
     
     // check the keychain
@@ -302,7 +306,7 @@ static NSString *const DELETE_EXTRA_CLIENTS_USER_PREFS_KEY = @"delete_extra_clie
     if (eligibleClients.count == 1) {
         self.currentClient = eligibleClients.firstObject;
         [_subjectForClientLogin sendNext:self.currentClient];
-        return [RACSignal return:self.currentClient];
+        return [[RACSignal return:self.currentClient] deliverOn:[RACScheduler mainThreadScheduler]];
     }
     
     //case eligibleClients.count > 1 || eligibleClients.count == 0
@@ -316,7 +320,7 @@ static NSString *const DELETE_EXTRA_CLIENTS_USER_PREFS_KEY = @"delete_extra_clie
         }
     }];
 
-    return [_subjectForClientLogin take:1];
+    return [[_subjectForClientLogin take:1] deliverOn:[RACScheduler mainThreadScheduler]];
 }
 
 - (void)completeLogout
@@ -334,7 +338,7 @@ static NSString *const DELETE_EXTRA_CLIENTS_USER_PREFS_KEY = @"delete_extra_clie
 
 - (void)logoutWithCompletionBlock:(void (^)())completionBlock
 {
-    if (! self.currentClient) {
+    if (!self.currentClient) {
         if (completionBlock) {
             completionBlock();
         }
@@ -399,7 +403,7 @@ static NSString *const DELETE_EXTRA_CLIENTS_USER_PREFS_KEY = @"delete_extra_clie
         [_subjectForClientLogin sendNext:newClient];
     }];
     
-    return fetchUserID;
+    return [fetchUserID deliverOn:[RACScheduler mainThreadScheduler]];
 }
 
 - (void)stopMasquerading
@@ -418,6 +422,17 @@ static NSString *const DELETE_EXTRA_CLIENTS_USER_PREFS_KEY = @"delete_extra_clie
         [[FXKeychain sharedCanvasKeychain] addClient:plainOlClient];
         [_subjectForClientLogin sendNext:plainOlClient];
     }];
+}
+
+- (void)resetKeymasterForTesting {
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] removeCookiesSinceDate:[NSDate dateWithTimeIntervalSinceReferenceDate:0]];
+    BOOL shouldLogout = [[FXKeychain sharedCanvasKeychain].clients count] > 0;
+    for (CKIClient *client in [[FXKeychain sharedCanvasKeychain].clients copy]) {
+        [[FXKeychain sharedCanvasKeychain] removeClient:client];
+    }
+    if (shouldLogout) {
+        [self logout];
+    }
 }
 
 @end

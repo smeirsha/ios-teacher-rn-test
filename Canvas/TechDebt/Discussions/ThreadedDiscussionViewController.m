@@ -1,6 +1,6 @@
 //
 // Copyright (C) 2016-present Instructure, Inc.
-//   
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 3 of the License.
@@ -28,7 +28,6 @@
 #import "DiscussionEntryCell.h"
 #import "ShortPressGestureRecognizer.h"
 #import "WebBrowserViewController.h"
-#import "ProfileViewController.h"
 #import "ContentLockViewController.h"
 #import "UITableView+in_updateInBlocks.h"
 #import "Router.h"
@@ -1041,7 +1040,7 @@ CKDiscussionEntry *asEntry(id entryOrTopic) {
             if(!self.topic.allowRating && (indexPath.row > 0 || self.showGoBackRow)) {
                 num = @([num floatValue] - 40.0);
             }
-            return [num floatValue];
+            return [num floatValue] > 0 ? [num floatValue] : 0;
         }
         else {
             return tableView.rowHeight;

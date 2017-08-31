@@ -97,13 +97,6 @@
       </FileRef>
    </Group>
    <Group
-      location = "container:SpeedGrader"
-      name = "SpeedGrader">
-      <FileRef
-         location = "group:SpeedGrader.xcodeproj">
-      </FileRef>
-   </Group>
-   <Group
       location = "container:Canvas"
       name = "Canvas">
       <FileRef
@@ -174,6 +167,9 @@
          location = "group:SoAnnotated/SoAnnotated.xcodeproj">
       </FileRef>
       <FileRef
+         location = "group:SoAnnotated-PreSubmission/SoAnnotated-PreSubmission.xcodeproj">
+      </FileRef>
+      <FileRef
          location = "group:SoEdventurous/SoEdventurous.xcodeproj">
       </FileRef>
       <FileRef
@@ -212,8 +208,14 @@
       <FileRef
          location = "group:WhizzyWig/WhizzyWig.xcodeproj">
       </FileRef>
+      <FileRef
+         location = "group:Attendance/Attendance.xcodeproj">
+      </FileRef>
    </Group>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Canvas/Canvas.xcodeproj">
    </FileRef>
 </Workspace>

@@ -1,6 +1,6 @@
 //
 // Copyright (C) 2016-present Instructure, Inc.
-//   
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 3 of the License.
@@ -182,9 +182,12 @@
 
 - (void)setUrl:(NSURL *)url {
     _url = url;
-    self.request = [NSURLRequest requestWithURL:url];
     
-    [self.request loadRequestInWebView:self.webView];
+    if (url) {
+        self.request = [NSURLRequest requestWithURL:url];
+    
+        [self.request loadRequestInWebView:self.webView];
+    }
 }
 
 - (void)setContentHTML:(NSString *)html baseURL:(NSURL *)baseURL {

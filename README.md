@@ -1,9 +1,5 @@
 # Instructure iOS
 
-## Jobs
-
-- [Mobile Software Engineer in Test (Remote)](https://goo.gl/JlF0Vp)
-
 ### Please Note:
 - This repository will be updated frequently with *breaking* changes. Fork with caution.
 - The Cartfile currently refers to a private repository to Instructure.
@@ -25,7 +21,7 @@
 
 App | Description
 --- | ---
-[Canvas][canvas]           | Used by Students all over the world to be smarter, go faster, and do more.
+[Canvas][canvas]           | Used by Students all over the world to be smarter, go faster, and do more. 
 [SpeedGrader][speedgrader] | Used by Teachers all over the world to grade at lightning speeds.
 
 ## Instructure Frameworks
@@ -58,7 +54,7 @@ A collection of frameworks that are general purpose
 
 Framework | Description
 --- | ---
-SoLazy 			| A collection of utilities and extensions that simplify tasks or provide a more Swift friendly interface to Apple APIs.
+SoLazy 			| A collection of utilities and extensions that simplify tasks or provide a more Swift friendly interface to Apple APIs. 
 SoPersistent 	| A powerhouse of persistence goodness. SoPersistent is based on CoreData and provides a unified Collection interface around NSFetchedResultsController. It also contains table and collection view controllers that exploit these collections. These utilities are optimized for reuse and customization.
 SoPretty        | A collection of UI utilities, custom views, and colors used throughout Canvas.
 WhizzyWig 		| Views for displaying and authoring rich text (html) content. Because we let our users do _anything_ they want.
@@ -70,7 +66,7 @@ SoGrey          | Automated testing with [EarlGrey](https://github.com/google/Ea
 
 ```
 Copyright (C) 2016 - present  Instructure, Inc.
-
+ 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, version 3 of the License.
@@ -92,9 +88,9 @@ Copyright (C) 2016 - present Instructure, Inc.
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
+ 
     http://www.apache.org/licenses/LICENSE-2.0
-
+ 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.

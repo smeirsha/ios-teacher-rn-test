@@ -171,6 +171,8 @@
 		619FCC5D1CAC57AB003C97AA /* WebBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619FCC5B1CAC57AB003C97AA /* WebBrowserViewController.swift */; };
 		61AABCA11D6F8EB7009500C3 /* Reachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61AABCA01D6F8EAD009500C3 /* Reachability.framework */; };
 		61AABCA21D6F8EB7009500C3 /* Reachability.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 61AABCA01D6F8EAD009500C3 /* Reachability.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		61B536441E7736B0000FEABB /* SoGrey.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 49E21B071D1C667A00B7B9B4 /* SoGrey.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		61B536461E773868000FEABB /* EarlGrey.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 492246061D1C75DE0053766B /* EarlGrey.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		61B536E11C97C25A0052B8CB /* CalendarEventDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B536E01C97C25A0052B8CB /* CalendarEventDetailsViewController.swift */; };
 		61B536F51C99E58B0052B8CB /* DatePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B536F41C99E58B0052B8CB /* DatePickerViewController.swift */; };
 		61B536F71C9B77900052B8CB /* CourseSyllabusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B536F61C9B77900052B8CB /* CourseSyllabusViewController.swift */; };
@@ -278,6 +280,17 @@
 				5E75B5F41C4D4A7F00A44160 /* ReactiveCocoa.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		61B536431E773687000FEABB /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "$(TEST_HOST)/..";
+			dstSubfolderSpec = 0;
+			files = (
+				61B536461E773868000FEABB /* EarlGrey.framework in CopyFiles */,
+				61B536441E7736B0000FEABB /* SoGrey.framework in CopyFiles */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -810,9 +823,9 @@
 		5E0F9A631C739E6A00BB7707 /* SettingsObserveeCellViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsObserveeCellViewModel.swift; sourceTree = "<group>"; };
 		5E0F9A651C739E6A00BB7707 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		5E0F9A661C739E6A00BB7707 /* SettingsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
-		5E0F9A7A1C739F2700BB7707 /* StudentsListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentsListViewController.swift; sourceTree = "<group>"; };
+		5E0F9A7A1C739F2700BB7707 /* StudentsListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = StudentsListViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		5E1B51221C8FDD590019D764 /* CalendarEventListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarEventListViewController.swift; sourceTree = "<group>"; };
-		5E23FE4D1C991FF3005CC5A6 /* CourseListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CourseListViewController.swift; path = Parent/Dashboard/Calendar/CourseListViewController.swift; sourceTree = SOURCE_ROOT; };
+		5E23FE4D1C991FF3005CC5A6 /* CourseListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = CourseListViewController.swift; path = Parent/Dashboard/Calendar/CourseListViewController.swift; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		5E2BD3921C52A0D3009511FB /* EnrollmentKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = EnrollmentKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E2BD39C1C52C2B9009511FB /* CalendarKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CalendarKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E2FAF671C73C4F200D90C0F /* Cartography.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Cartography.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -880,7 +893,7 @@
 		61B536F41C99E58B0052B8CB /* DatePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerViewController.swift; sourceTree = "<group>"; };
 		61B536F61C9B77900052B8CB /* CourseSyllabusViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseSyllabusViewController.swift; sourceTree = "<group>"; };
 		61BE87DE1C8E308600D79BF4 /* Remindable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Remindable.swift; sourceTree = "<group>"; };
-		61D6A84C1C8F84E400370117 /* AlertsListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertsListViewController.swift; sourceTree = "<group>"; };
+		61D6A84C1C8F84E400370117 /* AlertsListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AlertsListViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		61D7DA961D00815600894813 /* TPKeyboardAvoidingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TPKeyboardAvoidingKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		61DA38871D468DE6002FEE31 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fabric.framework; path = ../ExternalFrameworks/Fabric.framework; sourceTree = "<group>"; };
 		61DA38881D468DE6002FEE31 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = ../ExternalFrameworks/Crashlytics.framework; sourceTree = "<group>"; };
@@ -1512,6 +1525,7 @@
 				F96C7E661D108AEB008935F3 /* Sources */,
 				F96C7E671D108AEB008935F3 /* Frameworks */,
 				F96C7E681D108AEB008935F3 /* Resources */,
+				61B536431E773687000FEABB /* CopyFiles */,
 			);
 			buildRules = (
 			);

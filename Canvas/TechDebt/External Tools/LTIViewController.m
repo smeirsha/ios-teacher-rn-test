@@ -1,6 +1,6 @@
 //
 // Copyright (C) 2016-present Instructure, Inc.
-//   
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 3 of the License.
@@ -22,13 +22,12 @@
 #import "iCanvasErrorHandler.h"
 
 #import "UIViewController+AnalyticsTracking.h"
-#import "UIWebView+SafeAPIURL.h"
 #import "CBIModuleProgressNotifications.h"
 #import "Analytics.h"
 @import CanvasKeymaster;
 #import "CBILog.h"
 
-@interface LTIViewController () <UIWebViewDelegate>
+@interface LTIViewController () <WKNavigationDelegate>
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *backButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *forwardButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
@@ -46,6 +45,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.webView = [[WKWebView alloc] initWithFrame:self.view.bounds];
+    self.webView.translatesAutoresizingMaskIntoConstraints = false;
+    [self.view insertSubview:self.webView atIndex:0];
+    [NSLayoutConstraint activateConstraints:@[
+        [self.webView.topAnchor constraintEqualToAnchor:self.topLayoutGuide.bottomAnchor],
+        [self.webView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+        [self.webView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+        [self.webView.bottomAnchor constraintEqualToAnchor:self.toolbar.topAnchor],
+        
+        [self.toolbar.bottomAnchor constraintEqualToAnchor:self.bottomLayoutGuide.topAnchor],
+    ]];
+    self.webView.navigationDelegate = self;
     self.title = self.externalTool.name;
     [self.webView loadHTMLString:@"" baseURL:nil]; // gets rid of the black bar while loading
     [self loadExternalTool];
@@ -69,7 +80,7 @@
     }
     
     NSURLSession *session = [NSURLSession sharedSession];
-    
+
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.externalTool.url];
     [request addValue:[NSString stringWithFormat:@"Bearer %@", TheKeymaster.currentClient.accessToken] forHTTPHeaderField:@"Authorization"];
     [session.configuration.URLCache removeCachedResponseForRequest:request];
@@ -78,6 +89,9 @@
         NSDictionary *jsonResponse = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
         
         NSURL *url = [NSURL URLWithString:jsonResponse[@"url"]];
+        if (url) {
+            url = [self url:url appendingURLQuery:[NSURLQueryItem queryItemWithName:@"platform" value:@"ios"]];
+        }
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
         [[NSURLCache sharedURLCache] removeCachedResponseForRequest:request];
 
@@ -87,6 +101,16 @@
     }];
     [task resume];
     CBIPostModuleItemProgressUpdate([self.externalTool.url absoluteString], CKIModuleItemCompletionRequirementMustView);
+}
+
+- (NSURL *)url:(NSURL *)url appendingURLQuery:(NSURLQueryItem *)query
+{
+    NSURLComponents *components = [NSURLComponents componentsWithString:url.absoluteString];
+    NSMutableArray *queryItems = [NSMutableArray arrayWithArray:components.queryItems];
+    [queryItems addObject:query];
+    components.queryItems = queryItems;
+
+    return components.URL;
 }
 
 - (void)setExternalTool:(CKIExternalTool *)externalTool
@@ -111,7 +135,7 @@
     [self.webView reload];
 }
 
-#pragma mark - UIWebViewDelegate
+#pragma mark - WKNavigationDelegate
 
 - (void)finishLoading
 {
@@ -126,35 +150,45 @@
 }
 
 - (void)constrainWidth {
-    UIWebView *webView = self.webView;
+    WKWebView *webView = self.webView;
     NSInteger width = webView.bounds.size.width;
     
-    NSString* js =
-    [NSString stringWithFormat:@"var meta = document.createElement('meta'); " \
+    NSString* js = [NSString stringWithFormat:@"var meta = document.createElement('meta'); " \
      "meta.setAttribute( 'name', 'viewport' ); " \
      "meta.setAttribute( 'content', 'width = %@, initial-scale = 1.0, user-scalable = yes' ); " \
      "document.getElementsByTagName('head')[0].appendChild(meta)", @(width)];
     
-    [webView stringByEvaluatingJavaScriptFromString: js];
+    [webView evaluateJavaScript:js completionHandler:nil];
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(nonnull WKNavigationResponse *)navigationResponse decisionHandler:(nonnull void (^)(WKNavigationResponsePolicy))decisionHandler {
+    NSLog(@"response for navigation: %@", navigationResponse.response);
+    decisionHandler(WKNavigationResponsePolicyAllow);
+}
+
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
     [self constrainWidth];
-
     [self finishLoading];
-    [webView replaceHREFsWithAPISafeURLs];
+    [webView evaluateJavaScript:
+     @"var links = document.getElementsByTagName('a');" \
+      "for (var i = 0; i < links.length; i++) {" \
+      "  if(links[i].getAttribute('data-api-endpoint')) {" \
+      "    links[i].setAttribute('href',links[i].getAttribute('data-api-endpoint'));" \
+      "}}" completionHandler:nil];
     DDLogVerbose(@"LTIViewController posting module item progress update after webview finished loading");
     CBIPostModuleItemProgressUpdate([self.externalTool.url absoluteString], CKIModuleItemCompletionRequirementMustView);
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
     [self finishLoading];
 }
+
 - (IBAction)closeButtonTouched:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
+

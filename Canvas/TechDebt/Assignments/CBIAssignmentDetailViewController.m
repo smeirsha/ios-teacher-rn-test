@@ -1,6 +1,6 @@
 //
 // Copyright (C) 2016-present Instructure, Inc.
-//   
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 3 of the License.
@@ -340,7 +340,7 @@ static NSUInteger const CBIAssignmentDetailNumMinutesInDay = 60 * 24;
 }
 
 - (void)displayContentLockIfNecessary {
-    if (self.viewModel.model.lockInfo == nil) {
+    if (self.viewModel.model.lockInfo == nil || [self.viewModel.model.lockInfo.canView boolValue]) {
         return;
     }
     

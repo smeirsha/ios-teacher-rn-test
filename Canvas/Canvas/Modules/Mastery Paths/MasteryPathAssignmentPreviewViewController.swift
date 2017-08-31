@@ -1,6 +1,6 @@
 //
 // Copyright (C) 2016-present Instructure, Inc.
-//   
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, version 3 of the License.
@@ -96,7 +96,7 @@ private func ==(lhs: AssignmentPreviewViewModel, rhs: AssignmentPreviewViewModel
 }
 
 
-class MasteryPathAssignmentPreviewViewController: MasteryPathAssignment.DetailViewController {
+class MasteryPathAssignmentPreviewViewController: MasteryPathAssignmentDetailViewController {
 
     let session: Session
     let assignment: MasteryPathAssignment
