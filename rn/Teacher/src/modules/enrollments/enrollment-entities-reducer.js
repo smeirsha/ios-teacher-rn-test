@@ -41,14 +41,18 @@ export const enrollmentUsers: Reducer<UserProfileState, any> = handleActions({
     resolved: (state, { result }) => {
       const incoming = fromPairs(result.data
         .map((enrollment) => {
-          const incomingUser = enrollment.user
-          let user = state[incomingUser.id]
-          if (user) {
-            Object.assign(user, incomingUser)
-          } else {
-            user = incomingUser
+          let incomingUser = enrollment.user
+          let userState = state[incomingUser.id] || {}
+
+          let newState = {
+            ...userState,
+            data: {
+              ...userState.data,
+              ...incomingUser,
+            },
           }
-          return [user.id, user]
+
+          return [incomingUser.id, newState]
         }))
       return { ...state, ...incoming }
     },

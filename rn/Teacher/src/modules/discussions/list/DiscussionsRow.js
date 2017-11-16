@@ -40,7 +40,7 @@ export type Props = {
   onToggleDiscussionGrouping: Function,
 }
 
-export default class DiscussionsRow extends Component<any, Props, any> {
+export default class DiscussionsRow extends Component<Props, any> {
   render () {
     const discussion = this.props.discussion
     const points = this._points(discussion)
@@ -52,7 +52,7 @@ export default class DiscussionsRow extends Component<any, Props, any> {
           <Row accessible={false}
             accessibilityLabel={`${discussion.title}`}
             renderImage={this._renderIcon}
-            title={discussion.title}
+            title={discussion.title || i18n('No Title')}
             titleProps={{ ellipsizeMode: 'tail', numberOfLines: 2 }}
             border='bottom'
             disclosureIndicator={false}
@@ -147,7 +147,6 @@ export default class DiscussionsRow extends Component<any, Props, any> {
     const replies = i18n({
       default: `{
         count, plural,
-        zero {# Replies}
         one {# Reply}
         other {# Replies}
       }`,
@@ -228,9 +227,10 @@ const style = StyleSheet.create({
     width: 43,
     height: 43,
     marginTop: -15,
+    marginRight: -global.style.defaultPadding / 2,
   },
   kabob: {
-    alignSelf: 'flex-end',
+    alignSelf: 'center',
     width: 18,
     height: 18,
     tintColor: '#000',

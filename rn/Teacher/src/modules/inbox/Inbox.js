@@ -14,6 +14,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+/* @flow */
+
 import React, { Component } from 'react'
 import {
   View,
@@ -33,6 +35,8 @@ import EmptyInbox from './components/EmptyInbox'
 import Images from '../../images'
 import i18n from 'format-message'
 import color from '../../common/colors'
+import RowSeparator from '../../common/components/rows/RowSeparator'
+import CourseActions from '../courses/actions'
 
 export type InboxProps = {
   conversations: Conversation[],
@@ -96,14 +100,11 @@ export class Inbox extends Component {
   }
 
   _filteredConversations () {
-    if (this.state.selectedCourse === 'all') {
-      return this.props.conversations
-    } else {
-      return this.props.conversations.filter((convo) => {
-        if (!convo.context_code) return false
-        return convo.context_code.replace('course_', '') === this.state.selectedCourse
-      })
-    }
+    return this.props.conversations.filter((convo) => {
+      if (this.state.selectedCourse === 'all') return true
+      if (!convo.context_code) return false
+      return convo.context_code.replace('course_', '') === this.state.selectedCourse
+    })
   }
 
   _renderComponent = () => {
@@ -126,6 +127,7 @@ export class Inbox extends Component {
                 onRefresh={this.props.refresh}
                 keyExtractor={ (c) => c.id }
                 onEndReached={this.getNextPage}
+                ItemSeparatorComponent={RowSeparator}
             />
         }
       </View>
@@ -195,6 +197,9 @@ export function mapStateToProps ({ inbox, entities }: AppState): InboxProps {
 }
 
 export function handleRefresh (props: InboxProps, next: Function): void {
+  if (!props.courses || props.courses.length === 0) {
+    props.refreshCourses()
+  }
   switch (props.scope) {
     case 'all': props.refreshInboxAll(next); break
     case 'unread': props.refreshInboxUnread(next); break
@@ -205,7 +210,7 @@ export function handleRefresh (props: InboxProps, next: Function): void {
 }
 
 export function shouldRefresh (props: InboxProps): boolean {
-  return props => props.conversations.length === 0 || !props.next
+  return props.conversations.length === 0 || !props.next
 }
 
 export const Refreshed: any = refresh(
@@ -213,5 +218,5 @@ export const Refreshed: any = refresh(
   shouldRefresh,
   props => Boolean(props.pending)
 )(Inbox)
-const Connected = connect(mapStateToProps, Actions)(Refreshed)
-export default (Connected: Component<any, Props, any>)
+const Connected = connect(mapStateToProps, { ...Actions, ...CourseActions })(Refreshed)
+export default (Connected: Component<Props, any>)

@@ -39,6 +39,7 @@ import Images from '../../images'
 import type { SubmissionStatusProp } from '../submissions/list/submission-prop-types'
 import { statusProp, dueDate } from '../submissions/list/get-submissions-props'
 import UserSubmissionRow from './UserSubmissionRow'
+import RowSeparator from '../../common/components/rows/RowSeparator'
 
 type ContextCardOwnProps = {
   courseID: string,
@@ -90,7 +91,10 @@ export class ContextCard extends Component<any, ContextCardProps, any> {
   }
 
   refreshSubmissions (props: ContextCardProps) {
-    if (!this.state.hasGottenSubmissions && props.enrollment && props.enrollment.type === 'StudentEnrollment') {
+    if (!this.props.userIsDesigner &&
+        !this.state.hasGottenSubmissions &&
+        props.enrollment &&
+        props.enrollment.type === 'StudentEnrollment') {
       this.props.getUserSubmissions(this.props.courseID, this.props.userID)
       this.setState({ hasGottenSubmissions: true })
     }
@@ -108,7 +112,13 @@ export class ContextCard extends Component<any, ContextCardProps, any> {
   }
 
   renderHeader () {
-    let sectionName = this.props.enrollment ? this.props.course.sections.find(({ id }) => id === this.props.enrollment.course_section_id).name : ''
+    let sectionName
+    if (this.props.enrollment) {
+      const section = this.props.sections.find(({ id }) => id === this.props.enrollment.course_section_id)
+      if (section) {
+        sectionName = section.name
+      }
+    }
     let grade = this.props.enrollment.grades && this.props.enrollment.grades.current_grade
     let isStudent = this.props.enrollment.type === 'StudentEnrollment'
     return (
@@ -122,12 +132,12 @@ export class ContextCard extends Component<any, ContextCardProps, any> {
             />
             <View style={styles.userText}>
               <Text style={styles.userName}>{this.props.user.name}</Text>
-              <SubTitle>{this.props.user.primary_email}</SubTitle>
+              <SubTitle>{this.props.user.login_id}</SubTitle>
             </View>
           </View>
           <View>
             <Heading1>{this.props.course.name}</Heading1>
-            <Text testID='context-card.section-name' style={{ marginVertical: 4, fontSize: 14 }}>{i18n('Section: {sectionName}', { sectionName })}</Text>
+            { sectionName && <Text testID='context-card.section-name' style={{ marginVertical: 4, fontSize: 14 }}>{i18n('Section: {sectionName}', { sectionName })}</Text> }
             <SubTitle testID='context-card.last-activity'>
               {this.props.enrollment && i18n(`Last activity on {lastActivity, date, 'MMMM d'} at {lastActivity, time, short}`, {
                 lastActivity: new Date(this.props.enrollment.last_activity_at),
@@ -135,19 +145,14 @@ export class ContextCard extends Component<any, ContextCardProps, any> {
             </SubTitle>
           </View>
         </View>
-        {isStudent &&
+        {isStudent && !this.props.userIsDesigner &&
           <View style={styles.headerSection}>
             <Heading1 style={{ marginBottom: 16 }}>{i18n('Submissions')}</Heading1>
             <View style={styles.line}>
-              <Text testID='context-card.grade' style={styles.largeText}>{grade || this.props.enrollment.grades.current_score || 0}</Text>
-              <Text style={styles.largeText}>{this.props.numLate}</Text>
-              <Text style={styles.largeText}>{this.props.numMissing}</Text>
+              <Text testID='context-card.grade' style={styles.largeText}>{grade || i18n.number(this.props.enrollment.grades.current_score / 100, 'percent') || 0}</Text>
+              <Text style={styles.largeText}>{i18n.number(this.props.numLate)}</Text>
+              <Text style={styles.largeText}>{i18n.number(this.props.numMissing)}</Text>
             </View>
-            {!grade &&
-              <View style={styles.line}>
-                <Text style={styles.outOf}>{i18n('out of {total, number}', { total: this.props.totalPoints })}</Text>
-              </View>
-            }
             <View style={styles.line}>
               <Text style={styles.label}>{i18n('Grade')}</Text>
               <Text style={styles.label}>{i18n('Late')}</Text>
@@ -159,7 +164,7 @@ export class ContextCard extends Component<any, ContextCardProps, any> {
     )
   }
 
-  renderItem = ({ item: assignment }: { item: Assignment }) => {
+  renderItem = ({ item: assignment, index }: { item: Assignment, index: number }) => {
     let submission = this.props.submissions.find(submission => assignment.id === submission.assignment_id)
     return (
       <UserSubmissionRow
@@ -173,13 +178,13 @@ export class ContextCard extends Component<any, ContextCardProps, any> {
   }
 
   render () {
-    const { course, user, enrollment, submissions, assignments } = this.props
-    if ((this.props.pending && !this.props.refreshing) || !user || !enrollment || assignments.length === 0) {
+    const { course, enrollment, submissions } = this.props
+    if (this.props.pending && !this.props.refreshing) {
       return <Screen><ActivityIndicatorView /></Screen>
     }
 
     let isStudent = enrollment.type === 'StudentEnrollment'
-    if (isStudent && submissions.length === 0) {
+    if (!this.props.userIsDesigner && isStudent && submissions.length === 0) {
       return <Screen><ActivityIndicatorView /></Screen>
     }
 
@@ -216,12 +221,16 @@ export class ContextCard extends Component<any, ContextCardProps, any> {
           ListHeaderComponent={this.renderHeader()}
           onRefresh={this.refresh}
           refreshing={this.props.refreshing}
-          data={isStudent ? this.props.assignments : []}
+          data={isStudent && !this.props.userIsDesigner ? this.props.assignments : []}
           renderItem={this.renderItem}
+          keyExtractor={this._keyExtractor}
+          ItemSeparatorComponent={RowSeparator}
         />
       </Screen>
     )
   }
+
+  _keyExtractor = (item: Object, index: number) => `${index}`
 
   _emailContact = () => {
     const { course, user } = this.props
@@ -235,14 +244,12 @@ export class ContextCard extends Component<any, ContextCardProps, any> {
 
   _navigateToSpeedGrader = (assignment: Assignment) => {
     let userID = this.props.user.id
-    let filter = {
-      filterFunc: (submissions: any) => submissions.filter((s) => s.userID === userID),
-    }
+    let filter = (submissions: any) => submissions.filter((s) => s.userID === userID)
 
     let url = `${assignment.html_url}/submissions/${userID}`
-    this.props.navigator.show(url, { modal: true }, {
+    this.props.navigator.show(url, { modal: true, modalPresentationStyle: 'fullscreen' }, {
       studentIndex: 0,
-      selectedFilter: { filter },
+      filter,
     })
   }
 }
@@ -304,7 +311,7 @@ export function shouldRefresh (props: ContextCardProps): boolean {
 }
 
 export function fetchData (props: ContextCardProps): void {
-  props.refreshUsers([props.userID])
+  props.refreshUsers(props.courseID, [props.userID])
   props.refreshCourses()
   props.refreshEnrollments(props.courseID)
   props.refreshAssignmentList(props.courseID)
@@ -326,7 +333,10 @@ export function mapStateToProps (state: AppState, ownProps: ContextCardOwnProps)
 
   let enrollment
   if (enrollments) {
-    let enrollmentID = enrollments.refs.find(id => state.entities.enrollments[id].user_id === ownProps.userID) || ''
+    let enrollmentID = enrollments.refs.find(id => {
+      let e = state.entities.enrollments[id]
+      return e && e.user_id === ownProps.userID
+    }) || ''
     enrollment = state.entities.enrollments[enrollmentID]
   } else {
     enrollments = {}
@@ -355,14 +365,26 @@ export function mapStateToProps (state: AppState, ownProps: ContextCardOwnProps)
       else return -1
     })
 
+  const sections = Object.values(state.entities.sections).filter((s) => {
+    return s.course_id === ownProps.courseID
+  })
+
+  let asyncActions = state.asyncActions
+  let pending = asyncActions['users.refresh'] && asyncActions['users.refresh'].pending ||
+                asyncActions['courses.refresh'] && asyncActions['courses.refresh'].pending ||
+                asyncActions['enrollments.update'] && asyncActions['enrollments.update'].pending ||
+                asyncActions['assignmentList.refresh'] && asyncActions['assignmentList.refresh'].pending
+
   return {
     user: user.data,
-    pending: user.pending || enrollments.pending || false,
+    pending: Boolean(pending) || !enrollment,
     courseColor: color,
     course,
     enrollment,
     submissions,
     assignments,
+    sections,
+    userIsDesigner: course && course.enrollments[0].type === 'designer',
     totalPoints: calculateTotalPoints(state, ownProps),
     numLate: calculateStatus(state, ownProps, 'late'),
     numMissing: calculateStatus(state, ownProps, 'missing'),

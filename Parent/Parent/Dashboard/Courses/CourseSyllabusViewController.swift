@@ -17,13 +17,12 @@
     
 
 import UIKit
-import WhizzyWig
-import EnrollmentKit
-import TooLegit
-import SoPersistent
+import CanvasCore
+import CanvasCore
+
+
 import ReactiveSwift
-import SoLazy
-import Armchair
+import CanvasCore
 
 class CourseSyllabusViewController: UIViewController {
 
@@ -57,7 +56,6 @@ class CourseSyllabusViewController: UIViewController {
         session.enrollmentsDataSource(withScope: studentID).producer(ContextID(id: courseID, context: .course)).observe(on: UIScheduler()).startWithValues { next in
             guard let course = next as? Course else { return }
             self.whizzyWigView.loadHTMLString(course.syllabusBody ?? "", baseURL: session.baseURL)
-            Armchair.userDidSignificantEvent(true)
         }
     }
     

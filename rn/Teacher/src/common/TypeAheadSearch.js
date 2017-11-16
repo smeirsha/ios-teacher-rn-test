@@ -18,8 +18,8 @@
 
 import React, { Component } from 'react'
 import SearchBar from 'react-native-search-bar'
-import { httpClient } from 'canvas-api'
-import { parseNext } from 'canvas-api/utils/pagination'
+import { httpClient } from '../canvas-api'
+import { parseNext } from '../canvas-api/utils/pagination'
 import axios, { CancelToken } from 'axios'
 import i18n from 'format-message'
 
@@ -35,7 +35,7 @@ export type Props = {
   defaultQuery?: string,
 }
 
-export default class TypeAheadSearch extends Component<any, Props, any> {
+export default class TypeAheadSearch extends Component<Props, any> {
   searchBar: SearchBar
   nextURL: ?string
   cancel: ?(() => void)

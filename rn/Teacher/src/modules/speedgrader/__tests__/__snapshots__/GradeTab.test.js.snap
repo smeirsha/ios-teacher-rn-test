@@ -531,6 +531,14 @@ exports[`Rubric has the correct score 1`] = `
           >
             <TouchableOpacity
               accessibilityTraits="button"
+              hitSlop={
+                Object {
+                  "bottom": 15,
+                  "left": 15,
+                  "right": 15,
+                  "top": 15,
+                }
+              }
               onPress={[Function]}
               testID="rubric-item.description"
             >
@@ -572,7 +580,7 @@ exports[`Rubric has the correct score 1`] = `
                     ]
                   }
                 >
-                  View long description
+                  View Long Description
                 </Text>
               </View>
             </TouchableOpacity>
@@ -1118,6 +1126,14 @@ exports[`Rubric renders a rubric 1`] = `
           >
             <TouchableOpacity
               accessibilityTraits="button"
+              hitSlop={
+                Object {
+                  "bottom": 15,
+                  "left": 15,
+                  "right": 15,
+                  "top": 15,
+                }
+              }
               onPress={[Function]}
               testID="rubric-item.description"
             >
@@ -1159,7 +1175,7 @@ exports[`Rubric renders a rubric 1`] = `
                     ]
                   }
                 >
-                  View long description
+                  View Long Description
                 </Text>
               </View>
             </TouchableOpacity>
@@ -1499,6 +1515,14 @@ exports[`Rubric renders the comment input when openCommentKeyboard is called 1`]
           >
             <TouchableOpacity
               accessibilityTraits="button"
+              hitSlop={
+                Object {
+                  "bottom": 15,
+                  "left": 15,
+                  "right": 15,
+                  "top": 15,
+                }
+              }
               onPress={[Function]}
               testID="rubric-item.add-comment-2"
             >
@@ -1574,6 +1598,14 @@ exports[`Rubric renders the comment input when openCommentKeyboard is called 1`]
             </Text>
             <TouchableOpacity
               accessibilityTraits="button"
+              hitSlop={
+                Object {
+                  "bottom": 15,
+                  "left": 15,
+                  "right": 15,
+                  "top": 15,
+                }
+              }
               onPress={[Function]}
               testID="rubric-item.description"
             >
@@ -1615,7 +1647,7 @@ exports[`Rubric renders the comment input when openCommentKeyboard is called 1`]
                     ]
                   }
                 >
-                  View long description
+                  View Long Description
                 </Text>
               </View>
             </TouchableOpacity>
@@ -1635,7 +1667,7 @@ exports[`Rubric renders the comment input when openCommentKeyboard is called 1`]
           "flexDirection": "row",
           "justifyContent": "space-between",
           "overflow": "hidden",
-          "paddingHorizontal": 16,
+          "paddingRight": 16,
           "paddingVertical": 8,
         }
       }
@@ -1651,7 +1683,6 @@ exports[`Rubric renders the comment input when openCommentKeyboard is called 1`]
             "flex": 1,
             "flexDirection": "row",
             "justifyContent": "space-between",
-            "marginLeft": 4,
             "overflow": "hidden",
           }
         }
@@ -2347,6 +2378,14 @@ exports[`Rubric shows the activity indicator when saving a rubric score 1`] = `
           >
             <TouchableOpacity
               accessibilityTraits="button"
+              hitSlop={
+                Object {
+                  "bottom": 15,
+                  "left": 15,
+                  "right": 15,
+                  "top": 15,
+                }
+              }
               onPress={[Function]}
               testID="rubric-item.description"
             >
@@ -2388,7 +2427,7 @@ exports[`Rubric shows the activity indicator when saving a rubric score 1`] = `
                     ]
                   }
                 >
-                  View long description
+                  View Long Description
                 </Text>
               </View>
             </TouchableOpacity>

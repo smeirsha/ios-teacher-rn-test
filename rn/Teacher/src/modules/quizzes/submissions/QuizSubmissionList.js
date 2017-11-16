@@ -19,22 +19,26 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Actions from './actions'
+import SectionActions from '../../assignee-picker/actions'
 import EnrollmentActions from '../../enrollments/actions'
+import CoursesActions from '../../courses/actions'
 import {
   View,
   StyleSheet,
   FlatList,
 } from 'react-native'
 
-import find from 'lodash/find'
 import refresh from '../../../utils/refresh'
 import Screen from '../../../routing/Screen'
-import SubmissionsHeader, { type SubmissionFilterOption, type SelectedSubmissionFilter } from '../../submissions/SubmissionsHeader'
+import SubmissionsHeader from '../../submissions/SubmissionsHeader'
 import SubmissionRow, { type SubmissionRowDataProps } from '../../submissions/list/SubmissionRow'
 import mapStateToProps from './map-state-to-props'
 import Images from '../../../images'
 import i18n from 'format-message'
 import ActivityIndicatorView from '../../../common/components/ActivityIndicatorView'
+import RowSeparator from '../../../common/components/rows/RowSeparator'
+import ListEmptyComponent from '../../../common/components/ListEmptyComponent'
+import defaultFilterOptions, { type SubmissionFilterOption, createFilter, joinTitles } from '../../filter/filter-options'
 
 export type QuizSubmissionListNavProps = {
   courseID: string,
@@ -51,9 +55,14 @@ export type QuizSubmissionListDataProps = {
   error: ?string,
   pointsPossible: number,
   anonymous: boolean,
+  sections: Array<Section>,
 }
 
 export type QuizSubmissionListProps = QuizSubmissionListDataProps & QuizSubmissionListNavProps
+
+export type QuizSubmissionListState = {
+  filterOptions: Array<SubmissionFilterOptions>,
+}
 
 export class QuizSubmissionList extends Component<any, QuizSubmissionListProps, any> {
 
@@ -63,9 +72,12 @@ export class QuizSubmissionList extends Component<any, QuizSubmissionListProps, 
   constructor (props: any) {
     super(props)
 
-    this.filterOptions = this.filterOptions = SubmissionsHeader.defaultFilterOptions()
+    let filterOptions = [ ...defaultFilterOptions(this.props.filterType), ...this.props.sections.map(createFilterFromSection) ]
+    let filter = createFilter(filterOptions)
+
     this.state = {
-      rows: props.rows || [],
+      filterOptions,
+      filter,
     }
   }
 
@@ -77,44 +89,25 @@ export class QuizSubmissionList extends Component<any, QuizSubmissionListProps, 
     this.props.navigator.show(
       path,
       { modal: true, modalPresentationStyle: 'fullscreen' },
-      { selectedFilter: this.selectedFilter, studentIndex: index }
+      { filter: this.state.filter, studentIndex: index }
     )
   }
 
-  componentWillMount = () => {
-    const type = this.props.filterType
-    if (type) {
-      const filter = find(this.filterOptions, { type })
-      if (filter) {
-        this.selectedFilter = { filter }
-      }
-      this.updateRows(this.props.rows)
-    }
-  }
-
   componentWillReceiveProps = (newProps: QuizSubmissionListProps) => {
-    this.updateRows(newProps.rows)
-  }
-
-  updateFilter = (filter: SelectedSubmissionFilter) => {
-    this.selectedFilter = filter
-    this.updateRows(this.props.rows)
-  }
-
-  clearFilter = () => {
-    this.selectedFilter = null
-    this.updateRows(this.props.rows)
-  }
-
-  updateRows = (rows: SubmissionRowDataProps[]) => {
-    const selected = this.selectedFilter
-    let filtered = rows
-    if (selected && selected.filter && selected.filter.filterFunc) {
-      filtered = selected.filter.filterFunc(rows, selected.metadata)
+    if (this.props.sections.length !== newProps.sections.length) {
+      let filterOptions = [ ...this.state.filterOptions, ...newProps.sections.map(createFilterFromSection) ]
+      let filter = createFilter(filterOptions)
+      this.setState({
+        filterOptions,
+        filter,
+      })
     }
+  }
 
+  applyFilter = (filterOptions: Array<SubmissionFilterOption>): void => {
     this.setState({
-      rows: filtered,
+      filterOptions,
+      filter: createFilter(filterOptions),
     })
   }
 
@@ -128,6 +121,7 @@ export class QuizSubmissionList extends Component<any, QuizSubmissionListProps, 
       onPress={this.navigateToSubmission(index)}
       disclosure={disclosure}
       anonymous={this.props.anonymous}
+      disabled={!this.props.quiz.data.assignment_id}
     />
   }
 
@@ -142,8 +136,33 @@ export class QuizSubmissionList extends Component<any, QuizSubmissionListProps, 
     )
   }
 
+  messageStudentsWho = () => {
+    var subject = ''
+    let jointTitles = joinTitles(this.state.filterOptions)
+    if (jointTitles) {
+      subject = `${jointTitles} - ${this.props.quiz.title}`
+    }
+    const recipients = this.state.filter(this.props.rows).map(row => {
+      return { id: row.userID, name: row.name, avatar_url: row.avatarURL }
+    })
+
+    this.props.navigator.show('/conversations/compose', { modal: true }, {
+      recipients,
+      subject,
+      contextName: this.props.courseName,
+      contextCode: this.props.courseID ? `course_${this.props.courseID}` : null,
+      canAddRecipients: false,
+      onlySendIndividualMessages: true,
+    })
+  }
+
   render () {
-    let rightBarButtons = []
+    let rightBarButtons = [{
+      accessibilityLabel: i18n('Message students who'),
+      image: Images.smallMail,
+      testID: 'submission-list.message-who-btn',
+      action: this.messageStudentsWho,
+    }]
     if (this.props.quiz && this.props.quiz.data.assignment_id) {
       rightBarButtons.push({
         accessibilityLabel: i18n('Submission Settings'),
@@ -165,20 +184,25 @@ export class QuizSubmissionList extends Component<any, QuizSubmissionListProps, 
           ? <ActivityIndicatorView />
           : <View style={styles.container}>
               <SubmissionsHeader
-                filterOptions={this.filterOptions}
-                selectedFilter={this.selectedFilter}
-                onClearFilter={this.clearFilter}
-                onSelectFilter={this.updateFilter}
+                filterOptions={this.state.filterOptions}
+                applyFilter={this.applyFilter}
+                initialFilterType={this.props.filterType}
+                filterPromptMessage={i18n('Out of {points}', { points: this.props.pointsPossible })}
+                navigator={this.props.navigator}
                 pointsPossible={this.props.pointsPossible}
                 anonymous={this.props.anonymous}
                 muted={this.props.muted} />
               <FlatList
-                data={this.state.rows}
+                data={this.state.filter(this.props.rows)}
                 keyExtractor={this.keyExtractor}
                 testID='quiz-submission-list'
                 renderItem={this.renderRow}
                 refreshing={this.props.refreshing}
                 onRefresh={this.props.refresh}
+                ItemSeparatorComponent={RowSeparator}
+                ListEmptyComponent={
+                  <ListEmptyComponent title={i18n('No results')} />
+                }
                 />
             </View>
         }
@@ -213,8 +237,10 @@ const styles = StyleSheet.create({
 
 export function refreshQuizSubmissionData (props: any): void {
   const { courseID, quizID } = props
+  props.refreshSections(courseID)
   props.refreshQuizSubmissions(courseID, quizID)
   props.refreshEnrollments(courseID)
+  props.getCourseEnabledFeatures(courseID)
 }
 
 let Refreshed = refresh(
@@ -222,5 +248,18 @@ let Refreshed = refresh(
   props => true,
   props => Boolean(props.pending)
 )(QuizSubmissionList)
-let Connected = connect(mapStateToProps, { ...Actions, ...EnrollmentActions })(Refreshed)
+let Connected = connect(mapStateToProps, { ...Actions, ...EnrollmentActions, ...SectionActions, ...CoursesActions })(Refreshed)
 export default (Connected: Component<any, QuizSubmissionListProps, any>)
+
+function createFilterFromSection (section) {
+  return {
+    type: `section.${section.id}`,
+    title: () => section.name,
+    disabled: false,
+    selected: false,
+    exclusive: false,
+    filterFunc: (submission) => {
+      return submission.allSectionIDs.includes(section.id)
+    },
+  }
+}

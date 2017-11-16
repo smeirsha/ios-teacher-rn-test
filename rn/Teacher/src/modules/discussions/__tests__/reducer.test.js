@@ -30,6 +30,7 @@ const {
   deleteDiscussionEntry,
   deletePendingReplies,
   markAllAsRead,
+  markEntryAsRead,
 } = DetailActions
 const { refreshAnnouncements } = AnnouncementListActions
 const {
@@ -409,6 +410,67 @@ describe('refreshDiscussions', () => {
         data: two,
         pending: 0,
         error: null,
+      },
+    })
+  })
+
+  it('preserves replies', () => {
+    const discussion = template.discussion({
+      id: '1',
+      message: 'initial message',
+    })
+    const replies = [template.discussionReply()]
+    const initialState = {
+      '1': {
+        data: { ...discussion, replies },
+        error: null,
+        pending: 0,
+      },
+    }
+    const expected = {
+      '1': {
+        data: {
+          ...discussion,
+          replies,
+          message: 'updated message',
+        },
+        error: null,
+        pending: 0,
+      },
+    }
+    const resolved = {
+      type: refreshDiscussions.toString(),
+      payload: {
+        result: {
+          data: [{ ...discussion, message: 'updated message' }],
+        },
+      },
+    }
+    expect(discussions(initialState, resolved)).toEqual(expected)
+  })
+})
+
+describe('markEntryAsRead', () => {
+  it('updates unread_entries', () => {
+    let discussion = template.discussion()
+    let state = {
+      [discussion.id]: {
+        data: discussion,
+        unread_entries: ['1'],
+      },
+    }
+    let action = {
+      type: markEntryAsRead.toString(),
+      payload: {
+        discussionID: discussion.id,
+        entryID: '1',
+      },
+    }
+
+    expect(discussions(state, action)).toMatchObject({
+      [discussion.id]: {
+        data: discussion,
+        unread_entries: [],
       },
     })
   })
@@ -1294,6 +1356,18 @@ describe('createEntry', () => {
     let result = addOrUpdateReply(cUpdated, localIndexPath, { replies }, false, 'threaded')
 
     let expected = [a, b]
+    expect(result).toEqual(expected)
+  })
+
+  it('addOrUpdateReply UPDATE reply 1 deep not yet in incoming replies', () => {
+    let c = template.discussionReply({ id: '3', message: 'BBBB' })
+    let a = template.discussionReply({ id: '1' })
+    let replies = [a]
+
+    let localIndexPath = [0, 0]
+    let result = addOrUpdateReply(c, localIndexPath, { replies }, false, 'side_comment')
+
+    let expected = [template.discussionReply({ id: '1', replies: [c] })]
     expect(result).toEqual(expected)
   })
 })

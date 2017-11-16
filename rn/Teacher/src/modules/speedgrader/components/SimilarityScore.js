@@ -51,7 +51,7 @@ const TURN_IT_IN_COLORS = {
   THREAT_LEVEL_MIDNIGHT: '#EE0612',
 }
 
-export class SimilarityScore extends Component<any, Props, any> {
+export class SimilarityScore extends Component<Props, any> {
   render () {
     const { status, score } = this.props
     if (!status) {
@@ -194,7 +194,9 @@ export function mapStateToProps (state: AppState, ownProps: OwnProps): StateProp
       // online text entry
       if (selectedSubmission.submission_type === 'online_text_entry') {
         const data = selectedSubmission.turnitin_data[`submission_${selectedSubmission.id}`]
-        return mapTurnItInDataToProps(data)
+        if (data) {
+          return mapTurnItInDataToProps(data)
+        }
       }
 
       // online upload
@@ -203,7 +205,9 @@ export function mapStateToProps (state: AppState, ownProps: OwnProps): StateProp
           const { attachments } = selectedSubmission
           const selectedAttachment = selectedAttachmentIndex != null ? attachments[selectedAttachmentIndex] : attachments[0]
           const data = selectedSubmission.turnitin_data[`attachment_${selectedAttachment.id}`]
-          return mapTurnItInDataToProps(data)
+          if (data) {
+            return mapTurnItInDataToProps(data)
+          }
         }
       }
     }

@@ -182,7 +182,12 @@ const styles = StyleSheet.create({
 })
 
 export function mapStateToProps (state: AppState, ownProps: RouterProps): HeaderDataProps {
-  let anonymous = state.entities.assignments[ownProps.assignmentID].anonymousGradingOn
+  let assignmentContent = state.entities.assignments[ownProps.assignmentID]
+  let quiz = assignmentContent.data.quiz_id && state.entities.quizzes[assignmentContent.data.quiz_id].data
+  let course = state.entities.courses[ownProps.courseID]
+  let anonymous = assignmentContent.anonymousGradingOn ||
+                  quiz && quiz.anonymous_submissions ||
+                  course && course.enabledFeatures.includes('anonymous_grading')
   return {
     anonymous,
   }

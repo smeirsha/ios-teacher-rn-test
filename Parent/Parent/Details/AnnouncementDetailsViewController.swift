@@ -17,17 +17,15 @@
     
 
 import Foundation
-import DiscussionKit
-import TooLegit
-import ReactiveSwift
-import SoLazy
-import SoPersistent
-import WhizzyWig
-import EnrollmentKit
-import Airwolf
-import FileKit
+import CanvasCore
 
-typealias Announcement = DiscussionTopic
+import ReactiveSwift
+import CanvasCore
+
+import CanvasCore
+import CanvasCore
+
+
 
 private let TitleCellReuseIdentifier = "TitleCell"
 private let AttachmentCellReuseIdentifier = "AttachmentCell"
@@ -71,16 +69,10 @@ enum AnnouncementDetailsCellViewModel: TableViewCellViewModel {
     }
 
     static func detailsForDiscussionTopic(_ baseURL: URL, discussionTopic: DiscussionTopic) -> [AnnouncementDetailsCellViewModel] {
-        var attachmentInfo: AnnouncementDetailsCellViewModel? = nil
-        if let attachmentID = discussionTopic.attachmentIDs.first {
-            do {
-                if let file: File = try discussionTopic.managedObjectContext?.findOne(withPredicate: NSPredicate(format: "%K == %@", "id", attachmentID)) {
-                    attachmentInfo = .attachment(file.name)
-                }
-            } catch {
-                print("error fetching file: \(error)")
-            }
-        }
+        let attachmentInfo: AnnouncementDetailsCellViewModel? = discussionTopic
+            .attachmentName
+            .map(AnnouncementDetailsCellViewModel.attachment)
+        
         return [
             .title(discussionTopic.title),
             attachmentInfo,
@@ -101,12 +93,12 @@ func ==(lhs: AnnouncementDetailsCellViewModel, rhs: AnnouncementDetailsCellViewM
     }
 }
 
-class AnnouncementDetailsViewController: Announcement.DetailViewController {
+class AnnouncementDetailsViewController: DiscussionTopic.DetailViewController {
     var disposable: Disposable?
 
     init(session: Session, studentID: String, courseID: String, announcementID: String) throws {
         super.init()
-        let observer = try Announcement.observer(session, studentID: studentID, courseID: courseID, discussionTopicID: announcementID)
+        let observer = try DiscussionTopic.observer(session, studentID: studentID, courseID: courseID, discussionTopicID: announcementID)
         let refresher = try DiscussionTopic.refresher(session, studentID: studentID, courseID: courseID, discussionTopicID: announcementID)
 
         prepare(observer, refresher: refresher) { AnnouncementDetailsCellViewModel.detailsForDiscussionTopic(session.baseURL, discussionTopic: $0) }

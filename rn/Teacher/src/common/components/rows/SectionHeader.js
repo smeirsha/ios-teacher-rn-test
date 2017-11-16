@@ -28,14 +28,14 @@ import color from '../../colors'
 
 type Props = {
   title: string,
-  key?: string,
+  sectionKey?: string,
   top?: boolean, // Draw a line at the top of the section header. Usually used if the section header is the topmost of the list
 }
 
-export default class SectionHeader extends React.PureComponent<any, Props, any> {
+export default class SectionHeader extends React.PureComponent<Props, any> {
 
   render () {
-    const key = this.props.key ? this.props.key : this.props.title
+    const key = this.props.sectionKey ? this.props.sectionKey : this.props.title
     const topHairline = this.props.top ? styles.topHairline : undefined
     const containerStyle = [styles.section, styles.bottomHairline, topHairline].filter(Boolean)
     return (
@@ -49,11 +49,12 @@ export default class SectionHeader extends React.PureComponent<any, Props, any> 
 const styles = StyleSheet.create({
   section: {
     flex: 1,
-    height: 24,
+    height: 'auto',
     backgroundColor: '#F5F5F5',
     justifyContent: 'center',
     paddingLeft: 16,
     paddingRight: 8,
+    paddingVertical: global.style.defaultPadding / 4,
   },
   title: {
     fontSize: 14,

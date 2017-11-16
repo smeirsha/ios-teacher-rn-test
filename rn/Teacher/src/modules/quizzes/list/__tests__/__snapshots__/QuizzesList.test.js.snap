@@ -10,8 +10,14 @@ exports[`QuizzesList renders 1`] = `
 >
   <RCTScrollView
     ItemSeparatorComponent={undefined}
+    ListEmptyComponent={
+      <ListEmptyComponent
+        title="There are no quizzes to display."
+      />
+    }
     data={Array []}
     disableVirtualization={false}
+    extraData={true}
     getItem={[Function]}
     getItemCount={[Function]}
     horizontal={false}
@@ -38,7 +44,45 @@ exports[`QuizzesList renders 1`] = `
     updateCellsBatchingPeriod={50}
     windowSize={21}
   >
-    <View />
+    <View>
+      <View
+        onLayout={[Function]}
+        style={null}
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flex": 1,
+              "height": 100,
+              "justifyContent": "center",
+            }
+          }
+        >
+          <Text
+            accessible={true}
+            allowFontScaling={true}
+            disabled={false}
+            ellipsizeMode="tail"
+            style={
+              Array [
+                Object {
+                  "fontFamily": ".SFUIDisplay",
+                },
+                Object {
+                  "color": "#2D3B45",
+                  "fontFamily": ".SFUIDisplay-semibold",
+                  "fontSize": 16,
+                },
+                undefined,
+              ]
+            }
+          >
+            There are no quizzes to display.
+          </Text>
+        </View>
+      </View>
+    </View>
   </RCTScrollView>
 </View>
 `;
@@ -53,6 +97,11 @@ exports[`QuizzesList renders in correct order 1`] = `
 >
   <RCTScrollView
     ItemSeparatorComponent={undefined}
+    ListEmptyComponent={
+      <ListEmptyComponent
+        title="There are no quizzes to display."
+      />
+    }
     data={
       Array [
         Object {
@@ -116,6 +165,7 @@ exports[`QuizzesList renders in correct order 1`] = `
       ]
     }
     disableVirtualization={false}
+    extraData={true}
     getItem={[Function]}
     getItemCount={[Function]}
     horizontal={false}
@@ -219,10 +269,11 @@ exports[`QuizzesList renders in correct order 1`] = `
               Object {
                 "backgroundColor": "#F5F5F5",
                 "flex": 1,
-                "height": 24,
+                "height": "auto",
                 "justifyContent": "center",
                 "paddingLeft": 16,
                 "paddingRight": 8,
+                "paddingVertical": 4,
               },
               Object {
                 "borderBottomColor": "#C7CDD1",
@@ -286,9 +337,6 @@ exports[`QuizzesList renders in correct order 1`] = `
               onPress={[Function]}
               style={
                 Array [
-                  Object {
-                    "height": undefined,
-                  },
                   undefined,
                   Object {
                     "borderBottomColor": "#C7CDD1",
@@ -306,10 +354,11 @@ exports[`QuizzesList renders in correct order 1`] = `
                       "backgroundColor": "white",
                       "flex": 1,
                       "flexDirection": "row",
-                      "paddingBottom": 12.8,
+                      "minHeight": 54,
+                      "paddingBottom": 12,
                       "paddingLeft": 16,
                       "paddingRight": 16,
-                      "paddingTop": 12.8,
+                      "paddingTop": 12,
                     },
                     Object {
                       "backgroundColor": "white",
@@ -639,9 +688,6 @@ exports[`QuizzesList renders in correct order 1`] = `
               onPress={[Function]}
               style={
                 Array [
-                  Object {
-                    "height": undefined,
-                  },
                   undefined,
                   Object {
                     "borderBottomColor": "#C7CDD1",
@@ -659,10 +705,11 @@ exports[`QuizzesList renders in correct order 1`] = `
                       "backgroundColor": "white",
                       "flex": 1,
                       "flexDirection": "row",
-                      "paddingBottom": 12.8,
+                      "minHeight": 54,
+                      "paddingBottom": 12,
                       "paddingLeft": 16,
                       "paddingRight": 16,
-                      "paddingTop": 12.8,
+                      "paddingTop": 12,
                     },
                     Object {
                       "backgroundColor": "white",
@@ -989,6 +1036,11 @@ exports[`QuizzesList renders quizzes 1`] = `
 >
   <RCTScrollView
     ItemSeparatorComponent={undefined}
+    ListEmptyComponent={
+      <ListEmptyComponent
+        title="There are no quizzes to display."
+      />
+    }
     data={
       Array [
         Object {
@@ -1052,6 +1104,7 @@ exports[`QuizzesList renders quizzes 1`] = `
       ]
     }
     disableVirtualization={false}
+    extraData={true}
     getItem={[Function]}
     getItemCount={[Function]}
     horizontal={false}
@@ -1155,10 +1208,11 @@ exports[`QuizzesList renders quizzes 1`] = `
               Object {
                 "backgroundColor": "#F5F5F5",
                 "flex": 1,
-                "height": 24,
+                "height": "auto",
                 "justifyContent": "center",
                 "paddingLeft": 16,
                 "paddingRight": 8,
+                "paddingVertical": 4,
               },
               Object {
                 "borderBottomColor": "#C7CDD1",
@@ -1222,9 +1276,6 @@ exports[`QuizzesList renders quizzes 1`] = `
               onPress={[Function]}
               style={
                 Array [
-                  Object {
-                    "height": undefined,
-                  },
                   undefined,
                   Object {
                     "borderBottomColor": "#C7CDD1",
@@ -1242,10 +1293,11 @@ exports[`QuizzesList renders quizzes 1`] = `
                       "backgroundColor": "white",
                       "flex": 1,
                       "flexDirection": "row",
-                      "paddingBottom": 12.8,
+                      "minHeight": 54,
+                      "paddingBottom": 12,
                       "paddingLeft": 16,
                       "paddingRight": 16,
-                      "paddingTop": 12.8,
+                      "paddingTop": 12,
                     },
                     Object {
                       "backgroundColor": "white",
@@ -1575,9 +1627,6 @@ exports[`QuizzesList renders quizzes 1`] = `
               onPress={[Function]}
               style={
                 Array [
-                  Object {
-                    "height": undefined,
-                  },
                   undefined,
                   Object {
                     "borderBottomColor": "#C7CDD1",
@@ -1595,10 +1644,11 @@ exports[`QuizzesList renders quizzes 1`] = `
                       "backgroundColor": "white",
                       "flex": 1,
                       "flexDirection": "row",
-                      "paddingBottom": 12.8,
+                      "minHeight": 54,
+                      "paddingBottom": 12,
                       "paddingLeft": 16,
                       "paddingRight": 16,
-                      "paddingTop": 12.8,
+                      "paddingTop": 12,
                     },
                     Object {
                       "backgroundColor": "white",

@@ -17,10 +17,7 @@
     
 
 import UIKit
-import EnrollmentKit
-import SoPersistent
-import TooLegit
-import SoLazy
+import CanvasCore
 
 class GroupsCollectionViewController: FetchedCollectionViewController<Group>, UICollectionViewDelegateFlowLayout {
     
@@ -35,6 +32,10 @@ class GroupsCollectionViewController: FetchedCollectionViewController<Group>, UI
         self.session = session
         self.route = route
         super.init()
+        
+        if #available(iOS 11.0, *) {
+            collectionView?.contentInsetAdjustmentBehavior = .never
+        }
         
         let customize: (Enrollment)->() = { [weak self] enrollment in
             let picker = CustomizeEnrollmentViewController(session: session, context: enrollment.contextID)

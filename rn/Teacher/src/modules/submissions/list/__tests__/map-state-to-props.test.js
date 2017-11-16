@@ -24,15 +24,18 @@ jest.mock('knuth-shuffle-seeded', () => jest.fn())
 
 let t = {
   ...require('../../../../__templates__/assignments'),
+  ...require('../../../../__templates__/course'),
   ...require('../../../../__templates__/submissions'),
   ...require('../../../../__templates__/enrollments'),
   ...require('../../../../__templates__/users'),
   ...require('../../../../__templates__/assignments'),
+  ...require('../../../../__templates__/group'),
+  ...require('../../../../__templates__/section'),
   ...require('../../../../redux/__templates__/app-state'),
   ...require('../__templates__/submission-props'),
 }
 
-export const submissionProps: Array<SubmissionDataProps> = [
+const submissionProps: Array<SubmissionDataProps> = [
   t.submissionProps({
     name: 'S1',
     status: 'none',
@@ -110,7 +113,7 @@ function createHappyPathTestState () {
         user_id: '4',
         grade: 'A-',
         submitted_at: '2017-04-05T15:12:45Z',
-        workflow_state: 'submitted',
+        workflow_state: 'graded',
         excused: false,
         late: false,
       }]),
@@ -127,7 +130,7 @@ function createHappyPathTestState () {
   }
 
   const courses = {
-    '100': { enrollments: enrRefs, color: '#000', course: { name: 'fancy name' } },
+    '100': { enrollments: enrRefs, color: '#000', course: { name: 'fancy name' }, enabledFeatures: [] },
   }
 
   const subRefs = { pending: 0, refs: ['20', '30', '40'] }
@@ -149,6 +152,7 @@ function createHappyPathTestState () {
       submissions,
       courses,
       assignments,
+      sections: [t.section({ course_id: '100' })],
     },
   })
 }
@@ -175,6 +179,7 @@ test('submissions with missing data', () => {
       submissions: {},
       courses: {},
       assignments: {},
+      sections: [],
     },
   })
 
@@ -185,10 +190,100 @@ test('submissions with missing data', () => {
   })
 })
 
-test('anonymous grading shuffles the data', () => {
+test('anonymous grading on shuffles the data', () => {
   let state = createHappyPathTestState()
   state.entities.assignments['1000'].anonymousGradingOn = true
 
-  mapStateToProps(state, { courseID: '100', assignmentID: '1000' })
+  let props = mapStateToProps(state, { courseID: '100', assignmentID: '1000' })
+  expect(props.anonymous).toEqual(true)
   expect(shuffle).toHaveBeenCalled()
+})
+
+test('course level anonymous grading shuffles the data', () => {
+  let state = createHappyPathTestState()
+  state.entities.courses['100'].enabledFeatures = ['anonymous_grading']
+
+  let props = mapStateToProps(state, { courseID: '100', assignmentID: '1000' })
+  expect(props.anonymous).toEqual(true)
+  expect(shuffle).toHaveBeenCalled()
+})
+
+test('filters out StudentViewEnrollment', () => {
+  const student = t.enrollment({ id: '1', type: 'StudentEnrollment', user_id: '1' })
+  const testStudent = t.enrollment({ id: '2', type: 'StudentViewEnrollment', user_id: '2' })
+  const course = t.course()
+  const assignment = t.assignment()
+  const state = t.appState({
+    entities: {
+      enrollments: {
+        [student.id]: student,
+        [testStudent.id]: testStudent,
+      },
+      courses: {
+        [course.id]: {
+          enrollments: { pending: 0, refs: [student.id, testStudent.id] },
+          enabledFeatures: [],
+        },
+      },
+      assignments: {
+        [assignment.id]: {
+          submissions: { pending: 0, refs: [] },
+          data: assignment,
+        },
+      },
+      sections: [t.section({ course_id: course.id })],
+    },
+  })
+  const result = mapStateToProps(state, { courseID: course.id, assignmentID: assignment.id })
+  expect(result.submissions.map(u => u.userID)).toEqual(['1'])
+})
+
+test('gets all submissions if group doesnt exist', () => {
+  const s1 = t.enrollment({
+    id: '1',
+    type: 'StudentEnrollment',
+    user_id: '1',
+    user: t.user({ id: '1' }),
+  })
+  const s2 = t.enrollment({
+    id: '2',
+    type: 'StudentEnrollment',
+    user_id: '2',
+    user: t.user({ id: '2' }),
+  })
+  const course = t.course()
+  const assignment = t.assignment({
+    group_category_id: '555',
+  })
+  const state = t.appState({
+    entities: {
+      enrollments: {
+        [s1.id]: s1,
+        [s2.id]: s2,
+      },
+      courses: {
+        [course.id]: {
+          enrollments: { pending: 0, refs: [s1.id, s2.id] },
+          groups: { pending: 0, refs: ['1'] },
+          enabledFeatures: [],
+        },
+      },
+      assignments: {
+        [assignment.id]: {
+          submissions: { pending: 0, refs: [] },
+          data: assignment,
+        },
+      },
+      groups: {
+        '1': {
+          group: t.group({ group_category_id: '111' }),
+        },
+      },
+      sections: [t.section({ course_id: course.id })],
+    },
+  })
+  const { submissions } = mapStateToProps(state, { courseID: course.id, assignmentID: assignment.id })
+  const userIDs = submissions.map(u => u.userID)
+  expect(userIDs).toContain('1')
+  expect(userIDs).toContain('2')
 })

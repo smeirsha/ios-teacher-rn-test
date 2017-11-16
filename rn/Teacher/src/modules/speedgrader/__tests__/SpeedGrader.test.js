@@ -38,6 +38,7 @@ jest.mock('knuth-shuffle-seeded', () => jest.fn())
 const templates = {
   ...require('../../../__templates__/submissions'),
   ...require('../../../__templates__/assignments'),
+  ...require('../../../__templates__/quiz'),
   ...require('../../../redux/__templates__/app-state'),
   ...require('../../../__templates__/helm'),
   ...require('../../submissions/list/__templates__/submission-props'),
@@ -77,6 +78,7 @@ let defaultProps = {
   resetDrawer: jest.fn(),
   assignmentSubmissionTypes: ['none'],
   gradeSubmissionWithRubric: jest.fn(),
+  getCourseEnabledFeatures: jest.fn(),
 }
 
 describe('SpeedGrader', () => {
@@ -143,6 +145,15 @@ describe('SpeedGrader', () => {
       index: 2,
     })
   })
+
+  it('refreshes assignment on unmount', () => {
+    const spy = jest.fn()
+    let view = renderer.create(
+      <SpeedGrader {...defaultProps} refreshAssignment={spy} />
+    )
+    view.getInstance().componentWillUnmount()
+    expect(spy).toHaveBeenCalledWith(defaultProps.courseID, defaultProps.assignmentID)
+  })
 })
 
 describe('refresh functions', () => {
@@ -170,12 +181,14 @@ describe('refresh functions', () => {
     groupAssignment: null,
     studentIndex: 1,
     gradeSubmissionWithRubric: jest.fn(),
+    getCourseEnabledFeatures: jest.fn(),
   }
   it('refreshSubmissions', () => {
     refreshSpeedGrader(props)
     expect(props.refreshSubmissions).toHaveBeenCalledWith(props.courseID, props.assignmentID, false)
     expect(props.refreshEnrollments).toHaveBeenCalledWith(props.courseID)
     expect(props.refreshAssignment).toHaveBeenCalledWith(props.courseID, props.assignmentID)
+    expect(props.getCourseEnabledFeatures).toHaveBeenCalledWith(props.courseID)
   })
   it('refreshSubmissions on group assignments', () => {
     refreshSpeedGrader({
@@ -185,6 +198,7 @@ describe('refresh functions', () => {
     expect(props.refreshSubmissions).toHaveBeenCalledWith(props.courseID, props.assignmentID, true)
     expect(props.refreshGroupsForCourse).toHaveBeenCalledWith(props.courseID)
     expect(props.refreshAssignment).toHaveBeenCalledWith(props.courseID, props.assignmentID)
+    expect(props.getCourseEnabledFeatures).toHaveBeenCalledWith(props.courseID)
   })
   it('isRefreshing', () => {
     const isNot = isRefreshing(props)
@@ -212,6 +226,63 @@ test('mapStateToProps shuffles when anonymous grading is on', () => {
         [assignment.id]: {
           data: assignment,
           anonymousGradingOn: true,
+        },
+      },
+      courses: {},
+    },
+  })
+  mapStateToProps(appState, {
+    assignmentID: assignment.id,
+    courseID: '2',
+    userID: '3',
+    studentIndex: 1,
+  })
+  expect(shuffle).toHaveBeenCalled()
+})
+
+test('mapStateToProps shuffles when the assignment is an anonymous quiz', () => {
+  const assignment = templates.assignment({ quiz_id: '1' })
+  const quiz = templates.quiz({ id: '1', anonymous_submissions: true })
+  const appState = templates.appState({
+    entities: {
+      submissions: {},
+      assignments: {
+        [assignment.id]: {
+          data: assignment,
+          anonymousGradingOn: true,
+        },
+      },
+      quizzes: {
+        [quiz.id]: {
+          data: quiz,
+        },
+      },
+      courses: {},
+    },
+  })
+  mapStateToProps(appState, {
+    assignmentID: assignment.id,
+    courseID: '2',
+    userID: '3',
+    studentIndex: 1,
+  })
+  expect(shuffle).toHaveBeenCalled()
+})
+
+test('mapStateToProps shuffles when the course has anonymous_grading turned on', () => {
+  const assignment = templates.assignment()
+  const appState = templates.appState({
+    entities: {
+      submissions: {},
+      assignments: {
+        [assignment.id]: {
+          data: assignment,
+          anonymousGradingOn: false,
+        },
+      },
+      courses: {
+        '2': {
+          enabledFeatures: ['anonymous_grading'],
         },
       },
     },

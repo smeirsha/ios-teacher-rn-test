@@ -23,13 +23,11 @@ import ReactNative, {
   StyleSheet,
   LayoutAnimation,
   DatePickerIOS,
-  Alert,
   NativeModules,
   processColor,
 } from 'react-native'
 import i18n from 'format-message'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import moment from 'moment'
 import Screen from '../../../routing/Screen'
 import { Heading1 } from '../../../common/text'
 import RowWithTextInput from '../../../common/components/rows/RowWithTextInput'
@@ -41,7 +39,7 @@ import RichTextEditor from '../../../common/components/rich-text-editor/RichText
 import { extractDateFromString } from '../../../utils/dateUtils'
 import ModalActivityIndicator from '../../../common/components/ModalActivityIndicator'
 import { default as EditDiscussionActions } from '../../discussions/edit/actions'
-import { ERROR_TITLE } from '../../../redux/middleware/error-handler'
+import { alertError } from '../../../redux/middleware/error-handler'
 import UnmetRequirementBanner from '../../../common/components/UnmetRequirementBanner'
 import RequiredFieldSubscript from '../../../common/components/RequiredFieldSubscript'
 
@@ -76,7 +74,7 @@ export type Props = State & OwnProps & AsyncState & NavigationProps & typeof Act
   defaultDate?: Date,
 }
 
-export class AnnouncementEdit extends Component<any, Props, any> {
+export class AnnouncementEdit extends Component<Props, any> {
   scrollView: KeyboardAwareScrollView
 
   constructor (props: Props) {
@@ -107,7 +105,6 @@ export class AnnouncementEdit extends Component<any, Props, any> {
     }
 
     if (this.state.pending && !props.pending) {
-      this.setState({ pending: false })
       this.props.navigator.dismissAllModals()
       return
     }
@@ -188,6 +185,7 @@ export class AnnouncementEdit extends Component<any, Props, any> {
                 scrollEnabled={true}
                 contentHeight={150}
                 placeholder={i18n('Add description (required)')}
+                navigator={this.props.navigator}
               />
             </View>
             <RequiredFieldSubscript title={i18n('A description is required')} visible={!this.state.isValid} />
@@ -204,7 +202,7 @@ export class AnnouncementEdit extends Component<any, Props, any> {
               <View>
                 <RowWithDateInput
                   title={i18n('Post at...')}
-                  date={this.state.delayed_post_at ? moment(this.state.delayed_post_at).format(`MMM D  h:mm A`) : '--'}
+                  date={this.state.delayed_post_at}
                   selected={this.state.delayedPostAtPickerShown}
                   showRemoveButton={Boolean(this.state.delayed_post_at)}
                   border='bottom'
@@ -283,7 +281,7 @@ export class AnnouncementEdit extends Component<any, Props, any> {
     }
 
     const params = {
-      title: this.state.title === '' ? null : this.state.title,
+      title: this.state.title || i18n('No Title'),
       message: this.state.message,
       require_initial_post: this.state.require_initial_post || false,
       delayed_post_at: this.state.delayed_post_at,
@@ -315,7 +313,7 @@ export class AnnouncementEdit extends Component<any, Props, any> {
 
   _handleError (error: string) {
     setTimeout(() => {
-      Alert.alert(ERROR_TITLE, error)
+      alertError(error)
     }, 1000)
   }
 
@@ -401,4 +399,4 @@ export function mapStateToProps ({ entities }: AppState, { courseID, announcemen
 }
 
 const Connected = connect(mapStateToProps, Actions)(AnnouncementEdit)
-export default (Connected: Component<any, Props, any>)
+export default (Connected: Component<Props, any>)

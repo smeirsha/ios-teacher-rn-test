@@ -25,6 +25,7 @@ exports[`GroupList renders empty list 1`] = `
     }
   >
     <RCTScrollView
+      ItemSeparatorComponent={[Function]}
       ListEmptyComponent={
         <ListEmptyComponent
           title="No results"
@@ -132,6 +133,7 @@ exports[`GroupList renders properly 1`] = `
     }
   >
     <RCTScrollView
+      ItemSeparatorComponent={[Function]}
       ListEmptyComponent={
         <ListEmptyComponent
           title="No results"
@@ -209,9 +211,6 @@ exports[`GroupList renders properly 1`] = `
                 },
                 Array [
                   Object {
-                    "height": 54,
-                  },
-                  Object {
                     "borderTopColor": "#C7CDD1",
                     "borderTopWidth": 0.5,
                   },
@@ -233,10 +232,11 @@ exports[`GroupList renders properly 1`] = `
                     "backgroundColor": "white",
                     "flex": 1,
                     "flexDirection": "row",
-                    "paddingBottom": 12.8,
+                    "minHeight": 54,
+                    "paddingBottom": 12,
                     "paddingLeft": 16,
                     "paddingRight": 16,
-                    "paddingTop": 12.8,
+                    "paddingTop": 12,
                   },
                   Object {
                     "backgroundColor": "white",
@@ -389,6 +389,7 @@ exports[`GroupList renders without a group 1`] = `
     }
   >
     <RCTScrollView
+      ItemSeparatorComponent={[Function]}
       ListEmptyComponent={
         <ListEmptyComponent
           title="No results"

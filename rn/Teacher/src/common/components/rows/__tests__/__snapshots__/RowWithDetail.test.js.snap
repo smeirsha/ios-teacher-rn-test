@@ -23,9 +23,6 @@ exports[`Render row with detail label 1`] = `
         "backgroundColor": "transparent",
       },
       Array [
-        Object {
-          "height": 54,
-        },
         undefined,
         undefined,
       ],
@@ -42,10 +39,11 @@ exports[`Render row with detail label 1`] = `
           "backgroundColor": "white",
           "flex": 1,
           "flexDirection": "row",
-          "paddingBottom": 12.8,
+          "minHeight": 54,
+          "paddingBottom": 12,
           "paddingLeft": 16,
           "paddingRight": 16,
-          "paddingTop": 12.8,
+          "paddingTop": 12,
         },
         Object {
           "backgroundColor": "white",

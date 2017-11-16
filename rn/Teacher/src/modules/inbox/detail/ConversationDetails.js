@@ -24,6 +24,7 @@ import {
   TouchableOpacity,
   Image,
   ActionSheetIOS,
+  AlertIOS,
 } from 'react-native'
 import { connect } from 'react-redux'
 import refresh from '../../../utils/refresh'
@@ -35,6 +36,9 @@ import ConversationMessageRow from '../components/ConversationMessageRow'
 import { Heading1 } from '../../../common/text'
 import color from '../../../common/colors'
 import Images from '../../../images'
+import RowSeparator from '../../../common/components/rows/RowSeparator'
+import find from 'lodash/find'
+import { getSession } from '../../../canvas-api'
 
 export type ConversationOwnProps = {
   conversation: ?Conversation,
@@ -65,9 +69,21 @@ export class ConversationDetails extends Component <any, ConversationDetailsProp
   }
 
   componentDidMount () {
-    this.props.markAsRead(this.props.conversationID)
+    if (this.props.conversation && this.props.conversation.workflow_state === 'unread') {
+      this.props.markAsRead(this.props.conversationID)
+    }
   }
 
+  componentWillReceiveProps (nextProps: ConversationDetailsProps) {
+    if (this.state.deletePending && !nextProps.pending && !nextProps.conversation) {
+      this.setState({ deletePending: false })
+      this.props.navigator.pop()
+    }
+
+    if (this.props.conversation && !nextProps.conversation) {
+      this.props.navigator.pop()
+    }
+  }
   _renderItem = ({ item, index }) => {
     return <ConversationMessageRow
               navigator={this.props.navigator}
@@ -99,6 +115,7 @@ export class ConversationDetails extends Component <any, ConversationDetailsProp
                 accessibilityLabel={starred ? i18n('Starred') : i18n('Un-starred')}
                 accessibilityTraits='button'
                 testID={`inbox.detail.${starred ? 'starred' : 'not-starred'}`}
+                focusedOpacity={0.7}
                 onPress={this._toggleStarred}
                 hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
               >
@@ -115,11 +132,12 @@ export class ConversationDetails extends Component <any, ConversationDetailsProp
       <View style={styles.container}>
         <FlatList
           style={styles.list}
-          data={this.props.messages}
+          data={this.props.messages.filter(message => !message.pendingDelete)}
           renderItem={this._renderItem}
           ListHeaderComponent={header}
           refreshing={this.props.refreshing}
           onRefresh={this.props.refresh}
+          ItemSeparatorComponent={RowSeparator}
         />
       </View>
     )
@@ -146,18 +164,10 @@ export class ConversationDetails extends Component <any, ConversationDetailsProp
     )
   }
 
-  componentWillReceiveProps (nextProps: ConversationDetailsProps) {
-    if (this.state.deletePending && !nextProps.pending && !nextProps.conversation) {
-      this.setState({ deletePending: false })
-      this.props.navigator.pop()
-    }
-  }
-
   showOptionsActionSheet = (id: string) => {
-    id = id || this.props.conversationID
-
     const options = [
       i18n('Forward'),
+      i18n('Reply'),
       i18n('Delete'),
       i18n('Cancel'),
     ]
@@ -167,17 +177,26 @@ export class ConversationDetails extends Component <any, ConversationDetailsProp
         destructiveButtonIndex: options.length - 2,
         cancelButtonIndex: options.length - 1,
       },
-      this.handleOptionsActionSheet.bind(null, id),
+      (index: number) => {
+        this.handleOptionsActionSheet(id, index)
+      }
     )
   }
 
   handleOptionsActionSheet = (id: string, index: number) => {
     switch (index) {
       case 0:
-        this.forwardMessage(id)
+        this.forwardMessage(id || this.props.conversationID)
         break
       case 1:
-        this.deleteConversation(id)
+        this.reply(id)
+        break
+      case 2:
+        if (id) {
+          this.deleteConversationMessage(id)
+        } else {
+          this.deleteConversation(this.props.conversationID)
+        }
         break
     }
   }
@@ -188,8 +207,19 @@ export class ConversationDetails extends Component <any, ConversationDetailsProp
     this.props.deleteConversation(id)
   }
 
+  deleteConversationMessage (id: string) {
+    this.props.deleteConversationMessage(this.props.conversationID, id)
+  }
+
   forwardMessage (id: string) {
     let conversation = this.props.conversation || {}
+    if (!conversation.context_code) {
+      return AlertIOS.alert(
+        i18n('Can not forward message'),
+        i18n('That message can not be forwarded.')
+      )
+    }
+
     let includedMessages = []
     if (id === this.props.conversationID) {
       includedMessages = this.props.messages
@@ -210,6 +240,30 @@ export class ConversationDetails extends Component <any, ConversationDetailsProp
       navBarTitle: i18n('Forward'),
       requireMessageBody: false,
     })
+  }
+
+  reply (id: ?string) {
+    const convo = this.props.conversation
+    const options = {
+      recipients: convo.participants.filter(p => convo.audience.includes(p.id)),
+      contextName: convo.context_name,
+      contextCode: convo.context_code,
+      subject: convo.subject,
+      canSelectCourse: false,
+      canEditSubject: false,
+    }
+
+    if (id) {
+      const message = find(convo.messages, { id })
+      const me = (getSession() || {}).user
+      if (message) {
+        if (me && message.author_id !== me.id) {
+          options.recipients = convo.participants.filter(p => p.id === message.author_id)
+        }
+      }
+    }
+
+    this.props.navigator.show(`/conversations/${this.props.conversation.id}/add_message`, { modal: true }, options)
   }
 }
 

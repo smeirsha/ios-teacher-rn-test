@@ -24,9 +24,7 @@
 #import <CanvasKit1/NSArray+CKAdditions.h>
 #import <CanvasKit1/CKByteCountFormatter.h>
 #import "UIViewController+AnalyticsTracking.h"
-
 #import "FolderViewController.h"
-#import "RatingsController.h"
 #import "FileViewController.h"
 #import "ProgressTableViewCell.h"
 #import <Reachability/Reachability.h>
@@ -121,10 +119,6 @@
     
     UIImage *image = [UIImage techDebtImageNamed:@"icon_cog_fill"];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(showOptions:)];
-        
-    [self setAutomaticallyAdjustsScrollViewInsets:NO];
-    [self.tableView setContentInset:UIEdgeInsetsMake(64, 0, 0, 0)];
-    [self.tableView setScrollIndicatorInsets:self.tableView.contentInset];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -134,9 +128,6 @@
     
     [super viewWillAppear:animated];
     [self updateSelectionOnTableView];
-    
-    [self.tableView setContentInset:UIEdgeInsetsMake(64, 0, 0, 0)];
-    [self.tableView setScrollIndicatorInsets:UIEdgeInsetsMake(64, 0, 0, 0)];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -251,14 +242,12 @@ static NSIndexSet *indexSetFromIndexPathRows(NSArray *paths) {
         NSString *cancelButton = NSLocalizedString(@"Don't delete", @"Button to cancel deleting folders");
         [alert addButtonWithTitle:confirmButton handler:^{
             [self deleteFolderItems:items];
-            [RatingsController appLoadedOnViewController:self];
         }];
         [alert addCancelButtonWithTitle:cancelButton];
         [alert show];
     }
     else {
         [self deleteFolderItems:items];
-        [RatingsController appLoadedOnViewController:self];
     }
 }
 
@@ -732,7 +721,6 @@ static NSIndexSet *indexSetFromIndexPathRows(NSArray *paths) {
          else if (isFinalValue) {
              self.folder.foldersCount += 1;
              [self insertFolder:object];
-             [RatingsController appLoadedOnViewController:self];
          }
      }];
 }
@@ -795,7 +783,6 @@ static NSIndexSet *indexSetFromIndexPathRows(NSArray *paths) {
                     deleteFiles(urls);
                 }
                 [application endBackgroundTask:backgroundTask];
-                [RatingsController appLoadedOnViewController:self];
             }];
     [self dismissViewControllerAnimated:YES completion:NULL];
 }

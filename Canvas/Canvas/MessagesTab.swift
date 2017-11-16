@@ -16,11 +16,10 @@
 
 import UIKit
 import Foundation
-import TechDebt
-import SoIconic
+import CanvasCore
 
 func MessagesTab() -> UIViewController {
-    let vc = UIViewController.messagesTab()
+    let vc = inboxTab()
     vc.tabBarItem.image = .icon(.inbox)
     vc.tabBarItem.selectedImage = .icon(.inbox, filled: true)
     return vc

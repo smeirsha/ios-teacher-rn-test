@@ -28,6 +28,7 @@ import i18n from 'format-message'
 import colors from '../../colors'
 import Images from '../../../images'
 import branding from '../../branding'
+import { extractDateFromString } from '../../../utils/dateUtils'
 
 type DateRowProps = {
   title: string,
@@ -46,6 +47,9 @@ export default class RowWithDateInput extends Component<any, DateRowProps, any> 
   render () {
     let detailTextStyle = this.props.selected ? { color: branding.primaryBrandColor } : styles.detailText
     let paddingRightWhenEmpty = this.props.showRemoveButton ? 0 : global.style.defaultPadding
+
+    let date = extractDateFromString(this.props.date)
+    date = date ? i18n("{ date, date, 'MMM d' } { date, time, short }", { date }) : i18n('--')
     return (
         <View style={[ styles.row, styles.detailsRowContainer ]} >
             <TouchableHighlight style={{ flex: 1 }} onPress={this.props.onPress} testID={this.props.testID}>
@@ -54,7 +58,7 @@ export default class RowWithDateInput extends Component<any, DateRowProps, any> 
                     <Text style={styles.titleText}>{this.props.title}</Text>
                 </View>
                 <View style={styles.detailsRowContainer}>
-                  <Text style={detailTextStyle} testID={this.props.dateTestID}>{this.props.date}</Text>
+                  <Text style={detailTextStyle} testID={this.props.dateTestID}>{date}</Text>
                 </View>
               </View>
               </TouchableHighlight>
@@ -79,10 +83,11 @@ export default class RowWithDateInput extends Component<any, DateRowProps, any> 
 const styles = StyleSheet.create({
 
   row: {
-    height: 54,
+    paddingVertical: global.style.defaultPadding / 2,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.seperatorColor,
     backgroundColor: 'white',
+    minHeight: 54,
   },
   rowContainer: {
     flex: 1,
@@ -96,9 +101,11 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 0.5,
+    minWidth: 90,
   },
   titlesContainer: {
-    flex: 1,
+    flex: 0.5,
     flexDirection: 'column',
     justifyContent: 'center',
     paddingRight: 32,

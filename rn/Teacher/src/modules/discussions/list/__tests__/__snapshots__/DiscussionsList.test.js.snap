@@ -27,6 +27,11 @@ exports[`DiscussionsList renders 1`] = `
   >
     <RCTScrollView
       ItemSeparatorComponent={undefined}
+      ListEmptyComponent={
+        <ListEmptyComponent
+          title="There are no discussions to display."
+        />
+      }
       data={Array []}
       disableVirtualization={false}
       getItem={[Function]}
@@ -55,7 +60,45 @@ exports[`DiscussionsList renders 1`] = `
       updateCellsBatchingPeriod={50}
       windowSize={21}
     >
-      <View />
+      <View>
+        <View
+          onLayout={[Function]}
+          style={null}
+        >
+          <View
+            style={
+              Object {
+                "alignItems": "center",
+                "flex": 1,
+                "height": 100,
+                "justifyContent": "center",
+              }
+            }
+          >
+            <Text
+              accessible={true}
+              allowFontScaling={true}
+              disabled={false}
+              ellipsizeMode="tail"
+              style={
+                Array [
+                  Object {
+                    "fontFamily": ".SFUIDisplay",
+                  },
+                  Object {
+                    "color": "#2D3B45",
+                    "fontFamily": ".SFUIDisplay-semibold",
+                    "fontSize": 16,
+                  },
+                  undefined,
+                ]
+              }
+            >
+              There are no discussions to display.
+            </Text>
+          </View>
+        </View>
+      </View>
     </RCTScrollView>
   </View>
 </Screen>
@@ -112,6 +155,11 @@ exports[`DiscussionsList renders discussions 1`] = `
   >
     <RCTScrollView
       ItemSeparatorComponent={undefined}
+      ListEmptyComponent={
+        <ListEmptyComponent
+          title="There are no discussions to display."
+        />
+      }
       data={
         Array [
           Object {
@@ -121,13 +169,13 @@ exports[`DiscussionsList renders discussions 1`] = `
                 "assignment": Object {
                   "assignment_group_id": 1376,
                   "automatic_peer_reviews": false,
-                  "course_id": 987654321,
+                  "course_id": "987654321",
                   "created_at": "2017-03-17T19:15:25Z",
                   "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
                   "due_at": "2037-06-01T05:59:00Z",
                   "grading_type": "points",
                   "html_url": "http://hostname.tld/whatever",
-                  "id": 123456789,
+                  "id": "123456789",
                   "lock_at": "2037-06-01T05:59:59Z",
                   "name": "learn to write code",
                   "needs_grading_count": 0,
@@ -144,7 +192,7 @@ exports[`DiscussionsList renders discussions 1`] = `
                   "unlock_at": "2017-03-17T06:00:00Z",
                   "updated_at": "2017-03-17T19:15:25Z",
                 },
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -185,13 +233,13 @@ exports[`DiscussionsList renders discussions 1`] = `
                 "assignment": Object {
                   "assignment_group_id": 1376,
                   "automatic_peer_reviews": false,
-                  "course_id": 987654321,
+                  "course_id": "987654321",
                   "created_at": "2017-03-17T19:15:25Z",
                   "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
                   "due_at": "2037-06-01T05:59:00Z",
                   "grading_type": "points",
                   "html_url": "http://hostname.tld/whatever",
-                  "id": 123456789,
+                  "id": "123456789",
                   "lock_at": "2037-06-01T05:59:59Z",
                   "name": "learn to write code",
                   "needs_grading_count": 0,
@@ -208,7 +256,7 @@ exports[`DiscussionsList renders discussions 1`] = `
                   "unlock_at": "2017-03-17T06:00:00Z",
                   "updated_at": "2017-03-17T19:15:25Z",
                 },
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -278,13 +326,13 @@ exports[`DiscussionsList renders discussions 1`] = `
                 "assignment": Object {
                   "assignment_group_id": 1376,
                   "automatic_peer_reviews": false,
-                  "course_id": 987654321,
+                  "course_id": "987654321",
                   "created_at": "2017-03-17T19:15:25Z",
                   "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
                   "due_at": "2037-06-01T05:59:00Z",
                   "grading_type": "points",
                   "html_url": "http://hostname.tld/whatever",
-                  "id": 123456789,
+                  "id": "123456789",
                   "lock_at": "2037-06-01T05:59:59Z",
                   "name": "learn to write code",
                   "needs_grading_count": 0,
@@ -301,7 +349,7 @@ exports[`DiscussionsList renders discussions 1`] = `
                   "unlock_at": "2017-03-17T06:00:00Z",
                   "updated_at": "2017-03-17T19:15:25Z",
                 },
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -342,13 +390,13 @@ exports[`DiscussionsList renders discussions 1`] = `
                 "assignment": Object {
                   "assignment_group_id": 1376,
                   "automatic_peer_reviews": false,
-                  "course_id": 987654321,
+                  "course_id": "987654321",
                   "created_at": "2017-03-17T19:15:25Z",
                   "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
                   "due_at": "2037-06-01T05:59:00Z",
                   "grading_type": "points",
                   "html_url": "http://hostname.tld/whatever",
-                  "id": 123456789,
+                  "id": "123456789",
                   "lock_at": "2037-06-01T05:59:59Z",
                   "name": "learn to write code",
                   "needs_grading_count": 0,
@@ -365,7 +413,7 @@ exports[`DiscussionsList renders discussions 1`] = `
                   "unlock_at": "2017-03-17T06:00:00Z",
                   "updated_at": "2017-03-17T19:15:25Z",
                 },
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -428,10 +476,11 @@ exports[`DiscussionsList renders discussions 1`] = `
                 Object {
                   "backgroundColor": "#F5F5F5",
                   "flex": 1,
-                  "height": 24,
+                  "height": "auto",
                   "justifyContent": "center",
                   "paddingLeft": 16,
                   "paddingRight": 8,
+                  "paddingVertical": 4,
                 },
                 Object {
                   "borderBottomColor": "#C7CDD1",
@@ -495,9 +544,6 @@ exports[`DiscussionsList renders discussions 1`] = `
                 onPress={[Function]}
                 style={
                   Array [
-                    Object {
-                      "height": undefined,
-                    },
                     undefined,
                     Object {
                       "borderBottomColor": "#C7CDD1",
@@ -515,10 +561,11 @@ exports[`DiscussionsList renders discussions 1`] = `
                         "backgroundColor": "white",
                         "flex": 1,
                         "flexDirection": "row",
-                        "paddingBottom": 12.8,
+                        "minHeight": 54,
+                        "paddingBottom": 12,
                         "paddingLeft": 16,
                         "paddingRight": 16,
-                        "paddingTop": 12.8,
+                        "paddingTop": 12,
                       },
                       Object {
                         "backgroundColor": "white",
@@ -843,6 +890,7 @@ exports[`DiscussionsList renders discussions 1`] = `
                             "flexDirection": "column",
                             "height": 43,
                             "justifyContent": "center",
+                            "marginRight": -8,
                             "marginTop": -15,
                             "width": 43,
                           }
@@ -854,7 +902,7 @@ exports[`DiscussionsList renders discussions 1`] = `
                           source={1}
                           style={
                             Object {
-                              "alignSelf": "flex-end",
+                              "alignSelf": "center",
                               "height": 18,
                               "tintColor": "#000",
                               "transform": Array [
@@ -925,9 +973,6 @@ exports[`DiscussionsList renders discussions 1`] = `
                 onPress={[Function]}
                 style={
                   Array [
-                    Object {
-                      "height": undefined,
-                    },
                     undefined,
                     Object {
                       "borderBottomColor": "#C7CDD1",
@@ -945,10 +990,11 @@ exports[`DiscussionsList renders discussions 1`] = `
                         "backgroundColor": "white",
                         "flex": 1,
                         "flexDirection": "row",
-                        "paddingBottom": 12.8,
+                        "minHeight": 54,
+                        "paddingBottom": 12,
                         "paddingLeft": 16,
                         "paddingRight": 16,
-                        "paddingTop": 12.8,
+                        "paddingTop": 12,
                       },
                       Object {
                         "backgroundColor": "white",
@@ -1273,6 +1319,7 @@ exports[`DiscussionsList renders discussions 1`] = `
                             "flexDirection": "column",
                             "height": 43,
                             "justifyContent": "center",
+                            "marginRight": -8,
                             "marginTop": -15,
                             "width": 43,
                           }
@@ -1284,7 +1331,7 @@ exports[`DiscussionsList renders discussions 1`] = `
                           source={1}
                           style={
                             Object {
-                              "alignSelf": "flex-end",
+                              "alignSelf": "center",
                               "height": 18,
                               "tintColor": "#000",
                               "transform": Array [
@@ -1366,6 +1413,11 @@ exports[`DiscussionsList renders discussions with no assignments 1`] = `
   >
     <RCTScrollView
       ItemSeparatorComponent={undefined}
+      ListEmptyComponent={
+        <ListEmptyComponent
+          title="There are no discussions to display."
+        />
+      }
       data={
         Array [
           Object {
@@ -1373,7 +1425,7 @@ exports[`DiscussionsList renders discussions with no assignments 1`] = `
               Object {
                 "allow_rating": false,
                 "assignment": null,
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -1412,7 +1464,7 @@ exports[`DiscussionsList renders discussions with no assignments 1`] = `
               Object {
                 "allow_rating": false,
                 "assignment": null,
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -1480,7 +1532,7 @@ exports[`DiscussionsList renders discussions with no assignments 1`] = `
               Object {
                 "allow_rating": false,
                 "assignment": null,
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -1519,7 +1571,7 @@ exports[`DiscussionsList renders discussions with no assignments 1`] = `
               Object {
                 "allow_rating": false,
                 "assignment": null,
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -1582,10 +1634,11 @@ exports[`DiscussionsList renders discussions with no assignments 1`] = `
                 Object {
                   "backgroundColor": "#F5F5F5",
                   "flex": 1,
-                  "height": 24,
+                  "height": "auto",
                   "justifyContent": "center",
                   "paddingLeft": 16,
                   "paddingRight": 8,
+                  "paddingVertical": 4,
                 },
                 Object {
                   "borderBottomColor": "#C7CDD1",
@@ -1649,9 +1702,6 @@ exports[`DiscussionsList renders discussions with no assignments 1`] = `
                 onPress={[Function]}
                 style={
                   Array [
-                    Object {
-                      "height": undefined,
-                    },
                     undefined,
                     Object {
                       "borderBottomColor": "#C7CDD1",
@@ -1669,10 +1719,11 @@ exports[`DiscussionsList renders discussions with no assignments 1`] = `
                         "backgroundColor": "white",
                         "flex": 1,
                         "flexDirection": "row",
-                        "paddingBottom": 12.8,
+                        "minHeight": 54,
+                        "paddingBottom": 12,
                         "paddingLeft": 16,
                         "paddingRight": 16,
-                        "paddingTop": 12.8,
+                        "paddingTop": 12,
                       },
                       Object {
                         "backgroundColor": "white",
@@ -1963,6 +2014,7 @@ exports[`DiscussionsList renders discussions with no assignments 1`] = `
                             "flexDirection": "column",
                             "height": 43,
                             "justifyContent": "center",
+                            "marginRight": -8,
                             "marginTop": -15,
                             "width": 43,
                           }
@@ -1974,7 +2026,7 @@ exports[`DiscussionsList renders discussions with no assignments 1`] = `
                           source={1}
                           style={
                             Object {
-                              "alignSelf": "flex-end",
+                              "alignSelf": "center",
                               "height": 18,
                               "tintColor": "#000",
                               "transform": Array [
@@ -2045,9 +2097,6 @@ exports[`DiscussionsList renders discussions with no assignments 1`] = `
                 onPress={[Function]}
                 style={
                   Array [
-                    Object {
-                      "height": undefined,
-                    },
                     undefined,
                     Object {
                       "borderBottomColor": "#C7CDD1",
@@ -2065,10 +2114,11 @@ exports[`DiscussionsList renders discussions with no assignments 1`] = `
                         "backgroundColor": "white",
                         "flex": 1,
                         "flexDirection": "row",
-                        "paddingBottom": 12.8,
+                        "minHeight": 54,
+                        "paddingBottom": 12,
                         "paddingLeft": 16,
                         "paddingRight": 16,
-                        "paddingTop": 12.8,
+                        "paddingTop": 12,
                       },
                       Object {
                         "backgroundColor": "white",
@@ -2359,6 +2409,7 @@ exports[`DiscussionsList renders discussions with no assignments 1`] = `
                             "flexDirection": "column",
                             "height": 43,
                             "justifyContent": "center",
+                            "marginRight": -8,
                             "marginTop": -15,
                             "width": 43,
                           }
@@ -2370,7 +2421,7 @@ exports[`DiscussionsList renders discussions with no assignments 1`] = `
                           source={1}
                           style={
                             Object {
-                              "alignSelf": "flex-end",
+                              "alignSelf": "center",
                               "height": 18,
                               "tintColor": "#000",
                               "transform": Array [
@@ -2452,6 +2503,11 @@ exports[`DiscussionsList renders in correct order 1`] = `
   >
     <RCTScrollView
       ItemSeparatorComponent={undefined}
+      ListEmptyComponent={
+        <ListEmptyComponent
+          title="There are no discussions to display."
+        />
+      }
       data={
         Array [
           Object {
@@ -2461,13 +2517,13 @@ exports[`DiscussionsList renders in correct order 1`] = `
                 "assignment": Object {
                   "assignment_group_id": 1376,
                   "automatic_peer_reviews": false,
-                  "course_id": 987654321,
+                  "course_id": "987654321",
                   "created_at": "2017-03-17T19:15:25Z",
                   "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
                   "due_at": "2037-06-01T05:59:00Z",
                   "grading_type": "points",
                   "html_url": "http://hostname.tld/whatever",
-                  "id": 123456789,
+                  "id": "123456789",
                   "lock_at": "2037-06-01T05:59:59Z",
                   "name": "learn to write code",
                   "needs_grading_count": 0,
@@ -2484,7 +2540,7 @@ exports[`DiscussionsList renders in correct order 1`] = `
                   "unlock_at": "2017-03-17T06:00:00Z",
                   "updated_at": "2017-03-17T19:15:25Z",
                 },
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -2526,13 +2582,13 @@ exports[`DiscussionsList renders in correct order 1`] = `
                 "assignment": Object {
                   "assignment_group_id": 1376,
                   "automatic_peer_reviews": false,
-                  "course_id": 987654321,
+                  "course_id": "987654321",
                   "created_at": "2017-03-17T19:15:25Z",
                   "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
                   "due_at": "2037-06-01T05:59:00Z",
                   "grading_type": "points",
                   "html_url": "http://hostname.tld/whatever",
-                  "id": 123456789,
+                  "id": "123456789",
                   "lock_at": "2037-06-01T05:59:59Z",
                   "name": "learn to write code",
                   "needs_grading_count": 0,
@@ -2549,7 +2605,7 @@ exports[`DiscussionsList renders in correct order 1`] = `
                   "unlock_at": "2017-03-17T06:00:00Z",
                   "updated_at": "2017-03-17T19:15:25Z",
                 },
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -2620,13 +2676,13 @@ exports[`DiscussionsList renders in correct order 1`] = `
                 "assignment": Object {
                   "assignment_group_id": 1376,
                   "automatic_peer_reviews": false,
-                  "course_id": 987654321,
+                  "course_id": "987654321",
                   "created_at": "2017-03-17T19:15:25Z",
                   "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
                   "due_at": "2037-06-01T05:59:00Z",
                   "grading_type": "points",
                   "html_url": "http://hostname.tld/whatever",
-                  "id": 123456789,
+                  "id": "123456789",
                   "lock_at": "2037-06-01T05:59:59Z",
                   "name": "learn to write code",
                   "needs_grading_count": 0,
@@ -2643,7 +2699,7 @@ exports[`DiscussionsList renders in correct order 1`] = `
                   "unlock_at": "2017-03-17T06:00:00Z",
                   "updated_at": "2017-03-17T19:15:25Z",
                 },
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -2685,13 +2741,13 @@ exports[`DiscussionsList renders in correct order 1`] = `
                 "assignment": Object {
                   "assignment_group_id": 1376,
                   "automatic_peer_reviews": false,
-                  "course_id": 987654321,
+                  "course_id": "987654321",
                   "created_at": "2017-03-17T19:15:25Z",
                   "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
                   "due_at": "2037-06-01T05:59:00Z",
                   "grading_type": "points",
                   "html_url": "http://hostname.tld/whatever",
-                  "id": 123456789,
+                  "id": "123456789",
                   "lock_at": "2037-06-01T05:59:59Z",
                   "name": "learn to write code",
                   "needs_grading_count": 0,
@@ -2708,7 +2764,7 @@ exports[`DiscussionsList renders in correct order 1`] = `
                   "unlock_at": "2017-03-17T06:00:00Z",
                   "updated_at": "2017-03-17T19:15:25Z",
                 },
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -2772,10 +2828,11 @@ exports[`DiscussionsList renders in correct order 1`] = `
                 Object {
                   "backgroundColor": "#F5F5F5",
                   "flex": 1,
-                  "height": 24,
+                  "height": "auto",
                   "justifyContent": "center",
                   "paddingLeft": 16,
                   "paddingRight": 8,
+                  "paddingVertical": 4,
                 },
                 Object {
                   "borderBottomColor": "#C7CDD1",
@@ -2839,9 +2896,6 @@ exports[`DiscussionsList renders in correct order 1`] = `
                 onPress={[Function]}
                 style={
                   Array [
-                    Object {
-                      "height": undefined,
-                    },
                     undefined,
                     Object {
                       "borderBottomColor": "#C7CDD1",
@@ -2859,10 +2913,11 @@ exports[`DiscussionsList renders in correct order 1`] = `
                         "backgroundColor": "white",
                         "flex": 1,
                         "flexDirection": "row",
-                        "paddingBottom": 12.8,
+                        "minHeight": 54,
+                        "paddingBottom": 12,
                         "paddingLeft": 16,
                         "paddingRight": 16,
-                        "paddingTop": 12.8,
+                        "paddingTop": 12,
                       },
                       Object {
                         "backgroundColor": "white",
@@ -3187,6 +3242,7 @@ exports[`DiscussionsList renders in correct order 1`] = `
                             "flexDirection": "column",
                             "height": 43,
                             "justifyContent": "center",
+                            "marginRight": -8,
                             "marginTop": -15,
                             "width": 43,
                           }
@@ -3198,7 +3254,7 @@ exports[`DiscussionsList renders in correct order 1`] = `
                           source={1}
                           style={
                             Object {
-                              "alignSelf": "flex-end",
+                              "alignSelf": "center",
                               "height": 18,
                               "tintColor": "#000",
                               "transform": Array [
@@ -3269,9 +3325,6 @@ exports[`DiscussionsList renders in correct order 1`] = `
                 onPress={[Function]}
                 style={
                   Array [
-                    Object {
-                      "height": undefined,
-                    },
                     undefined,
                     Object {
                       "borderBottomColor": "#C7CDD1",
@@ -3289,10 +3342,11 @@ exports[`DiscussionsList renders in correct order 1`] = `
                         "backgroundColor": "white",
                         "flex": 1,
                         "flexDirection": "row",
-                        "paddingBottom": 12.8,
+                        "minHeight": 54,
+                        "paddingBottom": 12,
                         "paddingLeft": 16,
                         "paddingRight": 16,
-                        "paddingTop": 12.8,
+                        "paddingTop": 12,
                       },
                       Object {
                         "backgroundColor": "white",
@@ -3617,6 +3671,7 @@ exports[`DiscussionsList renders in correct order 1`] = `
                             "flexDirection": "column",
                             "height": 43,
                             "justifyContent": "center",
+                            "marginRight": -8,
                             "marginTop": -15,
                             "width": 43,
                           }
@@ -3628,7 +3683,7 @@ exports[`DiscussionsList renders in correct order 1`] = `
                           source={1}
                           style={
                             Object {
-                              "alignSelf": "flex-end",
+                              "alignSelf": "center",
                               "height": 18,
                               "tintColor": "#000",
                               "transform": Array [
@@ -3710,6 +3765,11 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
   >
     <RCTScrollView
       ItemSeparatorComponent={undefined}
+      ListEmptyComponent={
+        <ListEmptyComponent
+          title="There are no discussions to display."
+        />
+      }
       data={
         Array [
           Object {
@@ -3719,13 +3779,13 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
                 "assignment": Object {
                   "assignment_group_id": 1376,
                   "automatic_peer_reviews": false,
-                  "course_id": 987654321,
+                  "course_id": "987654321",
                   "created_at": "2017-03-17T19:15:25Z",
                   "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
                   "due_at": "2037-06-01T05:59:00Z",
                   "grading_type": "points",
                   "html_url": "http://hostname.tld/whatever",
-                  "id": 123456789,
+                  "id": "123456789",
                   "lock_at": "2037-06-01T05:59:59Z",
                   "name": "learn to write code",
                   "needs_grading_count": 0,
@@ -3742,7 +3802,7 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
                   "unlock_at": "2017-03-17T06:00:00Z",
                   "updated_at": "2017-03-17T19:15:25Z",
                 },
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -3788,13 +3848,13 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
                 "assignment": Object {
                   "assignment_group_id": 1376,
                   "automatic_peer_reviews": false,
-                  "course_id": 987654321,
+                  "course_id": "987654321",
                   "created_at": "2017-03-17T19:15:25Z",
                   "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
                   "due_at": "2037-06-01T05:59:00Z",
                   "grading_type": "points",
                   "html_url": "http://hostname.tld/whatever",
-                  "id": 123456789,
+                  "id": "123456789",
                   "lock_at": "2037-06-01T05:59:59Z",
                   "name": "learn to write code",
                   "needs_grading_count": 0,
@@ -3811,7 +3871,7 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
                   "unlock_at": "2017-03-17T06:00:00Z",
                   "updated_at": "2017-03-17T19:15:25Z",
                 },
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -3882,13 +3942,13 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
                 "assignment": Object {
                   "assignment_group_id": 1376,
                   "automatic_peer_reviews": false,
-                  "course_id": 987654321,
+                  "course_id": "987654321",
                   "created_at": "2017-03-17T19:15:25Z",
                   "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
                   "due_at": "2037-06-01T05:59:00Z",
                   "grading_type": "points",
                   "html_url": "http://hostname.tld/whatever",
-                  "id": 123456789,
+                  "id": "123456789",
                   "lock_at": "2037-06-01T05:59:59Z",
                   "name": "learn to write code",
                   "needs_grading_count": 0,
@@ -3905,7 +3965,7 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
                   "unlock_at": "2017-03-17T06:00:00Z",
                   "updated_at": "2017-03-17T19:15:25Z",
                 },
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -3951,13 +4011,13 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
                 "assignment": Object {
                   "assignment_group_id": 1376,
                   "automatic_peer_reviews": false,
-                  "course_id": 987654321,
+                  "course_id": "987654321",
                   "created_at": "2017-03-17T19:15:25Z",
                   "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
                   "due_at": "2037-06-01T05:59:00Z",
                   "grading_type": "points",
                   "html_url": "http://hostname.tld/whatever",
-                  "id": 123456789,
+                  "id": "123456789",
                   "lock_at": "2037-06-01T05:59:59Z",
                   "name": "learn to write code",
                   "needs_grading_count": 0,
@@ -3974,7 +4034,7 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
                   "unlock_at": "2017-03-17T06:00:00Z",
                   "updated_at": "2017-03-17T19:15:25Z",
                 },
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -4039,10 +4099,11 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
                 Object {
                   "backgroundColor": "#F5F5F5",
                   "flex": 1,
-                  "height": 24,
+                  "height": "auto",
                   "justifyContent": "center",
                   "paddingLeft": 16,
                   "paddingRight": 8,
+                  "paddingVertical": 4,
                 },
                 Object {
                   "borderBottomColor": "#C7CDD1",
@@ -4106,9 +4167,6 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
                 onPress={[Function]}
                 style={
                   Array [
-                    Object {
-                      "height": undefined,
-                    },
                     undefined,
                     Object {
                       "borderBottomColor": "#C7CDD1",
@@ -4126,10 +4184,11 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
                         "backgroundColor": "white",
                         "flex": 1,
                         "flexDirection": "row",
-                        "paddingBottom": 12.8,
+                        "minHeight": 54,
+                        "paddingBottom": 12,
                         "paddingLeft": 16,
                         "paddingRight": 16,
-                        "paddingTop": 12.8,
+                        "paddingTop": 12,
                       },
                       Object {
                         "backgroundColor": "white",
@@ -4454,6 +4513,7 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
                             "flexDirection": "column",
                             "height": 43,
                             "justifyContent": "center",
+                            "marginRight": -8,
                             "marginTop": -15,
                             "width": 43,
                           }
@@ -4465,7 +4525,7 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
                           source={1}
                           style={
                             Object {
-                              "alignSelf": "flex-end",
+                              "alignSelf": "center",
                               "height": 18,
                               "tintColor": "#000",
                               "transform": Array [
@@ -4525,10 +4585,11 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
                 Object {
                   "backgroundColor": "#F5F5F5",
                   "flex": 1,
-                  "height": 24,
+                  "height": "auto",
                   "justifyContent": "center",
                   "paddingLeft": 16,
                   "paddingRight": 8,
+                  "paddingVertical": 4,
                 },
                 Object {
                   "borderBottomColor": "#C7CDD1",
@@ -4592,9 +4653,6 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
                 onPress={[Function]}
                 style={
                   Array [
-                    Object {
-                      "height": undefined,
-                    },
                     undefined,
                     Object {
                       "borderBottomColor": "#C7CDD1",
@@ -4612,10 +4670,11 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
                         "backgroundColor": "white",
                         "flex": 1,
                         "flexDirection": "row",
-                        "paddingBottom": 12.8,
+                        "minHeight": 54,
+                        "paddingBottom": 12,
                         "paddingLeft": 16,
                         "paddingRight": 16,
-                        "paddingTop": 12.8,
+                        "paddingTop": 12,
                       },
                       Object {
                         "backgroundColor": "white",
@@ -4940,6 +4999,7 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
                             "flexDirection": "column",
                             "height": 43,
                             "justifyContent": "center",
+                            "marginRight": -8,
                             "marginTop": -15,
                             "width": 43,
                           }
@@ -4951,7 +5011,7 @@ exports[`DiscussionsList renders pinned discussions 1`] = `
                           source={1}
                           style={
                             Object {
-                              "alignSelf": "flex-end",
+                              "alignSelf": "center",
                               "height": 18,
                               "tintColor": "#000",
                               "transform": Array [

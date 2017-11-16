@@ -31,6 +31,8 @@ const templates = {
   ...require('../../../../__templates__/submissions'),
   ...require('../../../../redux/__templates__/app-state'),
   ...require('../../../../__templates__/helm'),
+  ...require('../../../../__templates__/assignments'),
+  ...require('../../../../__templates__/quiz'),
 }
 
 let noSubProps = {
@@ -196,6 +198,7 @@ describe('mapStateToProps', () => {
         assignments: {
           '2': {
             anonymousGradingOn: true,
+            data: {},
           },
         },
         submissions: {
@@ -206,6 +209,7 @@ describe('mapStateToProps', () => {
             selectedIndex: 3,
           },
         },
+        courses: {},
       },
     })
 
@@ -221,6 +225,7 @@ describe('mapStateToProps', () => {
         assignments: {
           '2': {
             anonymousGradingOn: true,
+            data: {},
           },
         },
         submissions: {
@@ -229,6 +234,70 @@ describe('mapStateToProps', () => {
             pending: 0,
             error: null,
             selectedIndex: 3,
+          },
+        },
+        courses: {},
+      },
+    })
+
+    let dataProps = mapStateToProps(state, subProps)
+    expect(dataProps).toMatchObject({
+      anonymous: true,
+    })
+  })
+
+  it('returns the correct data when the assignment is for an anonymous quiz', () => {
+    let state = templates.appState({
+      entities: {
+        assignments: {
+          '2': {
+            anonymousGradingOn: false,
+            data: templates.assignment({ id: '2', quiz_id: '1' }),
+          },
+        },
+        quizzes: {
+          '1': {
+            data: templates.quiz({ id: '1', anonymous_submissions: true }),
+          },
+        },
+        submissions: {
+          '1': {
+            submission: {},
+            pending: 0,
+            error: null,
+            selectedIndex: 3,
+          },
+        },
+        courses: {},
+      },
+    })
+
+    let dataProps = mapStateToProps(state, subProps)
+    expect(dataProps).toMatchObject({
+      anonymous: true,
+    })
+  })
+
+  it('returns the correct data when the course has anonymous grading turned on', () => {
+    let state = templates.appState({
+      entities: {
+        assignments: {
+          '2': {
+            anonymousGradingOn: false,
+            data: templates.assignment({ id: '2' }),
+          },
+        },
+        submissions: {
+          '1': {
+            submission: {},
+            pending: 0,
+            error: null,
+            selectedIndex: 3,
+          },
+        },
+        courses: {
+          '3': {
+            enabledFeatures: ['anonymous_grading'],
           },
         },
       },

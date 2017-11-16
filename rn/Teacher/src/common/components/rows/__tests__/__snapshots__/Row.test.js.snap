@@ -28,9 +28,6 @@ exports[`Render the base row 1`] = `
       },
       Array [
         Object {
-          "height": 44,
-        },
-        Object {
           "borderTopColor": "#C7CDD1",
           "borderTopWidth": 0.5,
         },
@@ -52,10 +49,11 @@ exports[`Render the base row 1`] = `
           "backgroundColor": "white",
           "flex": 1,
           "flexDirection": "row",
-          "paddingBottom": 12.8,
+          "minHeight": 54,
+          "paddingBottom": 12,
           "paddingLeft": 16,
           "paddingRight": 16,
-          "paddingTop": 12.8,
+          "paddingTop": 12,
         },
         Object {
           "backgroundColor": "white",

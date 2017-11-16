@@ -19,6 +19,7 @@
 import React from 'react'
 import 'react-native'
 import renderer from 'react-test-renderer'
+import { setSession } from '../../../../canvas-api'
 
 import { QuizDetails, mapStateToProps } from '../QuizDetails'
 import explore from '../../../../../test/helpers/explore'
@@ -37,9 +38,12 @@ const template = {
   ...require('../../../../__templates__/quiz'),
   ...require('../../../../__templates__/assignments'),
   ...require('../../../../redux/__templates__/app-state'),
+  ...require('../../../../__templates__/session'),
 }
 
 describe('QuizDetails', () => {
+  beforeAll(() => setSession(template.session()))
+
   let props
   beforeEach(() => {
     jest.clearAllMocks()
@@ -51,6 +55,7 @@ describe('QuizDetails', () => {
       courseID: '1',
       assignmentGroup: null,
       assignment: null,
+      showSubmissionSummary: true,
     }
   })
 
@@ -261,7 +266,7 @@ describe('QuizDetails', () => {
     const tree = render(props).toJSON()
     const btn: any = explore(tree).selectByID('quizzes.details.previewQuiz.btn')
     btn.props.onPress()
-    expect(props.navigator.show).toHaveBeenCalledWith('/courses/1/quizzes/1/preview', { modal: true })
+    expect(props.navigator.show).toHaveBeenCalledWith('/courses/1/quizzes/1/preview', { modal: true, modalPresentationStyle: 'fullscreen' })
   })
 
   function testRender (props: any) {
@@ -295,6 +300,7 @@ describe('mapStateToProps', () => {
         courses: {
           '1': {
             course: {
+              enrollments: [{ type: 'designer' }],
               name: 'CS1010',
             },
           },
@@ -329,6 +335,9 @@ describe('mapStateToProps', () => {
         ...template.appState().entities,
         courses: {
           '1': {
+            course: {
+              enrollments: [{ type: 'designer' }],
+            },
             assignmentGroups: {
               refs: ['1', '2'],
             },
@@ -387,6 +396,7 @@ describe('mapStateToProps', () => {
             error: null,
           },
         },
+        courses: { '1': {} },
       },
     })
 
@@ -401,5 +411,37 @@ describe('mapStateToProps', () => {
       assignmentGroup: null,
       assignment: assignment,
     })
+  })
+
+  it('returns showSubmissionSummary as false when the user is a designer', () => {
+    const quiz = template.quiz({
+      id: '1',
+      assignment_group_id: null,
+      assignment_id: null,
+    })
+    const state: AppState = template.appState({
+      entities: {
+        ...template.appState().entities,
+        quizzes: {
+          '1': {
+            data: quiz,
+            pending: 1,
+            error: null,
+          },
+        },
+        courses: {
+          '1': {
+            course: {
+              name: 'CS1010',
+              enrollments: [{ type: 'designer' }],
+            },
+          },
+        },
+      },
+    })
+
+    expect(
+      mapStateToProps(state, { courseID: '1', quizID: '1' }).showSubmissionSummary
+    ).toEqual(false)
   })
 })

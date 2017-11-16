@@ -34,7 +34,7 @@ exports[`DiscussionDetails renders a non-assignment discussion 1`] = `
               Object {
                 "allow_rating": false,
                 "assignment": null,
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -145,7 +145,7 @@ exports[`DiscussionDetails renders a non-assignment discussion 1`] = `
               Object {
                 "allow_rating": false,
                 "assignment": null,
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -1006,7 +1006,7 @@ exports[`DiscussionDetails renders a non-assignment discussion 1`] = `
                     }
                     testID="discussion.details.post-date-lbl"
                   >
-                    November 10, 2016 9:03 PM
+                    Nov 10 at 9:03 PM
                   </Text>
                 </View>
               </View>
@@ -1022,7 +1022,6 @@ exports[`DiscussionDetails renders a non-assignment discussion 1`] = `
                   onLayout={[Function]}
                   style={
                     Object {
-                      "color": "#2D3B45",
                       "flex": 1,
                     }
                   }
@@ -1302,7 +1301,7 @@ exports[`DiscussionDetails renders a non-assignment discussion 1`] = `
                       ]
                     }
                   >
-                    May 23, 2017 11:12 AM
+                    May 23 at 11:12 AM
                   </Text>
                   <View
                     onLayout={[Function]}
@@ -1324,6 +1323,14 @@ exports[`DiscussionDetails renders a non-assignment discussion 1`] = `
                   >
                     <TouchableOpacity
                       accessibilityTraits="button"
+                      hitSlop={
+                        Object {
+                          "bottom": 15,
+                          "left": 15,
+                          "right": 15,
+                          "top": 15,
+                        }
+                      }
                       onPress={[Function]}
                       style={
                         Object {
@@ -1421,6 +1428,14 @@ exports[`DiscussionDetails renders a non-assignment discussion 1`] = `
                     </Text>
                     <TouchableOpacity
                       accessibilityTraits="button"
+                      hitSlop={
+                        Object {
+                          "bottom": 15,
+                          "left": 15,
+                          "right": 15,
+                          "top": 15,
+                        }
+                      }
                       onPress={[Function]}
                       style={
                         Object {
@@ -1532,13 +1547,13 @@ exports[`DiscussionDetails renders no replies 1`] = `
                 "assignment": Object {
                   "assignment_group_id": 1376,
                   "automatic_peer_reviews": false,
-                  "course_id": 987654321,
+                  "course_id": "987654321",
                   "created_at": "2017-03-17T19:15:25Z",
                   "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
                   "due_at": "2037-06-01T05:59:00Z",
                   "grading_type": "points",
                   "html_url": "http://hostname.tld/whatever",
-                  "id": 123456789,
+                  "id": "123456789",
                   "lock_at": "2037-06-01T05:59:59Z",
                   "name": "learn to write code",
                   "needs_grading_count": 0,
@@ -1555,7 +1570,7 @@ exports[`DiscussionDetails renders no replies 1`] = `
                   "unlock_at": "2017-03-17T06:00:00Z",
                   "updated_at": "2017-03-17T19:15:25Z",
                 },
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -1633,13 +1648,13 @@ exports[`DiscussionDetails renders no replies 1`] = `
                 "assignment": Object {
                   "assignment_group_id": 1376,
                   "automatic_peer_reviews": false,
-                  "course_id": 987654321,
+                  "course_id": "987654321",
                   "created_at": "2017-03-17T19:15:25Z",
                   "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
                   "due_at": "2037-06-01T05:59:00Z",
                   "grading_type": "points",
                   "html_url": "http://hostname.tld/whatever",
-                  "id": 123456789,
+                  "id": "123456789",
                   "lock_at": "2037-06-01T05:59:59Z",
                   "name": "learn to write code",
                   "needs_grading_count": 0,
@@ -1656,7 +1671,7 @@ exports[`DiscussionDetails renders no replies 1`] = `
                   "unlock_at": "2017-03-17T06:00:00Z",
                   "updated_at": "2017-03-17T19:15:25Z",
                 },
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -2508,7 +2523,7 @@ exports[`DiscussionDetails renders no replies 1`] = `
                     }
                     testID="discussion.details.post-date-lbl"
                   >
-                    November 10, 2016 9:03 PM
+                    Nov 10 at 9:03 PM
                   </Text>
                 </View>
               </View>
@@ -2524,7 +2539,6 @@ exports[`DiscussionDetails renders no replies 1`] = `
                   onLayout={[Function]}
                   style={
                     Object {
-                      "color": "#2D3B45",
                       "flex": 1,
                     }
                   }
@@ -2631,13 +2645,13 @@ exports[`DiscussionDetails renders with nested replies selected 1`] = `
                 "assignment": Object {
                   "assignment_group_id": 1376,
                   "automatic_peer_reviews": false,
-                  "course_id": 987654321,
+                  "course_id": "987654321",
                   "created_at": "2017-03-17T19:15:25Z",
                   "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
                   "due_at": "2037-06-01T05:59:00Z",
                   "grading_type": "points",
                   "html_url": "http://hostname.tld/whatever",
-                  "id": 123456789,
+                  "id": "123456789",
                   "lock_at": "2037-06-01T05:59:59Z",
                   "name": "learn to write code",
                   "needs_grading_count": 0,
@@ -2654,7 +2668,7 @@ exports[`DiscussionDetails renders with nested replies selected 1`] = `
                   "unlock_at": "2017-03-17T06:00:00Z",
                   "updated_at": "2017-03-17T19:15:25Z",
                 },
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -2844,13 +2858,13 @@ exports[`DiscussionDetails renders with nested replies selected 1`] = `
                 "assignment": Object {
                   "assignment_group_id": 1376,
                   "automatic_peer_reviews": false,
-                  "course_id": 987654321,
+                  "course_id": "987654321",
                   "created_at": "2017-03-17T19:15:25Z",
                   "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
                   "due_at": "2037-06-01T05:59:00Z",
                   "grading_type": "points",
                   "html_url": "http://hostname.tld/whatever",
-                  "id": 123456789,
+                  "id": "123456789",
                   "lock_at": "2037-06-01T05:59:59Z",
                   "name": "learn to write code",
                   "needs_grading_count": 0,
@@ -2867,7 +2881,7 @@ exports[`DiscussionDetails renders with nested replies selected 1`] = `
                   "unlock_at": "2017-03-17T06:00:00Z",
                   "updated_at": "2017-03-17T19:15:25Z",
                 },
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -3832,7 +3846,7 @@ exports[`DiscussionDetails renders with nested replies selected 1`] = `
                     }
                     testID="discussion.details.post-date-lbl"
                   >
-                    November 10, 2016 9:03 PM
+                    Nov 10 at 9:03 PM
                   </Text>
                 </View>
               </View>
@@ -3848,7 +3862,6 @@ exports[`DiscussionDetails renders with nested replies selected 1`] = `
                   onLayout={[Function]}
                   style={
                     Object {
-                      "color": "#2D3B45",
                       "flex": 1,
                     }
                   }
@@ -4163,7 +4176,7 @@ exports[`DiscussionDetails renders with nested replies selected 1`] = `
                       ]
                     }
                   >
-                    May 23, 2017 11:12 AM
+                    May 23 at 11:12 AM
                   </Text>
                   <View
                     onLayout={[Function]}
@@ -4185,6 +4198,14 @@ exports[`DiscussionDetails renders with nested replies selected 1`] = `
                   >
                     <TouchableOpacity
                       accessibilityTraits="button"
+                      hitSlop={
+                        Object {
+                          "bottom": 15,
+                          "left": 15,
+                          "right": 15,
+                          "top": 15,
+                        }
+                      }
                       onPress={[Function]}
                       style={
                         Object {
@@ -4282,6 +4303,14 @@ exports[`DiscussionDetails renders with nested replies selected 1`] = `
                     </Text>
                     <TouchableOpacity
                       accessibilityTraits="button"
+                      hitSlop={
+                        Object {
+                          "bottom": 15,
+                          "left": 15,
+                          "right": 15,
+                          "top": 15,
+                        }
+                      }
                       onPress={[Function]}
                       style={
                         Object {
@@ -4495,7 +4524,7 @@ exports[`DiscussionDetails renders with nested replies selected 1`] = `
                       ]
                     }
                   >
-                    May 23, 2017 11:12 AM
+                    May 23 at 11:12 AM
                   </Text>
                   <View
                     onLayout={[Function]}
@@ -4517,6 +4546,14 @@ exports[`DiscussionDetails renders with nested replies selected 1`] = `
                   >
                     <TouchableOpacity
                       accessibilityTraits="button"
+                      hitSlop={
+                        Object {
+                          "bottom": 15,
+                          "left": 15,
+                          "right": 15,
+                          "top": 15,
+                        }
+                      }
                       onPress={[Function]}
                       style={
                         Object {
@@ -4614,6 +4651,14 @@ exports[`DiscussionDetails renders with nested replies selected 1`] = `
                     </Text>
                     <TouchableOpacity
                       accessibilityTraits="button"
+                      hitSlop={
+                        Object {
+                          "bottom": 15,
+                          "left": 15,
+                          "right": 15,
+                          "top": 15,
+                        }
+                      }
                       onPress={[Function]}
                       style={
                         Object {
@@ -4716,17 +4761,7 @@ exports[`DiscussionDetails renders with no discussion 1`] = `
   >
     <RCTScrollView
       ItemSeparatorComponent={undefined}
-      data={
-        Array [
-          Object {
-            "data": Array [
-              Object {},
-            ],
-            "renderItem": [Function],
-            "title": "",
-          },
-        ]
-      }
+      data={Array []}
       disableVirtualization={false}
       extraData={Array []}
       getItem={[Function]}
@@ -4754,823 +4789,14 @@ exports[`DiscussionDetails renders with no discussion 1`] = `
       refreshing={false}
       renderItem={[Function]}
       scrollEventThrottle={50}
-      sections={
-        Array [
-          Object {
-            "data": Array [
-              Object {},
-            ],
-            "renderItem": [Function],
-            "title": "",
-          },
-        ]
-      }
-      stickyHeaderIndices={
-        Array [
-          0,
-        ]
-      }
+      sections={Array []}
+      stickyHeaderIndices={Array []}
       stickySectionHeadersEnabled={true}
       updateCellsBatchingPeriod={50}
       windowSize={21}
     >
       <RCTRefreshControl />
-      <View>
-        <View
-          onLayout={[Function]}
-          style={null}
-        />
-        <View
-          onLayout={[Function]}
-          style={null}
-        >
-          <View>
-            <TouchableHighlight
-              onPress={undefined}
-              testID={undefined}
-            >
-              <View
-                style={
-                  Array [
-                    Object {
-                      "backgroundColor": "white",
-                      "flex": 1,
-                      "paddingBottom": 16,
-                      "paddingLeft": 16,
-                      "paddingRight": 16,
-                    },
-                    Object {
-                      "paddingBottom": 17,
-                      "paddingLeft": 16,
-                      "paddingRight": 16,
-                      "paddingTop": 14,
-                    },
-                  ]
-                }
-              >
-                <View
-                  style={Object {}}
-                />
-                <View
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "flex": 1,
-                      "flexDirection": "row",
-                    }
-                  }
-                >
-                  <View
-                    style={
-                      Object {
-                        "flex": 1,
-                      }
-                    }
-                  >
-                    <View
-                      accessibilityLabel={undefined}
-                      accessible={false}
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "flexDirection": "row",
-                          "marginBottom": 4,
-                        }
-                      }
-                    />
-                    <Text
-                      accessibilityTraits="header"
-                      accessible={true}
-                      allowFontScaling={true}
-                      disabled={false}
-                      ellipsizeMode="tail"
-                      style={
-                        Array [
-                          Object {
-                            "fontFamily": ".SFUIDisplay",
-                          },
-                          Object {
-                            "color": "#2D3B45",
-                            "fontFamily": ".SFUIDisplay-semibold",
-                            "fontSize": 20,
-                          },
-                          undefined,
-                        ]
-                      }
-                    />
-                    <View
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "flex": 1,
-                          "flexDirection": "row",
-                          "marginTop": 2,
-                        }
-                      }
-                    >
-                      <PublishedIcon
-                        published={undefined}
-                      />
-                    </View>
-                  </View>
-                </View>
-              </View>
-            </TouchableHighlight>
-            <TouchableHighlight
-              onPress={[Function]}
-              testID={undefined}
-            >
-              <View
-                style={
-                  Array [
-                    Object {
-                      "backgroundColor": "white",
-                      "flex": 1,
-                      "paddingBottom": 16,
-                      "paddingLeft": 16,
-                      "paddingRight": 16,
-                    },
-                    undefined,
-                  ]
-                }
-              >
-                <View
-                  style={
-                    Object {
-                      "borderTopColor": "#C7CDD1",
-                      "borderTopWidth": 0.5,
-                      "paddingBottom": 16,
-                    }
-                  }
-                />
-                <View
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "flex": 1,
-                      "flexDirection": "row",
-                    }
-                  }
-                >
-                  <View
-                    style={
-                      Object {
-                        "flex": 1,
-                      }
-                    }
-                  >
-                    <View
-                      accessibilityLabel={undefined}
-                      accessible={false}
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "flexDirection": "row",
-                          "marginBottom": 4,
-                        }
-                      }
-                    >
-                      <Image
-                        source={1}
-                        style={
-                          Object {
-                            "height": 19,
-                            "marginRight": 5,
-                            "tintColor": "#8B969E",
-                            "width": 19,
-                          }
-                        }
-                        testID="undefined-title-img"
-                      />
-                      <Text
-                        accessible={true}
-                        allowFontScaling={true}
-                        disabled={false}
-                        ellipsizeMode="tail"
-                        style={
-                          Array [
-                            Object {
-                              "fontFamily": ".SFUIDisplay",
-                            },
-                            Object {
-                              "color": "#2D3B45",
-                              "fontSize": 16,
-                            },
-                            Object {
-                              "color": "#8B969E",
-                              "fontSize": 16,
-                              "fontWeight": "500",
-                              "paddingTop": 2,
-                            },
-                            Object {
-                              "fontFamily": ".SFUIDisplay-medium",
-                            },
-                          ]
-                        }
-                        testID="undefined-title-lbl"
-                      >
-                        Due
-                      </Text>
-                    </View>
-                    <View
-                      style={
-                        Object {
-                          "flex": 1,
-                        }
-                      }
-                    >
-                      <View
-                        accessibilityLabel={undefined}
-                        accessible={true}
-                      >
-                        <Text
-                          accessible={true}
-                          allowFontScaling={true}
-                          disabled={false}
-                          ellipsizeMode="tail"
-                          style={
-                            Array [
-                              Object {
-                                "fontFamily": ".SFUIDisplay",
-                              },
-                              Object {
-                                "color": "#2D3B45",
-                                "fontSize": 16,
-                              },
-                              Object {
-                                "paddingTop": 4,
-                              },
-                              Object {
-                                "fontFamily": ".SFUIDisplay",
-                              },
-                            ]
-                          }
-                          testID="assignment-details.assignment-dates.due-date-lbl"
-                        >
-                          <Text
-                            accessible={true}
-                            allowFontScaling={true}
-                            disabled={false}
-                            ellipsizeMode="tail"
-                            style={
-                              Array [
-                                Object {
-                                  "fontFamily": ".SFUIDisplay",
-                                },
-                                Object {
-                                  "color": "#2D3B45",
-                                  "fontSize": 16,
-                                },
-                                Object {
-                                  "fontWeight": "600",
-                                },
-                                Object {
-                                  "fontFamily": ".SFUIDisplay-semibold",
-                                },
-                              ]
-                            }
-                          >
-                            Due:
-                          </Text>
-                          <Text
-                            accessible={true}
-                            allowFontScaling={true}
-                            disabled={false}
-                            ellipsizeMode="tail"
-                            style={
-                              Array [
-                                Object {
-                                  "fontFamily": ".SFUIDisplay",
-                                },
-                                Object {
-                                  "color": "#2D3B45",
-                                  "fontSize": 16,
-                                },
-                                Object {},
-                                Object {
-                                  "fontFamily": ".SFUIDisplay",
-                                },
-                              ]
-                            }
-                          >
-                             May 31, 2037 at 11:59 PM
-                          </Text>
-                        </Text>
-                      </View>
-                      <Text
-                        accessible={true}
-                        allowFontScaling={true}
-                        disabled={false}
-                        ellipsizeMode="tail"
-                        style={
-                          Array [
-                            Object {
-                              "fontFamily": ".SFUIDisplay",
-                            },
-                            Object {
-                              "color": "#2D3B45",
-                              "fontSize": 16,
-                            },
-                            Object {
-                              "paddingTop": 4,
-                            },
-                            Object {
-                              "fontFamily": ".SFUIDisplay",
-                            },
-                          ]
-                        }
-                        testID="assignment-details.assignment-dates.due-for-lbl"
-                      >
-                        <Text
-                          accessible={true}
-                          allowFontScaling={true}
-                          disabled={false}
-                          ellipsizeMode="tail"
-                          style={
-                            Array [
-                              Object {
-                                "fontFamily": ".SFUIDisplay",
-                              },
-                              Object {
-                                "color": "#2D3B45",
-                                "fontSize": 16,
-                              },
-                              Object {
-                                "fontWeight": "600",
-                              },
-                              Object {
-                                "fontFamily": ".SFUIDisplay-semibold",
-                              },
-                            ]
-                          }
-                        >
-                          For:
-                        </Text>
-                        <Text
-                          accessible={true}
-                          allowFontScaling={true}
-                          disabled={false}
-                          ellipsizeMode="tail"
-                          style={
-                            Array [
-                              Object {
-                                "fontFamily": ".SFUIDisplay",
-                              },
-                              Object {
-                                "color": "#2D3B45",
-                                "fontSize": 16,
-                              },
-                              Object {},
-                              Object {
-                                "fontFamily": ".SFUIDisplay",
-                              },
-                            ]
-                          }
-                        >
-                           -
-                        </Text>
-                      </Text>
-                      <View>
-                        <View
-                          accessibilityLabel={undefined}
-                          accessible={true}
-                        >
-                          <Text
-                            accessible={true}
-                            allowFontScaling={true}
-                            disabled={false}
-                            ellipsizeMode="tail"
-                            style={
-                              Array [
-                                Object {
-                                  "fontFamily": ".SFUIDisplay",
-                                },
-                                Object {
-                                  "color": "#2D3B45",
-                                  "fontSize": 16,
-                                },
-                                Object {
-                                  "paddingTop": 4,
-                                },
-                                Object {
-                                  "fontFamily": ".SFUIDisplay",
-                                },
-                              ]
-                            }
-                            testID="assignment-details.assignment-dates.available-from-lbl"
-                          >
-                            <Text
-                              accessible={true}
-                              allowFontScaling={true}
-                              disabled={false}
-                              ellipsizeMode="tail"
-                              style={
-                                Array [
-                                  Object {
-                                    "fontFamily": ".SFUIDisplay",
-                                  },
-                                  Object {
-                                    "color": "#2D3B45",
-                                    "fontSize": 16,
-                                  },
-                                  Object {
-                                    "fontWeight": "600",
-                                  },
-                                  Object {
-                                    "fontFamily": ".SFUIDisplay-semibold",
-                                  },
-                                ]
-                              }
-                            >
-                              Available From:
-                            </Text>
-                            <Text
-                              accessible={true}
-                              allowFontScaling={true}
-                              disabled={false}
-                              ellipsizeMode="tail"
-                              style={
-                                Array [
-                                  Object {
-                                    "fontFamily": ".SFUIDisplay",
-                                  },
-                                  Object {
-                                    "color": "#2D3B45",
-                                    "fontSize": 16,
-                                  },
-                                  Object {},
-                                  Object {
-                                    "fontFamily": ".SFUIDisplay",
-                                  },
-                                ]
-                              }
-                            >
-                               Mar 17, 2017 at 12:00 AM
-                            </Text>
-                          </Text>
-                        </View>
-                        <View
-                          accessibilityLabel={undefined}
-                          accessible={true}
-                        >
-                          <Text
-                            accessible={true}
-                            allowFontScaling={true}
-                            disabled={false}
-                            ellipsizeMode="tail"
-                            style={
-                              Array [
-                                Object {
-                                  "fontFamily": ".SFUIDisplay",
-                                },
-                                Object {
-                                  "color": "#2D3B45",
-                                  "fontSize": 16,
-                                },
-                                Object {
-                                  "paddingTop": 4,
-                                },
-                                Object {
-                                  "fontFamily": ".SFUIDisplay",
-                                },
-                              ]
-                            }
-                            testID="assignment-details.assignment-dates.available-to-lbl"
-                          >
-                            <Text
-                              accessible={true}
-                              allowFontScaling={true}
-                              disabled={false}
-                              ellipsizeMode="tail"
-                              style={
-                                Array [
-                                  Object {
-                                    "fontFamily": ".SFUIDisplay",
-                                  },
-                                  Object {
-                                    "color": "#2D3B45",
-                                    "fontSize": 16,
-                                  },
-                                  Object {
-                                    "fontWeight": "600",
-                                  },
-                                  Object {
-                                    "fontFamily": ".SFUIDisplay-semibold",
-                                  },
-                                ]
-                              }
-                            >
-                              Available Until:
-                            </Text>
-                            <Text
-                              accessible={true}
-                              allowFontScaling={true}
-                              disabled={false}
-                              ellipsizeMode="tail"
-                              style={
-                                Array [
-                                  Object {
-                                    "fontFamily": ".SFUIDisplay",
-                                  },
-                                  Object {
-                                    "color": "#2D3B45",
-                                    "fontSize": 16,
-                                  },
-                                  Object {},
-                                  Object {
-                                    "fontFamily": ".SFUIDisplay",
-                                  },
-                                ]
-                              }
-                            >
-                               May 31, 2037 at 11:59 PM
-                            </Text>
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                  <View
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "flex": 0,
-                        "flexDirection": "row",
-                        "justifyContent": "flex-end",
-                        "paddingRight": 2,
-                        "width": 10,
-                      }
-                    }
-                  >
-                    <View
-                      style={
-                        Object {
-                          "alignSelf": "center",
-                          "backgroundColor": "transparent",
-                          "borderColor": "#c7c7cc",
-                          "borderRightWidth": 2,
-                          "borderTopWidth": 2,
-                          "height": 10,
-                          "marginLeft": 7,
-                          "transform": Array [
-                            Object {
-                              "rotate": "45deg",
-                            },
-                          ],
-                          "width": 10,
-                        }
-                      }
-                    />
-                  </View>
-                </View>
-              </View>
-            </TouchableHighlight>
-            <TouchableHighlight
-              onPress={[Function]}
-              testID="discussions.submission-graphs"
-            >
-              <View
-                style={
-                  Array [
-                    Object {
-                      "backgroundColor": "white",
-                      "flex": 1,
-                      "paddingBottom": 16,
-                      "paddingLeft": 16,
-                      "paddingRight": 16,
-                    },
-                    undefined,
-                  ]
-                }
-              >
-                <View
-                  style={
-                    Object {
-                      "borderTopColor": "#C7CDD1",
-                      "borderTopWidth": 0.5,
-                      "paddingBottom": 16,
-                    }
-                  }
-                />
-                <View
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "flex": 1,
-                      "flexDirection": "row",
-                    }
-                  }
-                >
-                  <View
-                    style={
-                      Object {
-                        "flex": 1,
-                      }
-                    }
-                  >
-                    <View
-                      accessibilityLabel={undefined}
-                      accessible={false}
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "flexDirection": "row",
-                          "marginBottom": 4,
-                        }
-                      }
-                    >
-                      <Text
-                        accessible={true}
-                        allowFontScaling={true}
-                        disabled={false}
-                        ellipsizeMode="tail"
-                        style={
-                          Array [
-                            Object {
-                              "fontFamily": ".SFUIDisplay",
-                            },
-                            Object {
-                              "color": "#2D3B45",
-                              "fontSize": 16,
-                            },
-                            Object {
-                              "color": "#8B969E",
-                              "fontSize": 16,
-                              "fontWeight": "500",
-                              "paddingTop": 2,
-                            },
-                            Object {
-                              "fontFamily": ".SFUIDisplay-medium",
-                            },
-                          ]
-                        }
-                        testID="discussions.submission-graphs-title-lbl"
-                      >
-                        Submissions
-                      </Text>
-                    </View>
-                  </View>
-                  <View
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "flex": 0,
-                        "flexDirection": "row",
-                        "justifyContent": "flex-end",
-                        "paddingRight": 2,
-                        "width": 10,
-                      }
-                    }
-                  >
-                    <View
-                      style={
-                        Object {
-                          "alignSelf": "center",
-                          "backgroundColor": "transparent",
-                          "borderColor": "#c7c7cc",
-                          "borderRightWidth": 2,
-                          "borderTopWidth": 2,
-                          "height": 10,
-                          "marginLeft": 7,
-                          "transform": Array [
-                            Object {
-                              "rotate": "45deg",
-                            },
-                          ],
-                          "width": 10,
-                        }
-                      }
-                    />
-                  </View>
-                </View>
-              </View>
-            </TouchableHighlight>
-            <View
-              style={
-                Object {
-                  "backgroundColor": "white",
-                  "borderTopColor": "#C7CDD1",
-                  "borderTopWidth": 0.5,
-                  "flex": 1,
-                  "paddingBottom": 16,
-                  "paddingLeft": 16,
-                  "paddingRight": 16,
-                  "paddingTop": 16,
-                }
-              }
-            >
-              <View
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "justifyContent": "flex-start",
-                  }
-                }
-              >
-                <View
-                  style={
-                    Array [
-                      Object {
-                        "alignItems": "flex-start",
-                        "flex": 1,
-                        "flexDirection": "column",
-                        "justifyContent": "flex-start",
-                      },
-                      Object {
-                        "marginLeft": 0,
-                      },
-                    ]
-                  }
-                >
-                  <Text
-                    accessible={true}
-                    allowFontScaling={true}
-                    disabled={false}
-                    ellipsizeMode="tail"
-                    style={
-                      Array [
-                        Object {
-                          "fontFamily": ".SFUIDisplay",
-                        },
-                        Object {
-                          "color": "#2D3B45",
-                          "fontSize": 16,
-                        },
-                        Object {
-                          "color": "#A5AFB5",
-                          "fontSize": 12,
-                        },
-                        Object {
-                          "fontFamily": ".SFUIDisplay",
-                        },
-                      ]
-                    }
-                    testID="discussion.details.post-date-lbl"
-                  >
-                    
-                  </Text>
-                </View>
-              </View>
-              <View
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "justifyContent": "flex-start",
-                  }
-                }
-              >
-                <TouchableHighlight
-                  accessibilityTraits="button"
-                  onPress={[Function]}
-                  testID="discussion-reply"
-                  underlayColor="white"
-                >
-                  <View
-                    style={
-                      Object {
-                        "backgroundColor": "white",
-                        "flex": 1,
-                      }
-                    }
-                  >
-                    <Text
-                      accessible={true}
-                      allowFontScaling={true}
-                      disabled={false}
-                      ellipsizeMode="tail"
-                      style={
-                        Array [
-                          Object {
-                            "fontFamily": ".SFUIDisplay",
-                          },
-                          Object {
-                            "color": "#2D3B45",
-                            "fontSize": 16,
-                          },
-                          Object {
-                            "color": "#008EE2",
-                          },
-                          Object {
-                            "fontFamily": ".SFUIDisplay",
-                          },
-                        ]
-                      }
-                    >
-                      Reply
-                    </Text>
-                  </View>
-                </TouchableHighlight>
-              </View>
-            </View>
-          </View>
-        </View>
-        <View
-          onLayout={[Function]}
-          style={null}
-        />
-      </View>
+      <View />
     </RCTScrollView>
   </View>
 </Screen>
@@ -5612,13 +4838,13 @@ exports[`DiscussionDetails renders with replies 1`] = `
                 "assignment": Object {
                   "assignment_group_id": 1376,
                   "automatic_peer_reviews": false,
-                  "course_id": 987654321,
+                  "course_id": "987654321",
                   "created_at": "2017-03-17T19:15:25Z",
                   "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
                   "due_at": "2037-06-01T05:59:00Z",
                   "grading_type": "points",
                   "html_url": "http://hostname.tld/whatever",
-                  "id": 123456789,
+                  "id": "123456789",
                   "lock_at": "2037-06-01T05:59:59Z",
                   "name": "learn to write code",
                   "needs_grading_count": 0,
@@ -5635,7 +4861,7 @@ exports[`DiscussionDetails renders with replies 1`] = `
                   "unlock_at": "2017-03-17T06:00:00Z",
                   "updated_at": "2017-03-17T19:15:25Z",
                 },
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -5748,13 +4974,13 @@ exports[`DiscussionDetails renders with replies 1`] = `
                 "assignment": Object {
                   "assignment_group_id": 1376,
                   "automatic_peer_reviews": false,
-                  "course_id": 987654321,
+                  "course_id": "987654321",
                   "created_at": "2017-03-17T19:15:25Z",
                   "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
                   "due_at": "2037-06-01T05:59:00Z",
                   "grading_type": "points",
                   "html_url": "http://hostname.tld/whatever",
-                  "id": 123456789,
+                  "id": "123456789",
                   "lock_at": "2037-06-01T05:59:59Z",
                   "name": "learn to write code",
                   "needs_grading_count": 0,
@@ -5771,7 +4997,7 @@ exports[`DiscussionDetails renders with replies 1`] = `
                   "unlock_at": "2017-03-17T06:00:00Z",
                   "updated_at": "2017-03-17T19:15:25Z",
                 },
-                "assignment_id": 123456789,
+                "assignment_id": "123456789",
                 "author": Object {
                   "avatar_url": "http://www.fillmurray.com/100/100",
                   "display_name": "The Donald",
@@ -6659,7 +5885,7 @@ exports[`DiscussionDetails renders with replies 1`] = `
                     }
                     testID="discussion.details.post-date-lbl"
                   >
-                    November 10, 2016 9:03 PM
+                    Nov 10 at 9:03 PM
                   </Text>
                 </View>
               </View>
@@ -6675,7 +5901,6 @@ exports[`DiscussionDetails renders with replies 1`] = `
                   onLayout={[Function]}
                   style={
                     Object {
-                      "color": "#2D3B45",
                       "flex": 1,
                     }
                   }
@@ -6955,7 +6180,7 @@ exports[`DiscussionDetails renders with replies 1`] = `
                       ]
                     }
                   >
-                    May 23, 2017 11:12 AM
+                    May 23 at 11:12 AM
                   </Text>
                   <View
                     onLayout={[Function]}
@@ -6977,6 +6202,14 @@ exports[`DiscussionDetails renders with replies 1`] = `
                   >
                     <TouchableOpacity
                       accessibilityTraits="button"
+                      hitSlop={
+                        Object {
+                          "bottom": 15,
+                          "left": 15,
+                          "right": 15,
+                          "top": 15,
+                        }
+                      }
                       onPress={[Function]}
                       style={
                         Object {
@@ -7074,6 +6307,14 @@ exports[`DiscussionDetails renders with replies 1`] = `
                     </Text>
                     <TouchableOpacity
                       accessibilityTraits="button"
+                      hitSlop={
+                        Object {
+                          "bottom": 15,
+                          "left": 15,
+                          "right": 15,
+                          "top": 15,
+                        }
+                      }
                       onPress={[Function]}
                       style={
                         Object {

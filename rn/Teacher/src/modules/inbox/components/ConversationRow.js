@@ -27,11 +27,10 @@ import {
 import { Text } from '../../../common/text'
 import Avatar from '../../../common/components/Avatar'
 import color from '../../../common/colors'
-import { getSession } from 'canvas-api'
+import { getSession } from '../../../canvas-api'
 import i18n from 'format-message'
 import Images from '../../../images'
 import branding from '../../../common/branding'
-import { formattedDate } from '../../../utils/dateUtils'
 
 export type ConversationRowProps = {
   conversation: Conversation,
@@ -82,9 +81,9 @@ export default class ConversationRow extends Component<any, ConversationRowProps
       containerStyles.push(styles.topHairline)
     }
     const unread = c.workflow_state === 'unread'
-    const date = ConversationRow.extractDate(c)
-    const dateTitle = formattedDate(date, 'l')
-    const accessibilityDateTitle = formattedDate(date, 'LLLL')
+    const date = new Date(ConversationRow.extractDate(c))
+    const dateTitle = i18n.date(date, 'M/d/yyyy')
+    const accessibilityDateTitle = i18n.date(date, 'long')
     return (<TouchableHighlight onPress={this._onPress} testID={`inbox.conversation-${c.id}`}>
               <View style={containerStyles}>
                 { unread && <View style={styles.unreadDot} accessibilityLabel={i18n('Unread')} /> }
@@ -135,7 +134,7 @@ const styles = StyleSheet.create({
   unreadDot: {
     height: 6,
     width: 6,
-    backgroundColor: 'blue',
+    backgroundColor: '#008EE2',
     borderRadius: 3,
     position: 'absolute',
     top: 8,

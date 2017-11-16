@@ -3,14 +3,13 @@
 exports[`AutoGrowingTextInput adjusts the height when content size is updated 1`] = `
 <TextInput
   defaultHeight={54}
-  extraHeight={0}
   multiline={true}
   onContentSizeChange={[Function]}
   style={
     Array [
       undefined,
       Object {
-        "height": 100,
+        "height": 105,
       },
     ]
   }
@@ -20,7 +19,6 @@ exports[`AutoGrowingTextInput adjusts the height when content size is updated 1`
 exports[`AutoGrowingTextInput renders 1`] = `
 <TextInput
   defaultHeight={54}
-  extraHeight={0}
   multiline={true}
   onContentSizeChange={[Function]}
   style={

@@ -17,8 +17,6 @@
 import Foundation
 import EarlGrey
 
-// DSL that auto waits for elements to exist. Enables react-native compatability.
-
 // MARK: Element timeout and poll
 
 public let elementTimeout:TimeInterval = 30.0 // seconds

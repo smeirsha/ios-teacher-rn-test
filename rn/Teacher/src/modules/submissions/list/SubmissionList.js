@@ -28,55 +28,48 @@ import { connect } from 'react-redux'
 import type {
   SubmissionListProps,
   SubmissionProps,
-  SubmissionDataProps,
 } from './submission-prop-types'
-import find from 'lodash/find'
 import { mapStateToProps } from './map-state-to-props'
 import i18n from 'format-message'
 import SubmissionRow from './SubmissionRow'
 import SubmissionActions from './actions'
 import EnrollmentActions from '../../enrollments/actions'
+import SectionActions from '../../assignee-picker/actions'
 import GroupActions from '../../groups/actions'
+import CourseActions from '../../courses/actions'
 import refresh from '../../../utils/refresh'
 import Screen from '../../../routing/Screen'
 import Navigator from '../../../routing/Navigator'
-import SubmissionsHeader, { type SubmissionFilterOption, type SelectedSubmissionFilter } from '../SubmissionsHeader'
+import SubmissionsHeader from '../SubmissionsHeader'
+import defaultFilterOptions, { type SubmissionFilterOption, createFilter, joinTitles } from '../../filter/filter-options'
 import Images from '../../../images'
 import ActivityIndicatorView from '../../../common/components/ActivityIndicatorView'
+import RowSeparator from '../../../common/components/rows/RowSeparator'
+import ListEmptyComponent from '../../../common/components/ListEmptyComponent'
 
 type Props = SubmissionListProps & { navigator: Navigator } & RefreshProps
 type State = {
-  submissions: Array<SubmissionDataProps>,
   isConnected: boolean,
+  filterOptions: SubmissionFilterOption[],
 }
 
 export class SubmissionList extends Component {
   props: Props
   state: State
 
-  filterOptions: SubmissionFilterOption[]
-  selectedFilter: ?SelectedSubmissionFilter
-
   constructor (props: Props) {
     super(props)
+    let filterOptions = [ ...defaultFilterOptions(this.props.filterType), ...this.props.sections.map(createFilterFromSection) ]
+    let filter = createFilter(filterOptions)
 
     this.state = {
-      submissions: props.submissions || [],
       isConnected: true,
+      filterOptions,
+      filter,
     }
-
-    this.filterOptions = SubmissionsHeader.defaultFilterOptions()
   }
 
   componentWillMount = () => {
-    const type = this.props.filterType
-    if (type) {
-      const filter = find(this.filterOptions, { type })
-      if (filter) {
-        this.selectedFilter = { filter }
-      }
-      this.updateSubmissions(this.props.submissions)
-    }
     NetInfo.isConnected.fetch().then(this.setConnection)
     NetInfo.isConnected.addEventListener('change', this.setConnection)
   }
@@ -86,7 +79,14 @@ export class SubmissionList extends Component {
   }
 
   componentWillReceiveProps = (newProps: Props) => {
-    this.updateSubmissions(newProps.submissions)
+    if (this.props.sections.length !== newProps.sections.length) {
+      let filterOptions = [ ...this.state.filterOptions, ...newProps.sections.map(createFilterFromSection) ]
+      let filter = createFilter(filterOptions)
+      this.setState({
+        filterOptions,
+        filter,
+      })
+    }
   }
 
   setConnection = (isConnected: boolean) => {
@@ -106,7 +106,7 @@ export class SubmissionList extends Component {
     this.props.navigator.show(
       path,
       { modal: true, modalPresentationStyle: 'fullscreen' },
-      { selectedFilter: this.selectedFilter, studentIndex: index }
+      { filter: this.state.filter, studentIndex: index }
     )
   }
 
@@ -124,29 +124,15 @@ export class SubmissionList extends Component {
         onAvatarPress={!this.props.groupAssignment && this.navigateToContextCard}
         onPress={this.navigateToSubmission(index)}
         anonymous={this.props.anonymous}
+        gradingType={this.props.gradingType}
       />
     )
   }
 
-  updateFilter = (filter: SelectedSubmissionFilter) => {
-    this.selectedFilter = filter
-    this.updateSubmissions(this.props.submissions)
-  }
-
-  clearFilter = () => {
-    this.selectedFilter = null
-    this.updateSubmissions(this.props.submissions)
-  }
-
-  updateSubmissions = (submissions: SubmissionDataProps[]) => {
-    const selected = this.selectedFilter
-    let filtered = submissions
-    if (selected && selected.filter && selected.filter.filterFunc) {
-      filtered = selected.filter.filterFunc(submissions, selected.metadata)
-    }
-
+  applyFilter = (filterOptions: Array<SubmissionFilterOption>): void => {
     this.setState({
-      submissions: filtered,
+      filterOptions,
+      filter: createFilter(filterOptions),
     })
   }
 
@@ -158,40 +144,18 @@ export class SubmissionList extends Component {
 
   messageStudentsWho = () => {
     var subject = ''
-    if (this.selectedFilter) {
-      switch (this.selectedFilter.filter.type) {
-        case 'all':
-          subject = i18n('All submissions - {assignmentName}', { assignmentName: this.props.assignmentName })
-          break
-        case 'late':
-          subject = i18n('Submitted late - {assignmentName}', { assignmentName: this.props.assignmentName })
-          break
-        case 'notsubmitted':
-          subject = i18n("Haven't submitted yet - {assignmentName}", { assignmentName: this.props.assignmentName })
-          break
-        case 'notgraded':
-          subject = i18n("Haven't been graded - {assignmentName}", { assignmentName: this.props.assignmentName })
-          break
-        case 'graded':
-          subject = i18n('Graded - {assignmentName}', { assignmentName: this.props.assignmentName })
-          break
-        case 'lessthan':
-          subject = i18n('Scored less than {score} - {assignmentName}', { score: this.selectedFilter.metadata || '', assignmentName: this.props.assignmentName })
-          break
-        case 'morethan':
-          subject = i18n('Score more than {score} - {assignmentName}', { score: this.selectedFilter.metadata || '', assignmentName: this.props.assignmentName })
-          break
-        default:
-          break
-      }
+    let jointTitles = joinTitles(this.state.filterOptions)
+    if (jointTitles) {
+      subject = `${jointTitles} - ${this.props.assignmentName}`
     }
+
     this.props.navigator.show('/conversations/compose', { modal: true }, {
-      recipients: this.state.submissions.map((submission) => {
+      recipients: this.state.filter(this.props.submissions).map((submission) => {
         return { id: submission.userID, name: submission.name, avatar_url: submission.avatarURL }
       }),
       subject: subject,
-      contextName: this.props.course ? this.props.course.name : null,
-      contextCode: this.props.course ? `course_${this.props.course.id}` : null,
+      contextName: this.props.courseName,
+      contextCode: `course_${this.props.courseID}`,
       canAddRecipients: false,
       onlySendIndividualMessages: true,
     })
@@ -201,7 +165,7 @@ export class SubmissionList extends Component {
     return (
       <Screen
         title={i18n('Submissions')}
-        subtitle={this.props.courseName}
+        subtitle={this.props.assignmentName}
         navBarColor={this.props.courseColor}
         navBarStyle='dark'
         rightBarButtons={[
@@ -223,22 +187,27 @@ export class SubmissionList extends Component {
           ? <ActivityIndicatorView />
           : <View style={styles.container}>
               <SubmissionsHeader
-                filterOptions={this.filterOptions}
-                selectedFilter={this.selectedFilter}
-                onClearFilter={this.clearFilter}
-                onSelectFilter={this.updateFilter}
+                filterOptions={this.state.filterOptions}
+                applyFilter={this.applyFilter}
+                filterPromptMessage={i18n('Out of {points}', { points: this.props.pointsPossible })}
+                initialFilterType={this.props.filterType}
                 pointsPossible={this.props.pointsPossible}
                 anonymous={this.props.anonymous}
                 muted={this.props.muted}
+                navigator={this.props.navigator}
               />
-              { /* $FlowFixMe I seriously have no idea why this is complaining about flatlist not having some properties */ }
               <FlatList
-                data={this.state.submissions}
+                data={this.state.filter(this.props.submissions)}
                 keyExtractor={this.keyExtractor}
                 testID='submission-list'
                 renderItem={this.renderRow}
                 refreshing={this.props.refreshing}
                 onRefresh={this.props.refresh}
+                ItemSeparatorComponent={RowSeparator}
+                ListFooterComponent={RowSeparator}
+                ListEmptyComponent={
+                  <ListEmptyComponent title={i18n('No results')} />
+                }
                 />
             </View>
         }
@@ -273,6 +242,8 @@ const styles = StyleSheet.create({
 })
 
 export function refreshSubmissionList (props: SubmissionListProps): void {
+  props.refreshSections(props.courseID)
+  props.getCourseEnabledFeatures(props.courseID)
   if (props.groupAssignment && !props.groupAssignment.gradeIndividually) {
     props.refreshGroupsForCourse(props.courseID)
     props.refreshSubmissions(props.courseID, props.assignmentID, true)
@@ -283,7 +254,7 @@ export function refreshSubmissionList (props: SubmissionListProps): void {
 }
 
 export function shouldRefresh (props: SubmissionListProps): boolean {
-  return props.submissions.every(({ submission }) => !submission)
+  return props.submissions.every(({ submission }) => !submission) || props.sections.length === 0
 }
 
 const Refreshed = refresh(
@@ -295,5 +266,20 @@ const Connected = connect(mapStateToProps, {
   ...SubmissionActions,
   ...EnrollmentActions,
   ...GroupActions,
+  ...SectionActions,
+  ...CourseActions,
 })(Refreshed)
 export default (Connected: Component<any, SubmissionListProps, any>)
+
+function createFilterFromSection (section) {
+  return {
+    type: `section.${section.id}`,
+    title: () => section.name,
+    disabled: false,
+    selected: false,
+    exclusive: false,
+    filterFunc: (submission) => {
+      return submission.allSectionIDs.includes(section.id)
+    },
+  }
+}

@@ -17,7 +17,7 @@
 /* @flow */
 
 import { createAction } from 'redux-actions'
-import canvas from 'canvas-api'
+import canvas from '../../../canvas-api'
 
 export let Actions = (api: CanvasApi): * => ({
   refreshDiscussionEntries: createAction('discussionDetailEntries.refresh', (courseID: string, discussionID: string, includeNewEntries: boolean) => {
@@ -68,6 +68,7 @@ export let Actions = (api: CanvasApi): * => ({
     return {
       promise: api.markEntryAsRead(courseID, discussionID, entryID),
       discussionID,
+      entryID,
     }
   }),
   markAllAsRead: createAction('discussions.details.markAllAsRead', (courseID: string, discussionID: string, oldUnreadCount: number) => {

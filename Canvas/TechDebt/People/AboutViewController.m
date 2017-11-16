@@ -25,8 +25,8 @@
 #import "AboutViewController.h"
 #import "WebBrowserViewController.h"
 #import "Analytics.h"
-@import SoPretty;
-@import SoThankful;
+@import CanvasCore;
+@import CanvasCore;
 #import "CBILog.h"
 
 typedef NS_ENUM(NSInteger, AboutSections) {
@@ -76,6 +76,9 @@ typedef NS_ENUM(NSInteger, LegalRows) {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.estimatedRowHeight = 44.0;
     
     [self updateForUser];
     
@@ -196,6 +199,7 @@ typedef NS_ENUM(NSInteger, LegalRows) {
     else{
         backgroundView.backgroundColor = [UIColor whiteColor];
         selectedBackgroundView.backgroundColor = Brand.current.tintColor;
+        cell.textLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     }
     
     cell.backgroundView = backgroundView;
@@ -253,8 +257,8 @@ typedef NS_ENUM(NSInteger, LegalRows) {
     if (indexPath.section == LegalSection) {
         
         if (indexPath.row == OpenSourceRow) {
-            ThankfulViewController *soThankful = [ThankfulViewController new];
-            [self.navigationController pushViewController:soThankful animated:YES];
+            OSSAttributionViewController *viewController = [OSSAttributionViewController new];
+            [self.navigationController pushViewController:viewController animated:YES];
             return;
         }
         

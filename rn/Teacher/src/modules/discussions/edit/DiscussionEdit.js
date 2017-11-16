@@ -22,7 +22,6 @@ import ReactNative, {
   View,
   StyleSheet,
   LayoutAnimation,
-  Alert,
   PickerIOS,
   DatePickerIOS,
   Image,
@@ -32,7 +31,6 @@ import ReactNative, {
 import i18n from 'format-message'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Button from 'react-native-button'
-import moment from 'moment'
 
 import Screen from '../../../routing/Screen'
 import { Heading1 } from '../../../common/text'
@@ -46,7 +44,7 @@ import Images from '../../../images'
 import ModalActivityIndicator from '../../../common/components/ModalActivityIndicator'
 import { default as EditDiscussionActions } from '../../discussions/edit/actions'
 import { default as DiscussionDetailsActions } from '../../discussions/details/actions'
-import { ERROR_TITLE } from '../../../redux/middleware/error-handler'
+import { alertError } from '../../../redux/middleware/error-handler'
 import { gradeDisplayOptions } from '../../assignment-details/AssignmentDetailsEdit'
 import AssignmentDatesEditor from '../../assignment-details/components/AssignmentDatesEditor'
 import { default as AssignmentsActions } from '../../assignments/actions'
@@ -101,7 +99,7 @@ export type Props = State & OwnProps & AsyncState & NavigationProps & typeof Act
   defaultDate?: ?Date,
 }
 
-export class DiscussionEdit extends Component<any, Props, any> {
+export class DiscussionEdit extends Component<Props, any> {
   scrollView: KeyboardAwareScrollView
   datesEditor: AssignmentDatesEditor
 
@@ -143,13 +141,11 @@ export class DiscussionEdit extends Component<any, Props, any> {
   componentWillReceiveProps (props: Props) {
     const error = props.error
     if (error) {
-      this.setState({ pending: false })
       this._handleError(error)
       return
     }
 
     if (this.state.pending && !props.pending) {
-      this.setState({ pending: false })
       this.props.navigator.dismissAllModals()
       return
     }
@@ -190,11 +186,11 @@ export class DiscussionEdit extends Component<any, Props, any> {
             image: Images.attachmentLarge,
             testID: 'discussions.edit.attachment-btn',
             action: this.addAttachment,
-            accessibilityLabel: i18n('Add attachment'),
+            accessibilityLabel: i18n('Edit attachment ({count})', { count: this.state.attachment ? '1' : i18n('none') }),
             badge: this.state.attachment && {
               text: '1',
-              backgroundColor: processColor(colors.primaryButtonColor),
-              textColor: processColor(colors.primaryBrandColor),
+              backgroundColor: processColor('#008EE2'),
+              textColor: processColor('white'),
             },
           },
         ]}
@@ -219,6 +215,7 @@ export class DiscussionEdit extends Component<any, Props, any> {
             keyboardShouldPersistTaps='handled'
             enableAutoAutomaticScroll={false}
             ref={(r) => { this.scrollView = r }}
+            keyboardDismissMode={'on-drag'}
           >
             <Heading1 style={style.heading}>{i18n('Title')}</Heading1>
             <RowWithTextInput
@@ -242,6 +239,7 @@ export class DiscussionEdit extends Component<any, Props, any> {
                 scrollEnabled={true}
                 contentHeight={150}
                 placeholder={i18n('Add description (required)')}
+                navigator={this.props.navigator}
               />
             </View>
             <RequiredFieldSubscript
@@ -267,13 +265,15 @@ export class DiscussionEdit extends Component<any, Props, any> {
               onValueChange={this._valueChanged('discussion_type', b => b ? 'threaded' : 'side_comment')}
               identifier='discussions.edit.discussion_type.switch'
             />
-            <RowWithSwitch
+            {this.props.discussionID &&
+             <RowWithSwitch
               title={i18n('Subscribe')}
               border='bottom'
               value={this.state.subscribed}
               onValueChange={this._subscribe}
               identifier='discussions.edit.subscribed.switch'
             />
+            }
             <RowWithSwitch
               title={i18n('Users must post before seeing replies')}
               border='bottom'
@@ -337,7 +337,7 @@ export class DiscussionEdit extends Component<any, Props, any> {
                 <Heading1 style={style.heading}>{i18n('Availability')}</Heading1>
                 <RowWithDateInput
                   title={i18n('Available From')}
-                  date={this.state.delayed_post_at ? moment(this.state.delayed_post_at).format(`MMM D  h:mm A`) : '--'}
+                  date={this.state.delayed_post_at}
                   selected={this.state.showingDatePicker.delayed_post_at}
                   showRemoveButton={Boolean(this.state.delayed_post_at)}
                   border='bottom'
@@ -366,7 +366,7 @@ export class DiscussionEdit extends Component<any, Props, any> {
                 }
                 <RowWithDateInput
                   title={i18n('Available Until')}
-                  date={this.state.lock_at ? moment(this.state.lock_at).format(`MMM D  h:mm A`) : '--'}
+                  date={this.state.lock_at}
                   selected={this.state.showingDatePicker.lock_at}
                   showRemoveButton={Boolean(this.state.lock_at)}
                   border='bottom'
@@ -425,7 +425,7 @@ export class DiscussionEdit extends Component<any, Props, any> {
 
   _handleError (error: string) {
     setTimeout(() => {
-      Alert.alert(ERROR_TITLE, error)
+      alertError(error)
     }, 1000)
   }
 
@@ -503,7 +503,7 @@ export class DiscussionEdit extends Component<any, Props, any> {
 
   updateDiscussion () {
     const params = {
-      title: this.state.title === '' ? null : this.state.title,
+      title: this.state.title || i18n('No Title'),
       message: this.state.message,
       published: this.state.published || false,
       discussion_type: this.state.discussion_type || 'side_comment',
@@ -633,4 +633,4 @@ export function mapStateToProps ({ entities }: AppState, { courseID, discussionI
 }
 
 const Connected = connect(mapStateToProps, Actions)(DiscussionEdit)
-export default (Connected: Component<any, Props, any>)
+export default (Connected: Component<Props, any>)

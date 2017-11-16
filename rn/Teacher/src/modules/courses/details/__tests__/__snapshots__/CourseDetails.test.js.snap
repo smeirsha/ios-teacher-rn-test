@@ -44,15 +44,17 @@ exports[`refresh function second test 1`] = `
     }
   >
     <RCTScrollView
+      automaticallyAdjustContentInsets={false}
       collapsable={undefined}
       contentInset={
         Object {
           "top": 235,
         }
       }
+      contentInsetAdjustmentBehavior="never"
       contentOffset={
         Object {
-          "y": -235,
+          "y": 0,
         }
       }
       onScroll={[Function]}
@@ -184,13 +186,8 @@ exports[`refresh function second test 1`] = `
             "fontSize": 24,
             "fontWeight": "600",
             "marginBottom": 3,
-            "marginHorizontal": 0,
+            "opacity": 1,
             "textAlign": "center",
-            "transform": Array [
-              Object {
-                "translateY": 0,
-              },
-            ],
           }
         }
         testID="course-details.title-lbl"
@@ -232,7 +229,7 @@ exports[`refresh function second test 1`] = `
         "fontWeight": "600",
         "left": 0,
         "opacity": 1,
-        "paddingHorizontal": 60,
+        "paddingHorizontal": 75,
         "position": "absolute",
         "right": 0,
         "textAlign": "center",
@@ -241,6 +238,31 @@ exports[`refresh function second test 1`] = `
     }
   >
     rn 101
+  </Text>
+  <Text
+    accessible={false}
+    allowFontScaling={true}
+    collapsable={undefined}
+    disabled={false}
+    ellipsizeMode="tail"
+    numberOfLines={1}
+    style={
+      Object {
+        "backgroundColor": "transparent",
+        "color": "#fff",
+        "fontSize": 17,
+        "fontWeight": "600",
+        "left": 0,
+        "opacity": 0,
+        "paddingHorizontal": 75,
+        "position": "absolute",
+        "right": 0,
+        "textAlign": "center",
+        "top": 33,
+      }
+    }
+  >
+    Learn React Native
   </Text>
 </View>
 `;
@@ -289,15 +311,17 @@ exports[`renders correctly 1`] = `
     }
   >
     <RCTScrollView
+      automaticallyAdjustContentInsets={false}
       collapsable={undefined}
       contentInset={
         Object {
           "top": 235,
         }
       }
+      contentInsetAdjustmentBehavior="never"
       contentOffset={
         Object {
-          "y": -235,
+          "y": 0,
         }
       }
       onScroll={[Function]}
@@ -339,9 +363,6 @@ exports[`renders correctly 1`] = `
             onPress={[Function]}
             style={
               Array [
-                Object {
-                  "height": 54,
-                },
                 undefined,
                 Object {
                   "borderBottomColor": "#C7CDD1",
@@ -359,10 +380,11 @@ exports[`renders correctly 1`] = `
                     "backgroundColor": "white",
                     "flex": 1,
                     "flexDirection": "row",
-                    "paddingBottom": 12.8,
+                    "minHeight": 54,
+                    "paddingBottom": 12,
                     "paddingLeft": 16,
                     "paddingRight": 16,
-                    "paddingTop": 12.8,
+                    "paddingTop": 12,
                   },
                   Object {
                     "backgroundColor": "white",
@@ -569,13 +591,8 @@ exports[`renders correctly 1`] = `
             "fontSize": 24,
             "fontWeight": "600",
             "marginBottom": 3,
-            "marginHorizontal": 0,
+            "opacity": 1,
             "textAlign": "center",
-            "transform": Array [
-              Object {
-                "translateY": 0,
-              },
-            ],
           }
         }
         testID="course-details.title-lbl"
@@ -617,7 +634,7 @@ exports[`renders correctly 1`] = `
         "fontWeight": "600",
         "left": 0,
         "opacity": 1,
-        "paddingHorizontal": 60,
+        "paddingHorizontal": 75,
         "position": "absolute",
         "right": 0,
         "textAlign": "center",
@@ -626,6 +643,31 @@ exports[`renders correctly 1`] = `
     }
   >
     rn 101
+  </Text>
+  <Text
+    accessible={false}
+    allowFontScaling={true}
+    collapsable={undefined}
+    disabled={false}
+    ellipsizeMode="tail"
+    numberOfLines={1}
+    style={
+      Object {
+        "backgroundColor": "transparent",
+        "color": "#fff",
+        "fontSize": 17,
+        "fontWeight": "600",
+        "left": 0,
+        "opacity": 0,
+        "paddingHorizontal": 75,
+        "position": "absolute",
+        "right": 0,
+        "textAlign": "center",
+        "top": 33,
+      }
+    }
+  >
+    Learn React Native
   </Text>
 </View>
 `;
@@ -650,15 +692,17 @@ exports[`renders correctly without tabs 1`] = `
     }
   >
     <RCTScrollView
+      automaticallyAdjustContentInsets={false}
       collapsable={undefined}
       contentInset={
         Object {
           "top": 235,
         }
       }
+      contentInsetAdjustmentBehavior="never"
       contentOffset={
         Object {
-          "y": -235,
+          "y": 0,
         }
       }
       onScroll={[Function]}
@@ -790,13 +834,8 @@ exports[`renders correctly without tabs 1`] = `
             "fontSize": 24,
             "fontWeight": "600",
             "marginBottom": 3,
-            "marginHorizontal": 0,
+            "opacity": 1,
             "textAlign": "center",
-            "transform": Array [
-              Object {
-                "translateY": 0,
-              },
-            ],
           }
         }
         testID="course-details.title-lbl"
@@ -838,7 +877,7 @@ exports[`renders correctly without tabs 1`] = `
         "fontWeight": "600",
         "left": 0,
         "opacity": 1,
-        "paddingHorizontal": 60,
+        "paddingHorizontal": 75,
         "position": "absolute",
         "right": 0,
         "textAlign": "center",
@@ -847,6 +886,31 @@ exports[`renders correctly without tabs 1`] = `
     }
   >
     rn 101
+  </Text>
+  <Text
+    accessible={false}
+    allowFontScaling={true}
+    collapsable={undefined}
+    disabled={false}
+    ellipsizeMode="tail"
+    numberOfLines={1}
+    style={
+      Object {
+        "backgroundColor": "transparent",
+        "color": "#fff",
+        "fontSize": 17,
+        "fontWeight": "600",
+        "left": 0,
+        "opacity": 0,
+        "paddingHorizontal": 75,
+        "position": "absolute",
+        "right": 0,
+        "textAlign": "center",
+        "top": 33,
+      }
+    }
+  >
+    Learn React Native
   </Text>
 </View>
 `;
@@ -871,15 +935,17 @@ exports[`renders with empty image url 1`] = `
     }
   >
     <RCTScrollView
+      automaticallyAdjustContentInsets={false}
       collapsable={undefined}
       contentInset={
         Object {
           "top": 235,
         }
       }
+      contentInsetAdjustmentBehavior="never"
       contentOffset={
         Object {
-          "y": -235,
+          "y": 0,
         }
       }
       onScroll={[Function]}
@@ -921,9 +987,6 @@ exports[`renders with empty image url 1`] = `
             onPress={[Function]}
             style={
               Array [
-                Object {
-                  "height": 54,
-                },
                 undefined,
                 Object {
                   "borderBottomColor": "#C7CDD1",
@@ -941,10 +1004,11 @@ exports[`renders with empty image url 1`] = `
                     "backgroundColor": "white",
                     "flex": 1,
                     "flexDirection": "row",
-                    "paddingBottom": 12.8,
+                    "minHeight": 54,
+                    "paddingBottom": 12,
                     "paddingLeft": 16,
                     "paddingRight": 16,
-                    "paddingTop": 12.8,
+                    "paddingTop": 12,
                   },
                   Object {
                     "backgroundColor": "white",
@@ -1134,13 +1198,8 @@ exports[`renders with empty image url 1`] = `
             "fontSize": 24,
             "fontWeight": "600",
             "marginBottom": 3,
-            "marginHorizontal": 0,
+            "opacity": 1,
             "textAlign": "center",
-            "transform": Array [
-              Object {
-                "translateY": 0,
-              },
-            ],
           }
         }
         testID="course-details.title-lbl"
@@ -1182,7 +1241,7 @@ exports[`renders with empty image url 1`] = `
         "fontWeight": "600",
         "left": 0,
         "opacity": 1,
-        "paddingHorizontal": 60,
+        "paddingHorizontal": 75,
         "position": "absolute",
         "right": 0,
         "textAlign": "center",
@@ -1191,6 +1250,31 @@ exports[`renders with empty image url 1`] = `
     }
   >
     rn 101
+  </Text>
+  <Text
+    accessible={false}
+    allowFontScaling={true}
+    collapsable={undefined}
+    disabled={false}
+    ellipsizeMode="tail"
+    numberOfLines={1}
+    style={
+      Object {
+        "backgroundColor": "transparent",
+        "color": "#fff",
+        "fontSize": 17,
+        "fontWeight": "600",
+        "left": 0,
+        "opacity": 0,
+        "paddingHorizontal": 75,
+        "position": "absolute",
+        "right": 0,
+        "textAlign": "center",
+        "top": 33,
+      }
+    }
+  >
+    Learn React Native
   </Text>
 </View>
 `;
@@ -1215,15 +1299,17 @@ exports[`renders with image url 1`] = `
     }
   >
     <RCTScrollView
+      automaticallyAdjustContentInsets={false}
       collapsable={undefined}
       contentInset={
         Object {
           "top": 235,
         }
       }
+      contentInsetAdjustmentBehavior="never"
       contentOffset={
         Object {
-          "y": -235,
+          "y": 0,
         }
       }
       onScroll={[Function]}
@@ -1265,9 +1351,6 @@ exports[`renders with image url 1`] = `
             onPress={[Function]}
             style={
               Array [
-                Object {
-                  "height": 54,
-                },
                 undefined,
                 Object {
                   "borderBottomColor": "#C7CDD1",
@@ -1285,10 +1368,11 @@ exports[`renders with image url 1`] = `
                     "backgroundColor": "white",
                     "flex": 1,
                     "flexDirection": "row",
-                    "paddingBottom": 12.8,
+                    "minHeight": 54,
+                    "paddingBottom": 12,
                     "paddingLeft": 16,
                     "paddingRight": 16,
-                    "paddingTop": 12.8,
+                    "paddingTop": 12,
                   },
                   Object {
                     "backgroundColor": "white",
@@ -1495,13 +1579,8 @@ exports[`renders with image url 1`] = `
             "fontSize": 24,
             "fontWeight": "600",
             "marginBottom": 3,
-            "marginHorizontal": 0,
+            "opacity": 1,
             "textAlign": "center",
-            "transform": Array [
-              Object {
-                "translateY": 0,
-              },
-            ],
           }
         }
         testID="course-details.title-lbl"
@@ -1543,7 +1622,7 @@ exports[`renders with image url 1`] = `
         "fontWeight": "600",
         "left": 0,
         "opacity": 1,
-        "paddingHorizontal": 60,
+        "paddingHorizontal": 75,
         "position": "absolute",
         "right": 0,
         "textAlign": "center",
@@ -1552,6 +1631,31 @@ exports[`renders with image url 1`] = `
     }
   >
     rn 101
+  </Text>
+  <Text
+    accessible={false}
+    allowFontScaling={true}
+    collapsable={undefined}
+    disabled={false}
+    ellipsizeMode="tail"
+    numberOfLines={1}
+    style={
+      Object {
+        "backgroundColor": "transparent",
+        "color": "#fff",
+        "fontSize": 17,
+        "fontWeight": "600",
+        "left": 0,
+        "opacity": 0,
+        "paddingHorizontal": 75,
+        "position": "absolute",
+        "right": 0,
+        "textAlign": "center",
+        "top": 33,
+      }
+    }
+  >
+    Learn React Native
   </Text>
 </View>
 `;
@@ -1576,15 +1680,17 @@ exports[`renders without image url 1`] = `
     }
   >
     <RCTScrollView
+      automaticallyAdjustContentInsets={false}
       collapsable={undefined}
       contentInset={
         Object {
           "top": 235,
         }
       }
+      contentInsetAdjustmentBehavior="never"
       contentOffset={
         Object {
-          "y": -235,
+          "y": 0,
         }
       }
       onScroll={[Function]}
@@ -1626,9 +1732,6 @@ exports[`renders without image url 1`] = `
             onPress={[Function]}
             style={
               Array [
-                Object {
-                  "height": 54,
-                },
                 undefined,
                 Object {
                   "borderBottomColor": "#C7CDD1",
@@ -1646,10 +1749,11 @@ exports[`renders without image url 1`] = `
                     "backgroundColor": "white",
                     "flex": 1,
                     "flexDirection": "row",
-                    "paddingBottom": 12.8,
+                    "minHeight": 54,
+                    "paddingBottom": 12,
                     "paddingLeft": 16,
                     "paddingRight": 16,
-                    "paddingTop": 12.8,
+                    "paddingTop": 12,
                   },
                   Object {
                     "backgroundColor": "white",
@@ -1839,13 +1943,8 @@ exports[`renders without image url 1`] = `
             "fontSize": 24,
             "fontWeight": "600",
             "marginBottom": 3,
-            "marginHorizontal": 0,
+            "opacity": 1,
             "textAlign": "center",
-            "transform": Array [
-              Object {
-                "translateY": 0,
-              },
-            ],
           }
         }
         testID="course-details.title-lbl"
@@ -1887,7 +1986,7 @@ exports[`renders without image url 1`] = `
         "fontWeight": "600",
         "left": 0,
         "opacity": 1,
-        "paddingHorizontal": 60,
+        "paddingHorizontal": 75,
         "position": "absolute",
         "right": 0,
         "textAlign": "center",
@@ -1896,6 +1995,31 @@ exports[`renders without image url 1`] = `
     }
   >
     rn 101
+  </Text>
+  <Text
+    accessible={false}
+    allowFontScaling={true}
+    collapsable={undefined}
+    disabled={false}
+    ellipsizeMode="tail"
+    numberOfLines={1}
+    style={
+      Object {
+        "backgroundColor": "transparent",
+        "color": "#fff",
+        "fontSize": 17,
+        "fontWeight": "600",
+        "left": 0,
+        "opacity": 0,
+        "paddingHorizontal": 75,
+        "position": "absolute",
+        "right": 0,
+        "textAlign": "center",
+        "top": 33,
+      }
+    }
+  >
+    Learn React Native
   </Text>
 </View>
 `;

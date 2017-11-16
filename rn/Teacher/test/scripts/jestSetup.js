@@ -16,7 +16,9 @@
 
 /* @flow */
 import setupI18n from '../../i18n/setup'
+import { shouldTrackAsyncActions } from '../../src/redux/middleware/redux-promise'
 setupI18n('en')
+shouldTrackAsyncActions(false)
 
 const { NativeModules } = require('react-native')
 
@@ -27,7 +29,7 @@ require.requireActual('TextInput').displayName = 'TextInput'
 require.requireActual('ActivityIndicator').displayName = 'ActivityIndicator'
 require.requireActual('TouchableOpacity').displayName = 'TouchableOpacity'
 
-jest.mock('canvas-api')
+jest.mock('../../src/canvas-api')
 
 NativeModules.NativeAccessibility = {
   focusElement: jest.fn(),
@@ -55,6 +57,11 @@ NativeModules.RNFSManager = {
 NativeModules.AudioRecorderManager = {
   checkAuthorizationStatus: jest.fn(),
   prepareRecordingAtPath: jest.fn(),
+}
+
+NativeModules.RNSound = {
+  isAudio: jest.fn(),
+  isWindows: jest.fn(),
 }
 
 jest.mock('NetInfo', () => ({
@@ -95,6 +102,54 @@ jest.mock('PickerIOS', () => {
 jest.mock('AccessibilityInfo', () => ({
   setAccessibilityFocus: jest.fn(),
 }))
+
+jest.mock('LayoutAnimation', () => {
+  const ActualLayoutAnimation = require.requireActual('LayoutAnimation')
+  return {
+    ...ActualLayoutAnimation,
+    easeInEaseOut: jest.fn(),
+    configureNext: jest.fn(),
+  }
+})
+
+jest.mock('Linking', () => ({
+  canOpenURL: jest.fn(() => Promise.resolve(true)),
+  openURL: jest.fn(),
+}))
+
+jest.mock('AppState', () => ({
+  currentState: 'active',
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn(),
+}))
+
+NativeModules.CameraManager = {
+  Aspect: {
+    fill: 'fill',
+  },
+  Type: {
+    back: 'back',
+  },
+  Orientation: {
+    auto: 'auto',
+  },
+  CaptureMode: {
+    still: 'still',
+  },
+  CaptureTarget: {
+    cameraRoll: 'cameraRoll',
+  },
+  CaptureQuality: {
+    high: 'high',
+  },
+  FlashMode: {
+    off: 'off',
+  },
+  TorchMode: {
+    off: 'off',
+  },
+  BarCodeType: [],
+}
 
 // Fixes network calls in tests env.
 global.XMLHttpRequest = require('xhr2').XMLHttpRequest

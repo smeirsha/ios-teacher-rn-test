@@ -29,11 +29,10 @@ FOUNDATION_EXPORT const unsigned char TechDebtVersionString[];
 #import <TechDebt/Router.h>
 #import <TechDebt/ProfileViewController.h>
 #import <TechDebt/CKCanvasAPI+CurrentAPI.h>
-#import <TechDebt/CBIMessagesTab.h>
 #import <TechDebt/Analytics.h>
 #import <TechDebt/iCanvasConstants.h>
 #import <TechDebt/CBIModuleProgressNotifications.h>
-#import <TechDebt/ConversationUpdater.h>
+#import <TechDebt/CBIConversationStarter.h>
 #import <TechDebt/CBILogger.h>
 #import <TechDebt/CKIClient+CBIClient.h>
 #import <TechDebt/UIImage+TechDebt.h>
@@ -42,4 +41,5 @@ FOUNDATION_EXPORT const unsigned char TechDebtVersionString[];
 #import <TechDebt/ReceivedFilesViewController.h>
 #import <TechDebt/AboutViewController.h>
 #import <TechDebt/WebBrowserViewController.h>
+#import <TechDebt/MyLittleViewController.h>
 

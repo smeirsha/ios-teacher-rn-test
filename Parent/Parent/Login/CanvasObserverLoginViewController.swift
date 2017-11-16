@@ -17,19 +17,19 @@
     
 
 import Foundation
-import SoPretty
-import SoLazy
+
+import CanvasCore
 import ReactiveSwift
-import Airwolf
-import TooLegit
+
+
 import Marshal
 
 class CanvasObserverLoginViewController: WebLoginViewController, UIWebViewDelegate {
     let loginSuccess: (Session)->()
     
-    init(domain: String, loginSuccess: @escaping (Session)->()) {
+    init(domain: String, authenticationProvider: String?, loginSuccess: @escaping (Session)->()) {
         self.loginSuccess = loginSuccess
-        super.init(request: AirwolfAPI.authenticateAsCanvasObserver(domain), useBackButton: true, loginFailureMessage: NSLocalizedString("Only Canvas observers can authenticate in Canvas Parent.", comment: "Canvas Observer Auth Failed Message"))
+        super.init(request: AirwolfAPI.authenticateAsCanvasObserver(domain, provider: authenticationProvider), loginFailureMessage: NSLocalizedString("Only Canvas observers can authenticate in Canvas Parent.", comment: "Canvas Observer Auth Failed Message"))
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -44,6 +44,15 @@ class CanvasObserverLoginViewController: WebLoginViewController, UIWebViewDelega
     
     var jsonBodyData: Data? {
         return webView.stringByEvaluatingJavaScript(from: "document.getElementsByTagName('pre')[0].innerHTML")?.data(using: String.Encoding.utf8)
+    }
+
+    func presentBadDomainError() {
+        let title = NSLocalizedString("Invalid domain.", comment: "Invalid Domain title")
+        let message = NSLocalizedString("Please double-check the domain and try again.", comment: "Invalid Domain message")
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: NSLocalizedString("OK", comment: "OK Button Title"), style: .default, handler: { [weak self] _ in _ = self?.navigationController?.popViewController(animated: true) })
+        alertController.addAction(action)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     // MARK: UIWebViewDelegate
@@ -68,5 +77,14 @@ class CanvasObserverLoginViewController: WebLoginViewController, UIWebViewDelega
         loginSuccess(session)
         
         return true
+    }
+
+    func webViewDidFinishLoad(_ webView: UIWebView) {
+        guard let result = webView.stringByEvaluatingJavaScript(from: "document.getElementsByTagName('body')[0].childNodes[0].childNodes[0].data") else { return }
+        if result.contains("Bad Request") && result.contains("Error validating domain") {
+            webView.isHidden = true
+            presentBadDomainError()
+            return
+        }
     }
 }

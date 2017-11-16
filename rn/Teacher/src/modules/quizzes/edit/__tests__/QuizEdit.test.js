@@ -25,8 +25,6 @@ import renderer from 'react-test-renderer'
 
 import { QuizEdit, mapStateToProps } from '../QuizEdit'
 import explore from '../../../../../test/helpers/explore'
-import { ERROR_TITLE } from '../../../../redux/middleware/error-handler'
-import setProps from '../../../../../test/helpers/setProps'
 
 jest
   .mock('Button', () => 'Button')
@@ -76,7 +74,10 @@ describe('QuizEdit', () => {
       defaultDate: new Date(0),
       assignmentGroups: {},
       courseID: '1',
-      updateQuiz: jest.fn(),
+      updateQuiz: jest.fn(() => {
+        return Promise.resolve({ data: template.quiz() })
+      }),
+      quizUpdated: jest.fn(),
       error: null,
       updateAssignment: jest.fn(),
       refreshAssignment: jest.fn(),
@@ -233,8 +234,11 @@ describe('QuizEdit', () => {
     expect(component.toJSON()).toMatchSnapshot()
   })
 
-  it('saves quiz on done', () => {
-    props.updateQuiz = jest.fn()
+  it('saves quiz on done', async () => {
+    props.quizUpdated = jest.fn()
+    props.updateQuiz = jest.fn(() => {
+      return Promise.resolve({ data: props.quiz })
+    })
     let navigator = template.navigator({
       dismiss: jest.fn(),
     })
@@ -244,8 +248,10 @@ describe('QuizEdit', () => {
     )
 
     const doneButton: any = explore(tree.toJSON()).selectRightBarButton('quizzes.edit.doneButton')
-    doneButton.action()
-    expect(props.updateQuiz).toHaveBeenCalledWith(props.quiz, props.courseID, props.quiz)
+    await doneButton.action()
+    expect(props.updateQuiz).toHaveBeenCalled()
+    expect(props.quizUpdated).toHaveBeenCalledWith(props.quiz)
+    expect(navigator.dismiss).toHaveBeenCalled()
   })
 
   it('should validate the assignment dates on done', () => {
@@ -268,12 +274,15 @@ describe('QuizEdit', () => {
 
   it('updates assignment on done', () => {
     const originalAssignment = template.assignment({ name: 'Original Assignment' })
-    const updatedAssignment = { ...originalAssignment, name: 'Updated assignment' }
+    let overrides = {
+      id: originalAssignment.id,
+      assignment_overrides: originalAssignment.assignment_overrides,
+    }
     const createNodeMock = ({ type }) => {
       if (type === 'AssignmentDatesEditor') {
         return {
           validate: jest.fn().mockReturnValue(true),
-          updateAssignment: (assignment) => updatedAssignment,
+          updateAssignment: (assignment) => assignment,
         }
       }
     }
@@ -282,7 +291,8 @@ describe('QuizEdit', () => {
     const tree = render(props, { createNodeMock }).toJSON()
     const doneButton: any = explore(tree).selectRightBarButton('quizzes.edit.doneButton')
     doneButton.action()
-    expect(props.updateAssignment).toHaveBeenCalledWith(props.courseID, updatedAssignment, originalAssignment)
+
+    expect(props.updateAssignment).toHaveBeenCalledWith(props.courseID, overrides, originalAssignment)
   })
 
   it('shows modal while saving', () => {
@@ -300,27 +310,6 @@ describe('QuizEdit', () => {
     expect(component.toJSON()).toMatchSnapshot()
   })
 
-  it('calls dismiss when save finishes', () => {
-    let doneProps = {
-      ...props,
-      navigator: template.navigator({
-        dismiss: jest.fn(),
-      }),
-    }
-    let component = renderer.create(
-    <QuizEdit {...doneProps} />, options
-  )
-    let updateQuiz = jest.fn(() => {
-      setProps(component, { pending: false })
-    })
-    component.update(<QuizEdit {...doneProps} updateQuiz={updateQuiz}/>)
-
-    const doneButton: any = explore(component.toJSON()).selectRightBarButton('quizzes.edit.doneButton')
-    doneButton.action()
-
-    expect(doneProps.navigator.dismissAllModals).toHaveBeenCalled()
-  })
-
   it('calls dismiss on cancel', () => {
     props.navigator.dismiss = jest.fn()
     const tree = render(props).toJSON()
@@ -329,16 +318,18 @@ describe('QuizEdit', () => {
     expect(props.navigator.dismiss).toHaveBeenCalled()
   })
 
-  it('presents errors', () => {
-    jest.useFakeTimers()
-    // $FlowFixMe
+  it('presents errors', async () => {
+    props.updateQuiz = jest.fn(() => {
+      return Promise.reject({ response: new Error('this is an error') })
+    })
+    let tree = renderer.create(
+      <QuizEdit {...props} />, options
+    )
+
     Alert.alert = jest.fn()
-    const component = render(props)
-    const error = { response: template.error('this is an error') }
-    // $FlowFixMe
-    component.update(<QuizEdit {...props} error={error} />)
-    jest.runAllTimers()
-    expect(Alert.alert).toHaveBeenCalledWith(ERROR_TITLE, 'this is an error')
+    const doneButton: any = explore(tree.toJSON()).selectRightBarButton('quizzes.edit.doneButton')
+    await doneButton.action()
+    expect(Alert.alert).toHaveBeenCalled()
   })
 
   it('navigates to edit description', () => {

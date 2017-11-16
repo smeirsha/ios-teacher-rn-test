@@ -84,8 +84,7 @@ export default class RubricItem extends Component {
       [{
         text: i18n('Cancel'),
         style: 'cancel',
-        onPress: () => AccessibilityInfo.setAccessibilityFocus(findNodeHandle(this.customizeButton))
-,
+        onPress: () => AccessibilityInfo.setAccessibilityFocus(findNodeHandle(this.customizeButton)),
       }, {
         text: i18n('OK'),
         onPress: (value) => {
@@ -159,7 +158,7 @@ export default class RubricItem extends Component {
               accessibilityLabel={`${rating.points} — ${rating.description}`}
               testID={`rubric-item.points-${rating.id}`}
             >
-              {rating.points}
+              {i18n.number(rating.points)}
             </CircleToggle>
           ))}
           <CircleToggle
@@ -176,7 +175,7 @@ export default class RubricItem extends Component {
             ref={r => { this.customizeButton = r }}
           >
             { isCustomGrade
-              ? this.state.selectedOption
+              ? i18n.number(this.state.selectedOption)
               : <Image style={{ tintColor: colors.grey4 }} source={Images.add} />
             }
           </CircleToggle>
@@ -204,13 +203,14 @@ export default class RubricItem extends Component {
             onPress={this.showDescription}
             testID='rubric-item.description'
           >
-            {i18n('View long description')}
+            {i18n('View Long Description')}
           </LinkButton>
         </View>
         {hasComment &&
           <View style={styles.chatBubble}>
             <ChatBubble from='them' message={this.props.grade.comments} />
             <LinkButton
+              style={styles.editButton}
               textStyle={styles.editButtonText}
               testID={`rubric-item.edit-comment-${rubricItem.id}`}
               onPress={this.openActionSheet}
@@ -255,6 +255,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  editButton: {
+    marginLeft: 16,
   },
   editButtonText: {
     fontSize: 16,

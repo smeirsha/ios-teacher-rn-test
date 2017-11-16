@@ -35,6 +35,10 @@ import { quizSubmissions, quizAssignmentSubmissions } from '../modules/quizzes/s
 import { discussions } from '../modules/discussions/reducer'
 import inbox from '../modules/inbox/reducer'
 import { groups } from '../modules/groups/group-entities-reducer'
+import { asyncActions } from './actions/async-tracker'
+import toDo from '../modules/to-do/reducer'
+import { filesData as files, foldersData as folders } from '../modules/files/reducer'
+import { entities as pages } from '../modules/pages/reducer'
 
 const entities = combineReducers({
   courses,
@@ -50,12 +54,17 @@ const entities = combineReducers({
   quizSubmissions,
   discussions,
   courseDetailsTabSelectedRow,
+  pages,
 })
 
 const actualRootReducer: Reducer<AppState, Action> = combineReducers({
   favoriteCourses,
   inbox,
+  files,
+  folders,
   entities,
+  asyncActions,
+  toDo,
 })
 
 export default function rootReducer (state: ?AppState, action: Action): AppState {

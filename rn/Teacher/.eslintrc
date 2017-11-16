@@ -13,7 +13,8 @@
   ],
   "globals": {
     "fetch": true,
-    "fail": true
+    "fail": true,
+    "FormData": true
   },
   "rules": {
     "react/jsx-uses-vars": [2],
@@ -42,8 +43,7 @@
       2,
       "comma"
     ],
-    "flowtype/require-export-type": 2,
-    "flowtype/require-valid-file-annotation": 2,
+    "flowtype/require-valid-file-annotation": [ "error", "always" ],
     "flowtype/semi": [
       2,
       "never"

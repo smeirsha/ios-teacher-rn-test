@@ -14,6 +14,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+/* @flow */
+
 import React, { Component } from 'react'
 import {
   View,
@@ -27,6 +29,7 @@ import Row from '../../common/components/rows/Row'
 import Avatar from '../../common/components/Avatar'
 import TypeAheadSearch from '../../common/TypeAheadSearch'
 import ListEmptyComponent from '../../common/components/ListEmptyComponent'
+import RowSeparator from '../../common/components/rows/RowSeparator'
 
 export type Props = NavigationProps & {
   onSelect: (selected: AddressBookResult[]) => void,
@@ -40,7 +43,7 @@ function isBranch (id: string): boolean {
     id.startsWith('section')
 }
 
-export class AddressBook extends Component<any, Props, any> {
+export class AddressBook extends Component<Props, any> {
 
   typeAhead: TypeAheadSearch
 
@@ -150,6 +153,7 @@ export class AddressBook extends Component<any, Props, any> {
                 ListEmptyComponent={this.state.pending ? null : empty}
                 refreshing={this.state.pending}
                 onEndReached={() => this.typeAhead.next()}
+                ItemSeparatorComponent={RowSeparator}
               />
             </View>)
   }
@@ -212,4 +216,4 @@ export function mapStateToProps (state: AppState): AddressBookDataProps {
 }
 
 const Connected = connect(mapStateToProps, {})(AddressBook)
-export default (Connected: Component<any, Props, any>)
+export default (Connected: Component<Props, any>)

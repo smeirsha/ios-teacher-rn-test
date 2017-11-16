@@ -83,7 +83,7 @@ export class SubmissionBreakdownGraphSection extends Component<any, SubmissionBr
     let notSubmittedLabel = i18n('Not Submitted')
 
     let labels = [gradedLabel, ungradedLabel, notSubmittedLabel]
-    let ids = ['graded', 'ungraded', 'not-submitted']
+    let ids = ['graded', 'ungraded', 'not_submitted']
 
     let noSubmissions = submissionTypes.includes('none')
     if (noSubmissions) { return this.renderNoSubmissions() }
@@ -144,10 +144,10 @@ export class SubmissionBreakdownGraphSection extends Component<any, SubmissionBr
         this.props.onPress('graded')
         break
       case ungraded:
-        this.props.onPress('notgraded')
+        this.props.onPress('ungraded')
         break
       case notSubmitted:
-        this.props.onPress('notsubmitted')
+        this.props.onPress('not_submitted')
         break
     }
   }
@@ -158,7 +158,7 @@ const style = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     maxWidth: 400,
   },
   loadingWrapper: {

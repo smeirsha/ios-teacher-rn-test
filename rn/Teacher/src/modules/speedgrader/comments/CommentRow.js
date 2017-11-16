@@ -30,10 +30,12 @@ import {
   Paragraph,
 } from '../../../common/text'
 import ChatBubble from './ChatBubble'
+import AudioComment from './AudioComment'
 import SubmittedContent, { type SubmittedContentDataProps } from './SubmittedContent'
 import Images from '../../../images'
 import Button from 'react-native-button'
 import i18n from 'format-message'
+import Video from '../../../common/components/Video'
 
 export default class CommentRow extends Component<any, CommentRowProps, any> {
   showFailedOptions = () => {
@@ -112,8 +114,29 @@ export default class CommentRow extends Component<any, CommentRowProps, any> {
             attachmentIndex={i}
             onPress={this.props.switchFile}
             submissionID={contents.submissionID}
+            key={`commentRow_${i}`}
           />
           ))
+      case 'media':
+        switch (contents.mediaType) {
+          case 'audio':
+            return <AudioComment url={contents.url} from={from} />
+          case 'video':
+            if (!contents.url) return null
+            let uri = contents.url
+            if (uri.startsWith('/')) {
+              uri = `file://${uri}`
+            }
+            return (
+              <View style={{ flex: 1, height: 160 }}>
+                <Video
+                  source={{ uri }}
+                  style={{ flex: 1 }}
+                />
+              </View>
+            )
+        }
+        break
       default:
         return undefined // TODO: other message content types
     }
@@ -197,6 +220,12 @@ export type CommentContent = { type: 'text', message: string }
       items: Array<SubmittedContentDataProps>,
       attemptIndex: number,
       submissionID: string,
+    }
+  | {
+      type: 'media',
+      mediaType: string,
+      displayName: ?string,
+      url: string,
     }
 
 export type CommentRowProps = {

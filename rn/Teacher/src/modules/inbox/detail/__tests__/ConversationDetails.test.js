@@ -17,10 +17,11 @@
 /* @flow */
 import {
   ActionSheetIOS,
+  AlertIOS,
 } from 'react-native'
 import React from 'react'
 import { ConversationDetails, mapStateToProps, handleRefresh, shouldRefresh, type ConversationDetailsProps } from '../ConversationDetails.js'
-import { setSession } from 'canvas-api'
+import { setSession } from '../../../../canvas-api'
 import explore from '../../../../../test/helpers/explore'
 import setProps from '../../../../../test/helpers/setProps'
 
@@ -36,6 +37,9 @@ const template = {
 jest
   .mock('TouchableHighlight', () => 'TouchableHighlight')
   .mock('../../../../routing/Screen')
+  .mock('AlertIOS', () => ({
+    alert: jest.fn(),
+  }))
 
 // Note: test renderer must be required after react-native.
 import renderer from 'react-test-renderer'
@@ -67,6 +71,7 @@ const Screen = (props: ConversationDetailsProps) => {
 describe('ConversationDetails', () => {
   let props
   beforeEach(() => {
+    jest.resetAllMocks()
     props = {
       conversation: template.conversation({ id: '1' }),
       conversationID: '1',
@@ -76,6 +81,7 @@ describe('ConversationDetails', () => {
       starConversation: jest.fn(),
       unstarConversation: jest.fn(),
       deleteConversation: jest.fn(),
+      deleteConversationMessage: jest.fn(),
       markAsRead: jest.fn(),
       navigator: template.navigator(),
       enrollments: [template.enrollment()],
@@ -100,15 +106,20 @@ describe('ConversationDetails', () => {
     Screen(props).testRender()
   })
 
+  it('doesnt render messages that are pendingDelete', () => {
+    props.messages = [template.conversationMessage({ pendingDelete: true })]
+    Screen(props).testRender()
+  })
+
   it('shows options action sheet', () => {
     // $FlowFixMe
     ActionSheetIOS.showActionSheetWithOptions = jest.fn()
     Screen(props).tapOptionsButton()
     expect(ActionSheetIOS.showActionSheetWithOptions).toHaveBeenCalledWith(
       {
-        options: ['Forward', 'Delete', 'Cancel'],
-        destructiveButtonIndex: 1,
-        cancelButtonIndex: 2,
+        options: ['Forward', 'Reply', 'Delete', 'Cancel'],
+        destructiveButtonIndex: 2,
+        cancelButtonIndex: 3,
       },
       expect.any(Function),
     )
@@ -139,6 +150,7 @@ describe('ConversationDetails', () => {
       unstarConversation,
       starConversation,
       markAsRead: jest.fn(),
+      messages: [],
     }
 
     let tree = renderer.create(
@@ -160,7 +172,7 @@ describe('ConversationDetails', () => {
 
   it('it passess all messages as included messages when forwarding the conversation', () => {
     // $FlowFixMe
-    ActionSheetIOS.showActionSheetWithOptions = jest.fn((config, callback) => callback(config.options.length - 3))
+    ActionSheetIOS.showActionSheetWithOptions = jest.fn((config, callback) => callback(config.options.length - 4))
     props.conversationID = '1'
     props.messages = [
       template.conversationMessage({ id: '1' }),
@@ -195,19 +207,33 @@ describe('ConversationDetails', () => {
     })
   })
 
+  it('does not allow forwarding of messages with no context_code', () => {
+    props.conversationID = '1'
+    props.messages = [template.conversationMessage({ id: '3' })]
+    props.conversation = template.conversation({ id: '1', context_code: undefined })
+    Screen(props).instance.forwardMessage('3')
+    expect(AlertIOS.alert).toHaveBeenCalled()
+    expect(props.navigator.show).not.toHaveBeenCalled()
+  })
+
   it('calls options with an id', () => {
     // $FlowFixMe
     ActionSheetIOS.showActionSheetWithOptions = jest.fn((config, callback) => callback(config.options.length - 2))
-    props.deleteConversation = jest.fn()
     props.conversationID = '1'
     Screen(props).instance.showOptionsActionSheet('2')
-    expect(props.deleteConversation).toHaveBeenCalledWith('2')
+    expect(props.deleteConversationMessage).toHaveBeenCalledWith('1', '2')
+  })
+
+  it('calls navigator.pop when there is no conversation', () => {
+    let screen = Screen(props)
+    setProps(screen.component, { conversation: undefined })
+
+    expect(props.navigator.pop).toHaveBeenCalled()
   })
 
   it('calls pop after delete finishes', () => {
     // $FlowFixMe
     ActionSheetIOS.showActionSheetWithOptions = jest.fn((config, callback) => callback(config.options.length - 2))
-    props.navigator.pop = jest.fn()
     const screen = Screen(props)
     props.deleteConversation = jest.fn(() => {
       setProps(screen.component, { pending: 1 })
@@ -218,12 +244,28 @@ describe('ConversationDetails', () => {
     expect(props.navigator.pop).toHaveBeenCalled()
   })
 
-  it('calls markAsRead on componentDidMount', () => {
+  it('calls markAsRead on componentDidMount when the conversation has workflow state of unread', () => {
+    const myProps = {
+      ...props,
+      conversation: template.conversation({ workflow_state: 'unread' }),
+    }
     renderer.create(
-      <ConversationDetails {...props} />
+      <ConversationDetails {...myProps} />
     )
 
     expect(props.markAsRead).toHaveBeenCalledWith('1')
+  })
+
+  it('does not call markAsRead on componentDidMount when the conversation has workflow state of archived', () => {
+    const myProps = {
+      ...props,
+      conversation: template.conversation({ workflow_state: 'archived' }),
+    }
+    renderer.create(
+      <ConversationDetails {...myProps} />
+    )
+
+    expect(props.markAsRead).not.toHaveBeenCalledWith('1')
   })
 })
 

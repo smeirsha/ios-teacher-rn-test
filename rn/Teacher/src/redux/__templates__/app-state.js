@@ -49,6 +49,9 @@ const emptyAppState: AppState = {
     archived: { refs: [], pending: 0 },
     sent: { refs: [], pending: 0 },
   },
+  asyncActions: {},
+  files: {},
+  folders: {},
 }
 
 export const appState: Template<AppState> = template(emptyAppState)

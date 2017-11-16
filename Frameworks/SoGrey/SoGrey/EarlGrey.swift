@@ -48,13 +48,13 @@ public func GREYAssertNotEqual(_ left: @autoclosure () -> AnyObject?,
 }
 
 public func GREYAssertEqualObjects<T: Equatable>( _ left: @autoclosure () -> T?,
-                                   _ right: @autoclosure () -> T?, reason: String) {
+                                                  _ right: @autoclosure () -> T?, reason: String) {
   GREYAssert(left() == right(), reason, details: "Expected object of the left term to be equal" +
     " to the object of the right term")
 }
 
 public func GREYAssertNotEqualObjects<T: Equatable>( _ left: @autoclosure () -> T?,
-                                      _ right: @autoclosure () -> T?, reason: String) {
+                                                     _ right: @autoclosure () -> T?, reason: String) {
   GREYAssert(left() != right(), reason, details: "Expected object of the left term to not" +
     " equal the object of the right term")
 }
@@ -74,6 +74,7 @@ public func GREYFailWithDetails(_ reason: String, details: String) {
 private func GREYAssert(_ expression: @autoclosure () -> Bool,
                         _ reason: String, details: String) {
   GREYSetCurrentAsFailable()
+  GREYWaitUntilIdle()
   if !expression() {
     EarlGrey.handle(exception: GREYFrameworkException(name: kGREYAssertionFailedException,
                                                       reason: reason),
@@ -91,8 +92,12 @@ private func GREYSetCurrentAsFailable() {
   }
 }
 
+private func GREYWaitUntilIdle() {
+  GREYUIThreadExecutor.sharedInstance().drainUntilIdle()
+}
+
 open class EarlGrey: NSObject {
-  open class func select(elementWithMatcher matcher:GREYMatcher,
+  open class func select(elementWithMatcher matcher: GREYMatcher,
                          file: StaticString = #file,
                          line: UInt = #line) -> GREYElementInteraction {
     return EarlGreyImpl.invoked(fromFile: file.description, lineNumber: line)
@@ -131,7 +136,7 @@ extension GREYInteraction {
   }
 
   @discardableResult public func assert(_ matcher: @autoclosure () -> GREYMatcher,
-                                        error:UnsafeMutablePointer<NSError?>!) -> Self {
+                                        error: UnsafeMutablePointer<NSError?>!) -> Self {
     return self.assert(with: matcher(), error: error)
   }
 
@@ -140,3 +145,15 @@ extension GREYInteraction {
     return self.usingSearch(searchAction, onElementWith: matcher)
   }
 }
+
+extension GREYCondition {
+  open func waitWithTimeout(seconds: CFTimeInterval) -> Bool {
+    return self.wait(withTimeout: seconds)
+  }
+
+  open func waitWithTimeout(seconds: CFTimeInterval, pollInterval: CFTimeInterval)
+    -> Bool {
+      return self.wait(withTimeout: seconds, pollInterval: pollInterval)
+  }
+}
+

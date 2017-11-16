@@ -25,7 +25,7 @@
 #import "DiscussionCreationStrategy.h"
 #import "Analytics.h"
 
-@import SoPretty;
+@import CanvasCore;
 
 #import "CBILog.h"
 #import "UIImage+TechDebt.h"
@@ -228,9 +228,12 @@
             DDLogVerbose(@"Error createDiscussionTopic: %@", error);
             [activityIndicator stopAnimating];
             postButton.enabled = YES;
+            NSString *message = error.code >= 500
+                ? NSLocalizedString(@"Unable to post. Please try again later.", @"Error message")
+                : NSLocalizedString(@"Unable to post.", @"Error message without retry");
             
             CKAlertViewWithBlocks *alert = [[CKAlertViewWithBlocks alloc] initWithTitle:NSLocalizedString(@"Oops!", @"Title for an error alert") 
-                                                                                message:NSLocalizedString(@"Unable to post. Please try again later", @"Error message")];
+                                                                                message:message];
             [alert addCancelButtonWithTitle:NSLocalizedString(@"OK", @"OK Button Title")];
             [alert show];
         }

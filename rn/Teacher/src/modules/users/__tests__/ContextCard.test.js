@@ -36,6 +36,7 @@ const templates = {
   ...require('../../../__templates__/course'),
   ...require('../../../__templates__/enrollments'),
   ...require('../../../__templates__/users'),
+  ...require('../../../__templates__/section'),
   ...require('../../../__templates__/assignments'),
   ...require('../../../__templates__/submissions'),
   ...require('../../../redux/__templates__/app-state'),
@@ -46,8 +47,9 @@ const defaultProps = {
   user: templates.user({ id: '1' }),
   course: templates.courseWithSection({ id: '1' }),
   enrollment: templates.enrollment({ id: '1', course_id: '1', user_id: '1', course_section_id: '32', grades: { current_grade: 'A', current_score: 50 } }),
-  assignments: [templates.assignment({ id: '1', possible_points: 100 })],
+  assignments: [templates.assignment({ id: '1', points_possible: 100 })],
   submissions: [templates.submissionHistory([{ id: '1', assignment_id: '1', grade: 50 }])],
+  sections: [templates.section()],
   courseColor: '#fff',
   pending: false,
   refreshUsers: jest.fn(),
@@ -62,6 +64,7 @@ const defaultProps = {
   numMissing: 20,
   totalPoints: 100,
   modal: false,
+  userIsDesigner: false,
 }
 
 beforeEach(() => jest.resetAllMocks())
@@ -70,6 +73,13 @@ describe('ContextCard', () => {
   it('renders', () => {
     let view = renderer.create(
       <ContextCard {...defaultProps} />
+    )
+    expect(view.toJSON()).toMatchSnapshot()
+  })
+
+  it('renders for a designer', () => {
+    let view = renderer.create(
+      <ContextCard {...defaultProps} userIsDesigner />
     )
     expect(view.toJSON()).toMatchSnapshot()
   })
@@ -153,6 +163,15 @@ describe('ContextCard', () => {
     expect(defaultProps.getUserSubmissions).not.toHaveBeenCalled()
   })
 
+  it('renders for a designer', () => {
+    let view = renderer.create(
+      <ContextCard {...defaultProps} userIsDesigner />
+    )
+
+    expect(view.toJSON()).toMatchSnapshot()
+    expect(defaultProps.getUserSubmissions).not.toHaveBeenCalled()
+  })
+
   it('navigate to speedgrader', () => {
     let view = renderer.create(
       <ContextCard {...defaultProps} />
@@ -214,7 +233,7 @@ describe('refresh', () => {
 
   it('should call refreshUsers and refreshCourses when fetchData is called', () => {
     fetchData(defaultProps)
-    expect(defaultProps.refreshUsers).toHaveBeenCalledWith(['1'])
+    expect(defaultProps.refreshUsers).toHaveBeenCalledWith('1', ['1'])
     expect(defaultProps.refreshCourses).toHaveBeenCalled()
     expect(defaultProps.refreshEnrollments).toHaveBeenCalledWith('1')
     expect(defaultProps.refreshAssignmentList).toHaveBeenCalledWith('1')
@@ -311,7 +330,8 @@ describe('mapStateToProps', () => {
   })
 
   it('returns when the user is not there', () => {
-    let props = mapStateToProps(templates.appState(), ownProps)
+    let state = templates.appState()
+    let props = mapStateToProps(state, ownProps)
     expect(props.user).toBeUndefined()
   })
 
@@ -347,7 +367,9 @@ describe('mapStateToProps', () => {
   })
 
   it('returns when there are no assignments', () => {
-    let props = mapStateToProps(templates.appState(), ownProps)
+    let state = templates.appState()
+    state.entities.courses['1'] = { course: templates.courseWithSection({ id: '1' }) }
+    let props = mapStateToProps(state, ownProps)
     expect(props.assignments.length).toEqual(0)
   })
 
@@ -407,24 +429,53 @@ describe('mapStateToProps', () => {
     expect(props.numMissing).toEqual(1)
   })
 
-  it('returns pending based off of user pending and enrollment pending', () => {
+  it('returns pending based off of pending async actions and enrollment presence', () => {
     let pendingState = { ...state }
-    pendingState.entities.courses['1'].enrollments = {
-      pending: 0,
-      refs: ['1'],
+    pendingState.asyncActions = {
+      'users.refresh': {
+        pending: 1,
+      },
     }
     expect(mapStateToProps(pendingState, ownProps).pending).toBeTruthy()
 
-    pendingState.entities.courses['1'].enrollments.pending = 1
-    pendingState.entities.users['1'] = {
-      pending: 0,
-      data: user,
+    pendingState.asyncActions = {
+      'courses.refresh': {
+        pending: 1,
+      },
     }
     expect(mapStateToProps(pendingState, ownProps).pending).toBeTruthy()
 
-    pendingState.entities.courses['1'].enrollments.pending = 0
+    pendingState.asyncActions = {
+      'enrollments.update': {
+        pending: 1,
+      },
+    }
+    expect(mapStateToProps(pendingState, ownProps).pending).toBeTruthy()
+
+    pendingState.asyncActions = {
+      'assignmentList.refresh': {
+        pending: 1,
+      },
+    }
+    expect(mapStateToProps(templates.appState(), ownProps).pending).toBeTruthy()
+
+    pendingState.asyncActions = {}
+
+    let enrollment = pendingState.entities.enrollments['1']
+    pendingState.entities.enrollments['1'] = undefined
+    expect(mapStateToProps(pendingState, ownProps).pending).toBeTruthy()
+    pendingState.entities.enrollments['1'] = enrollment
+
     expect(mapStateToProps(pendingState, ownProps).pending).toBeFalsy()
+  })
 
-    expect(mapStateToProps(templates.appState(), ownProps).pending).toBeFalsy()
+  it('determines if a user is a designer', () => {
+    let designerState = { ...state }
+    designerState.entities.courses['1'].course = templates.courseWithSection({
+      id: '1',
+      enrollments: [{ type: 'designer' }],
+    })
+
+    expect(mapStateToProps(designerState, ownProps).userIsDesigner).toBeTruthy()
   })
 })

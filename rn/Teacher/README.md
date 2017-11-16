@@ -1,9 +1,11 @@
 # Teacher App
+[![BuddyBuild](https://dashboard.buddybuild.com/api/statusImage?appID=58b0b2116096900100863eb8&branch=develop&build=latest)](https://dashboard.buddybuild.com/apps/58b0b2116096900100863eb8/build/latest?branch=develop)
 
 ### Getting started
 
 - Install node. You probably should use 6.x or newer.
 - Install yarn: https://yarnpkg.com/en/docs/install#mac-tab
+- Install cocoapods: https://rubygems.org/gems/cocoapods/
 - Follow the installation steps in the react native getting started guide:
 
 https://facebook.github.io/react-native/docs/getting-started.html
@@ -15,19 +17,13 @@ xcode-select --install
 sudo xcode-select -s /Applications/Xcode.app
 ```
 
-- Install node dependencies: `yarn install`
-- Install carthage: `brew install carthage`
-- Run a carthage checkout at the top level of the repo:
-  `(cd ../.. ; carthage checkout --no-use-binaries)`
-- Launch the app: `react-native run-ios`
+- Install dependencies: `yarn build`
+- Launch the app: `yarn start-iphone` or `yarn start-ipad`
   (note: if you already have a simulator running, kill it before running that
    command)
 
 ### BuddyBuild
-In the root of the git repo is `buddybuild_postclone.sh` which will ensure that only the apps
-with relevant changes will build. But because we can only cancel builds right now, the builds
-in buddy build will show as failed. You should look to make sure that the Teacher App build
-succeeded for all commits related to this app.
+We use BuddyBuild's [selective builds](https://docs.buddybuild.com/builds/selective_builds.html) feature to ensure that only the apps with relevant changes will build.
 
 ### Linting
 We use the eslint config from the project http://standardjs.com/.

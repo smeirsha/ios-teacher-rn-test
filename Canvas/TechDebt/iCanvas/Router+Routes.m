@@ -24,7 +24,7 @@
 #import "UIViewController+Transitions.h"
 #import "CBIQuizzesTabViewModel.h"
 #import "CBIQuizViewModel.h"
-@import MyLittleViewController;
+#import <TechDebt/MyLittleViewController.h>
 
 #import "CBIAnnouncementsTabViewModel.h"
 #import "CBISyllabusTabViewModel.h"
@@ -52,22 +52,17 @@
 #import "CBIAnnouncementViewModel.h"
 #import "CKIClient+CBIClient.h"
 #import "UnsupportedViewController.h"
-#import "CBIMessageViewModel.h"
-#import "CBIMessageDetailViewController.h"
 
 #import "CBIAssignmentViewModel.h"
 #import "CBIAssignmentDetailViewController.h"
 #import "UIViewController+AnalyticsTracking.h"
 
-@import QuizKit;
 #import <CanvasKit/CanvasKit.h>
 #import "CKCanvasAPI+CurrentAPI.h"
 
-@import PageKit;
-@import WhizzyWig;
+@import CanvasCore;
 @import CanvasKeymaster;
-@import EnrollmentKit;
-@import SoPretty;
+@import CanvasCore;
 
 typedef UIViewController *(^ViewControllerRouteBlock)(NSDictionary *params, id viewModel);
 
@@ -87,6 +82,19 @@ typedef UIViewController *(^ViewControllerRouteBlock)(NSDictionary *params, id v
     [tableViewController trackScreenViewWithScreenName:name];
     tableViewController.viewModel = viewModel;
     return tableViewController;
+}
+
+- (UIViewController *)moduleItemControllerForParams:(NSDictionary *)params forClass:(Class)type
+{
+    NSString *contextID = [params[@"contextID"] description];
+    NSDictionary *query = params[@"query"];
+    NSString *moduleItemID = query[@"module_item_id"];
+
+    if (moduleItemID) {
+        return [self controllerForHandlingURL:[self urlForModuleItemID:moduleItemID contextID:contextID contextClass:type]];
+    }
+
+    return nil;
 }
 
 - (id(^)(NSDictionary *params, CBIFilesTabViewModel *viewModel)) filesBlockForClass:(Class)type
@@ -199,11 +207,15 @@ typedef UIViewController *(^ViewControllerRouteBlock)(NSDictionary *params, id v
 
 - (id(^)(NSDictionary *params, id viewModel)) courseGroupDiscussionTopicBlockForClass:(Class)type
 {
-    return ^ (NSDictionary *params, id viewModel) {
-        
+
+    return ^ UIViewController *(NSDictionary *params, id viewModel) {
+        if ([self moduleItemControllerForParams:params forClass:type]) {
+            return [self moduleItemControllerForParams:params forClass:type];
+        }
+
         NSString *contextID = [params[@"contextID"] description];
         NSString *topicID = [params[@"topicID"] description];
-        
+
         ThreadedDiscussionViewController *discussionViewController = [ThreadedDiscussionViewController new];
         [discussionViewController trackScreenViewWithScreenName:@"Discussion Screen"];
         
@@ -276,6 +288,13 @@ typedef UIViewController *(^ViewControllerRouteBlock)(NSDictionary *params, id v
     return tintColor;
 }
 
+- (NSURL *)urlForModuleItemID:(NSString *)moduleItemID contextID:(NSString *)contextID contextClass:(Class)contextClass
+{
+    NSString *context = [contextClass isSubclassOfClass:[CKIGroup class]] ? @"groups" : @"courses";
+    NSString *urlString = [NSString stringWithFormat:@"/%@/%@/modules/items/%@", context, contextID, moduleItemID];
+    return [NSURL URLWithString:urlString];
+}
+
 #pragma mark - Routes
 - (void)addRoutes
 {
@@ -318,6 +337,9 @@ typedef UIViewController *(^ViewControllerRouteBlock)(NSDictionary *params, id v
         
         // TODO: SoPersistent assignments
         @"/courses/:courseID/assignments/:assignmentID" : ^ (NSDictionary *params, id viewModel) {
+            if ([self moduleItemControllerForParams:params forClass:[CKICourse class]]) {
+                return [self moduleItemControllerForParams:params forClass:[CKICourse class]];
+            }
         
             NSString *assignmentID = [params[@"assignmentID"] description];
             if ([assignmentID isEqualToString:@"syllabus"]) {
@@ -487,23 +509,15 @@ typedef UIViewController *(^ViewControllerRouteBlock)(NSDictionary *params, id v
             [fileVC applyRoutingParameters:params];
             return (UIViewController *)fileVC;
         },
-        
-        @"/conversations/:conversationID" : ^ (NSDictionary *params, CBIMessageViewModel *viewModel) {
-            if (viewModel == nil) {
-                CKIConversation *conversation = [CKIConversation modelWithID:[params[@"conversationID"] description]];
-                viewModel = [CBIMessageViewModel viewModelForModel:conversation];
-            }
-        
-            CBIMessageDetailViewController *messageVC = [[CBIMessageDetailViewController alloc] init];
-            messageVC.viewModel = viewModel;
-            
-            return messageVC;
-        },
     }];
     
     
     // Quizzes
-    UIViewController *(^quizControllerConstructor)(NSDictionary *, CBIQuizViewModel *) = ^(NSDictionary *params, CBIQuizViewModel *vm) {
+    UIViewController *(^quizControllerConstructor)(NSDictionary *, CBIQuizViewModel *) = ^ UIViewController *(NSDictionary *params, CBIQuizViewModel *vm) {
+        if ([self moduleItemControllerForParams:params forClass:[CKICourse class]]) {
+            return [self moduleItemControllerForParams:params forClass:[CKICourse class]];
+        }
+
         if (vm == nil) {
             CKICourse *course = [CKICourse modelWithID:[params[@"courseID"] description]];
             vm = [CBIQuizViewModel viewModelForModel:[CKIQuiz modelWithID:[params[@"quizID"] description] context:course]];
@@ -525,6 +539,7 @@ typedef UIViewController *(^ViewControllerRouteBlock)(NSDictionary *params, id v
         @"/groups/:groupIdent/files/:fileIdent" : [FileViewController class],
         // Files
         @"/files/:fileIdent" : [FileViewController class],
+        @"/files" : [FileViewController class],
         @"/courses/:courseIdent/files/:fileIdent/download" : [FileViewController class],
     }];
     
@@ -532,7 +547,7 @@ typedef UIViewController *(^ViewControllerRouteBlock)(NSDictionary *params, id v
         if ([url.host isEqualToString:TheKeymaster.currentClient.baseURL.host]) {
             [self openCanvasURL:url];
         } else {
-            [[UIApplication sharedApplication] openURL:url];
+            [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
         }
     }];
 

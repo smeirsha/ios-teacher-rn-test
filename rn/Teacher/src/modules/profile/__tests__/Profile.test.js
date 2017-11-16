@@ -22,7 +22,7 @@ import explore from '../../../../test/helpers/explore'
 
 // Note: test renderer must be required after react-native.
 import renderer from 'react-test-renderer'
-import { setSession } from 'canvas-api'
+import { setSession } from '../../../canvas-api'
 
 const template = {
   ...require('../../../__templates__/session'),
@@ -37,14 +37,21 @@ jest.mock('AlertIOS', () => ({
   alert: jest.fn(),
 }))
 
+const { navigator } = template
+
 describe('Profile Tests', () => {
   beforeEach(() => {
     setSession(template.session())
     jest.resetAllMocks()
+
+    NativeModules.RNMail = {
+      ...NativeModules.RNMail,
+      canSendMail: true,
+    }
   })
   it('renders correctly', () => {
     const tree = renderer.create(
-      <Profile />
+      <Profile navigator={navigator} />
     ).toJSON()
 
     expect(tree).toMatchSnapshot()
@@ -55,7 +62,7 @@ describe('Profile Tests', () => {
 
   it('logout called', () => {
     const instance = renderer.create(
-      <Profile />
+      <Profile navigator={navigator} />
     ).getInstance()
 
     instance.logout()
@@ -64,7 +71,7 @@ describe('Profile Tests', () => {
 
   it('shows the action sheet', () => {
     const instance = renderer.create(
-      <Profile />
+      <Profile navigator={navigator} />
     ).getInstance()
 
     instance.settings()
@@ -73,7 +80,7 @@ describe('Profile Tests', () => {
 
   it('redirects to Canvas Guides', () => {
     const instance = renderer.create(
-      <Profile />
+      <Profile navigator={navigator} />
     ).getInstance()
 
     instance.handleActions(0)
@@ -82,19 +89,11 @@ describe('Profile Tests', () => {
 
   it('redirects to Terms of Use', () => {
     const instance = renderer.create(
-      <Profile />
+      <Profile navigator={navigator} />
     ).getInstance()
 
     instance.handleActions(2)
     expect(Linking.openURL).toHaveBeenCalled()
-  })
-
-  it('redirects to Terms of Use', () => {
-    const instance = renderer.create(
-      <Profile />
-    ).getInstance()
-
-    instance.handleActions(10)
   })
 
   it('opens mail app to report a problem', () => {
@@ -104,10 +103,11 @@ describe('Profile Tests', () => {
     NativeModules.RNMail = {
       ...NativeModules.RNMail,
       mail,
+      canSendMail: true,
     }
 
     const instance = renderer.create(
-      <Profile />
+      <Profile navigator={navigator} />
     ).getInstance()
 
     instance.handleActions(1)
@@ -121,14 +121,39 @@ describe('Profile Tests', () => {
     NativeModules.RNMail = {
       ...NativeModules.RNMail,
       mail,
+      canSendMail: true,
     }
 
     const instance = renderer.create(
-      <Profile />
+      <Profile navigator={navigator} />
     ).getInstance()
 
     instance.handleActions(1)
     expect(AlertIOS.alert).toHaveBeenCalled()
+  })
+
+  it('mail app is not configured, so hitting the button at index 1 should open a link', () => {
+    NativeModules.RNMail = {
+      ...NativeModules.RNMail,
+      canSendMail: false,
+    }
+
+    const instance = renderer.create(
+      <Profile navigator={navigator} />
+    ).getInstance()
+
+    instance.handleActions(1)
+    expect(Linking.openURL).toHaveBeenCalled()
+  })
+
+  it('cancel the action sheet', () => {
+    const instance = renderer.create(
+      <Profile navigator={navigator} />
+    ).getInstance()
+
+    instance.handleActions(3)
+    expect(Linking.openURL).not.toHaveBeenCalled()
+    expect(NativeModules.RNMail.mail).not.toHaveBeenCalled()
   })
 
   it('secret tap!', () => {
@@ -146,7 +171,7 @@ describe('Profile Tests', () => {
   it('render with no session', () => {
     setSession(null)
     const tree = renderer.create(
-      <Profile />
+      <Profile navigator={navigator}/>
     ).toJSON()
 
     expect(tree).toMatchSnapshot()

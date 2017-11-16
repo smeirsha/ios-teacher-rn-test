@@ -17,42 +17,25 @@
 // @flow
 
 import i18n from 'format-message'
-import moment from 'moment'
 import { isDateValid } from '../utils/dateUtils'
 
 export function formattedDueDate (date: ?Date): string {
-  if (!date) return i18n('No Due Date')
-
-  const dateString = extractDateString(date)
-  const timeString = extractTimeString(date)
-
-  if (!dateString || !timeString) return i18n('No Due Date')
-
-  return i18n('{dateString} at {timeString}', { dateString, timeString })
+  if (!date || !isDateValid(date)) return i18n('No Due Date')
+  return i18n('{date, date, medium} at {date, time, short}', { date })
 }
 
 export function formattedDueDateWithStatus (dueAt: ?Date, lockAt: ?Date): string[] {
   const dateString = formattedDueDate(dueAt)
-  if (dateString === i18n('No Due Date')) return [i18n('No Due Date')]
-  const now = Date.now()
-  if (lockAt && moment(now).isAfter(lockAt)) {
+  if (dateString === i18n('No Due Date')) return [dateString]
+  const now = new Date()
+  if (lockAt && now > lockAt) {
     return [i18n('Closed'), dateString]
   }
   return [i18n('Due {dateString}', { dateString })]
 }
 
-export function extractDateString (date: Date): ?string {
-  if (!isDateValid(date)) return null
-  return moment(date).format('ll')
-}
-
-export function extractTimeString (date: Date): ?string {
-  if (!isDateValid(date)) return null
-  return moment(date).format('LT')
-}
-
-export function formatGradeText (grade: string, decimals: number): string {
-  if (isNaN(grade)) {
+export function formatGradeText (grade: string, gradingType: GradingType, pointsPossible?: number): string {
+  if (!['points', 'percent'].includes(gradingType)) {
     switch (grade) {
       case 'pass':
         return i18n('Pass')
@@ -66,7 +49,16 @@ export function formatGradeText (grade: string, decimals: number): string {
 
     return grade
   }
-  let gradeText = grade
-  gradeText = Math.round(Number(grade) * Math.pow(10, decimals)) / Math.pow(10, decimals)
-  return String(gradeText)
+
+  if (gradingType === 'percent') {
+    grade = +grade.split('%')[0]
+    return i18n.number(grade / 100, 'percent')
+  }
+  grade = Math.round(Number(grade) * Math.pow(10, 2)) / Math.pow(10, 2)
+
+  if (gradingType === 'points' && pointsPossible) {
+    return `${i18n.number(grade)}/${pointsPossible}`
+  }
+
+  return i18n.number(grade)
 }

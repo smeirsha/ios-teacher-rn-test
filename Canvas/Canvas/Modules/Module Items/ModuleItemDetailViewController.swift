@@ -14,14 +14,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-import SoEdventurous
-import SoPersistent
-import TooLegit
+import CanvasCore
 import ReactiveSwift
 import ReactiveCocoa
 import Result
 import Cartography
-import SoLazy
 import TechDebt
 
 
@@ -75,13 +72,18 @@ class ModuleItemDetailViewController: UIViewController {
     }()
 
 
-    init(session: Session, courseID: String, moduleID: String, moduleItemID: String, route: @escaping (UIViewController, URL) -> Void) throws {
+    init(session: Session, courseID: String, moduleItemID: String, route: @escaping (UIViewController, URL) -> Void) throws {
         self.session = session
-        viewModel = try ModuleItemViewModel(session: session, moduleID: moduleID, moduleItemID: moduleItemID)
-        refresher = try Module.refresher(session: session, courseID: courseID)
+        viewModel = try ModuleItemViewModel(session: session, moduleItemID: moduleItemID)
+        refresher = try ModuleItem.refresher(session: session, courseID: courseID, moduleItemID: moduleItemID)
         self.route = route
         self.courseID = courseID
         super.init(nibName: nil, bundle: nil)
+
+        refresher.refreshingCompleted.observeValues { [weak self] error in
+            guard let me = self else { return }
+            ErrorReporter.reportError(error, from: me)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -91,7 +93,7 @@ class ModuleItemDetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        refresher.refresh(false)
+        refresher.refresh(true)
     }
 
     override func viewDidLoad() {

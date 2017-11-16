@@ -88,6 +88,11 @@ const images = {
     complete: require('./attachments/complete-icon.png'),
     error: require('./attachments/warning-icon.png'),
   },
+  mediaComments: {
+    x: require('./media-comments/Close.png'),
+    trash: require('./media-comments/Trash.png'),
+    send: require('./media-comments/Send.png'),
+  },
   canvasLogo: require('./canvas-logo.png'),
   feedback: require('./feedback.png'),
   kabob: require('./kabob.png'),
@@ -101,6 +106,7 @@ const images = {
   edit: require('./edit.png'),
   pencilBG: require('./Pencil-BG.jpg'),
   pickerArrow: require('./picker-arrow.png'),
+  profile: require('./profile.png'),
   published: require('./Published.png'),
   unpublished: require('./Unpublished.png'),
   upArrow: require('./mini-arrow-up.png'),
@@ -113,6 +119,7 @@ const images = {
   group: require('./group.png'),
   trash: require('./trash.png'),
   share: require('./share.png'),
+  relax: require('./relax.png'),
 }
 
 export default (images: *)
