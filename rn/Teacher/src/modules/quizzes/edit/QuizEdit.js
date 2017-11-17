@@ -27,7 +27,6 @@ import {
   LayoutAnimation,
   PickerIOS,
   DatePickerIOS,
-  Alert,
   NativeModules,
 } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -40,16 +39,17 @@ import RowWithDetail from '../../../common/components/rows/RowWithDetail'
 import RowWithDateInput from '../../../common/components/rows/RowWithDateInput'
 import RowWithSwitch from '../../../common/components/rows/RowWithSwitch'
 import formatter, { SCORING_POLICIES, QUIZ_TYPES } from '../formatter'
-import { extractDateFromString, formattedDate } from '../../../utils/dateUtils'
-import ModalActivityIndicator from '../../../common/components/ModalActivityIndicator'
+import { extractDateFromString } from '../../../utils/dateUtils'
 import { default as QuizEditActions } from './actions'
-import { ERROR_TITLE, parseErrorMessage } from '../../../redux/middleware/error-handler'
+import { alertError } from '../../../redux/middleware/error-handler'
 import Navigator from '../../../routing/Navigator'
 import Screen from '../../../routing/Screen'
 import AssignmentActions from '../../assignments/actions'
 import AssignmentDatesEditor from '../../assignment-details/components/AssignmentDatesEditor'
 import UnmetRequirementBanner from '../../../common/components/UnmetRequirementBanner'
 import RequiredFieldSubscript from '../../../common/components/RequiredFieldSubscript'
+import canvas from '../../../canvas-api'
+import SavingBanner from '../../../common/components/SavingBanner'
 
 const { NativeAccessibility } = NativeModules
 
@@ -90,7 +90,7 @@ function booleanTransformer<T> (truthy: T, falsey: T): (b: boolean) => T {
 
 const PickerItem = PickerIOS.Item
 
-export class QuizEdit extends Component<any, Props, any> {
+export class QuizEdit extends Component<Props, any> {
   datesEditor: AssignmentDatesEditor
   scrollView: KeyboardAwareScrollView
 
@@ -112,22 +112,7 @@ export class QuizEdit extends Component<any, Props, any> {
   }
 
   componentWillReceiveProps ({ quiz, pending, error, assignment }: Props) {
-    const isPending = pending > 0
-
-    if (error) {
-      this.setState({ pending: false })
-      this._handleError(parseErrorMessage(error.response))
-      return
-    }
-
-    if (this.state.pending && !isPending) {
-      this.setState({ pending: false })
-      this.props.navigator.dismissAllModals()
-      return
-    }
-
     this.setState({
-      pending: this.state.pending && isPending,
       quiz: {
         ...quiz,
         ...this.state.quiz,
@@ -154,7 +139,6 @@ export class QuizEdit extends Component<any, Props, any> {
     const readable = formatter(quiz)
 
     const defaultDate = this.props.defaultDate || new Date()
-
     return (
       <Screen
         title={i18n('Edit Quiz Details')}
@@ -167,6 +151,7 @@ export class QuizEdit extends Component<any, Props, any> {
             testID: 'quizzes.edit.doneButton',
             style: 'done',
             action: this._donePressed,
+            disabled: this.state.pending,
           },
         ]}
         leftBarButtons={[
@@ -174,12 +159,13 @@ export class QuizEdit extends Component<any, Props, any> {
             title: i18n('Cancel'),
             testID: 'quizzes.edit.cancelButton',
             action: this._cancelPressed,
+            disabled: this.state.pending,
           },
         ]}
       >
-        <View style={{ flex: 1 }}>
-          <ModalActivityIndicator text={i18n('Saving')} visible={this.state.pending}/>
-          <UnmetRequirementBanner text={i18n('Invalid field')} visible={!this.state.validation.isValid} testID={'quizEdit.unmet-requirement-banner'}/>
+        <View style={{ flex: 1, backgroundColor: '#F5F5F5' }}>
+          { this.state.pending && <SavingBanner style={style.savingBanner} />}
+          { !this.state.validation.isValid && <UnmetRequirementBanner text={i18n('Invalid field')} testID={'quizEdit.unmet-requirement-banner'}/> }
           <KeyboardAwareScrollView
             style={style.container}
             keyboardShouldPersistTaps='handled'
@@ -366,7 +352,7 @@ export class QuizEdit extends Component<any, Props, any> {
                       <View style={{ flex: 1 }}>
                         <RowWithDateInput
                           title={i18n('Show Correct Answers At')}
-                          date={readable.showCorrectAnswersAt || '--'}
+                          date={quiz.show_correct_answers_at}
                           selected={this.state.pickers.show_correct_answers_at}
                           showRemoveButton={quiz.show_correct_answers_at}
                           border='bottom'
@@ -391,7 +377,7 @@ export class QuizEdit extends Component<any, Props, any> {
                       <View style={{ flex: 1 }}>
                         <RowWithDateInput
                           title={i18n('Hide Correct Answers At')}
-                          date={readable.hideCorrectAnswersAt || '--'}
+                          date={quiz.hide_correct_answers_at}
                           selected={this.state.pickers.hide_correct_answers_at}
                           showRemoveButton={quiz.hide_correct_answers_at}
                           border='bottom'
@@ -493,8 +479,8 @@ export class QuizEdit extends Component<any, Props, any> {
     }
 
     if (quiz.show_correct_answers && quiz.show_correct_answers_at && quiz.hide_correct_answers_at) {
-      let show = extractDateFromString(formattedDate(quiz.show_correct_answers_at))
-      let hide = extractDateFromString(formattedDate(quiz.hide_correct_answers_at))
+      let show = extractDateFromString(quiz.show_correct_answers_at)
+      let hide = extractDateFromString(quiz.hide_correct_answers_at)
       if (show && hide && hide < show) {
         validator = {
           ...validator,
@@ -584,7 +570,7 @@ export class QuizEdit extends Component<any, Props, any> {
     }
   }
 
-  _donePressed = () => {
+  _donePressed = async () => {
     const validator = this._validateChanges()
     if (!validator.isValid) {
       this.setState({ validation: validator })
@@ -596,7 +582,11 @@ export class QuizEdit extends Component<any, Props, any> {
     let updatedAssignment = this.state.assignment
     if (this.state.quiz.quiz_type === 'assignment' && this.state.assignment) {
       updatedAssignment = this.datesEditor.updateAssignment({ ...this.state.assignment })
-      this.props.updateAssignment(this.props.courseID, updatedAssignment, this.props.assignment)
+      let overrides = {
+        id: updatedAssignment.id,
+        assignment_overrides: updatedAssignment.assignment_overrides,
+      }
+      this.props.updateAssignment(this.props.courseID, overrides, this.props.assignment)
     }
 
     const updatedQuiz = this.datesEditor.updateAssignment({ ...this.state.quiz })
@@ -606,17 +596,19 @@ export class QuizEdit extends Component<any, Props, any> {
       pending: true,
       validation: validator,
     })
-    this.props.updateQuiz(updatedQuiz, this.props.courseID, this.props.quiz)
+
+    try {
+      const result = await this.props.updateQuiz(updatedQuiz, this.props.courseID)
+      this.props.quizUpdated(result.data)
+      this.props.navigator.dismiss()
+    } catch (error) {
+      this.setState({ pending: this.props.pending || false })
+      alertError(error)
+    }
   }
 
   _cancelPressed = () => {
     this.props.navigator.dismiss()
-  }
-
-  _handleError (error: string) {
-    setTimeout(() => {
-      Alert.alert(ERROR_TITLE, error)
-    }, 1000)
   }
 
   _editDescription = () => {
@@ -627,7 +619,10 @@ export class QuizEdit extends Component<any, Props, any> {
       placeholder: i18n('Description'),
     })
   }
+}
 
+QuizEdit.defaultProps = {
+  updateQuiz: canvas.updateQuiz,
 }
 
 const style = StyleSheet.create({
@@ -657,6 +652,9 @@ const style = StyleSheet.create({
     marginRight: 8,
     height: 18,
     width: 18,
+  },
+  savingBanner: {
+    backgroundColor: 'transparent',
   },
 })
 
@@ -699,4 +697,4 @@ export function mapStateToProps ({ entities }: AppState, { courseID, quizID }: O
 }
 
 const Connected = connect(mapStateToProps, Actions)(QuizEdit)
-export default (Connected: Component<any, Props, any>)
+export default (Connected: Component<Props, any>)

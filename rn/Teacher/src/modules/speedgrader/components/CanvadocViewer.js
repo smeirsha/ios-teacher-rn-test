@@ -16,7 +16,8 @@
 
 // @flow
 
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { requireNativeComponent } from 'react-native'
 
 type Props = {
@@ -27,7 +28,7 @@ type Props = {
   style?: Object,
 }
 
-export default class CanvadocViewer extends Component<any, Props, any> {
+export default class CanvadocViewer extends Component<Props, any> {
   render () {
     return <CanvadocView style={this.props.style} {...this.props} />
   }

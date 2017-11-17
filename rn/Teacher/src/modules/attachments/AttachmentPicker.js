@@ -18,19 +18,30 @@
 
 import React, { Component } from 'react'
 import {
+  View,
   ActionSheetIOS,
   AlertIOS,
+  StyleSheet,
+  Modal,
 } from 'react-native'
 import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker'
 import ImagePicker from 'react-native-image-picker'
 import AudioRecorder from '../../common/components/AudioRecorder'
 import i18n from 'format-message'
+import Permissions from '../../common/permissions'
 
-type Callback = (Attachment) => void
+type MediaType = 'camera' | 'audio' | 'photo_library' | 'file'
+type Callback = (Attachment, MediaType) => *
+
 type Options = {
   imagePicker: any, // options passed to react-native-image-picker
 }
 type Props = {}
+
+const IMAGE_PICKER_PERMISSION_ERRORS = {
+  'Camera permissions not granted': 'camera',
+  'Photo library permissions not granted': 'photos',
+}
 
 export const DEFAULT_OPTIONS: Options = {
   imagePicker: {
@@ -38,12 +49,14 @@ export const DEFAULT_OPTIONS: Options = {
   },
 }
 
-export default class AttachmentPicker extends Component<any, Props, any> {
+export default class AttachmentPicker extends Component<Props, any> {
   constructor (props: Props) {
     super(props)
     this.state = {
       audioRecorderVisible: false,
       recordAudioCallback: null,
+      width: 0,
+      height: 0,
     }
   }
 
@@ -66,34 +79,63 @@ export default class AttachmentPicker extends Component<any, Props, any> {
 
   useCamera (options: ?Options, callback: Callback) {
     const opts = options && options.imagePicker || DEFAULT_OPTIONS.imagePicker
-    ImagePicker.launchCamera(opts, this._handleImagePickerResponse(callback))
+    ImagePicker.launchCamera(opts, this._handleImagePickerResponse(callback, 'camera'))
   }
 
-  recordAudio (options: ?Options, callback: Callback) {
-    this.setState({
-      audioRecorderVisible: true,
-      recordAudioCallback: callback,
-    })
+  async recordAudio (options: ?Options, callback: Callback) {
+    const permitted = await Permissions.checkMicrophone()
+    if (permitted) {
+      this.setState({
+        audioRecorderVisible: true,
+        recordAudioCallback: callback,
+      })
+    } else {
+      Permissions.alert('microphone')
+    }
   }
 
   useLibrary (options: ?Options, callback: Callback) {
     const opts = options && options.imagePicker || DEFAULT_OPTIONS.imagePicker
-    ImagePicker.launchImageLibrary(opts, this._handleImagePickerResponse(callback))
+    ImagePicker.launchImageLibrary(opts, this._handleImagePickerResponse(callback, 'photo_library'))
   }
 
   pickDocument (options: ?Options, callback: Callback) {
     DocumentPicker.show({
       filetype: [DocumentPickerUtil.allFiles()],
+      top: 12,
+      left: this.state.width - 30,
     }, this._handleDocumentPickerResponse(callback))
+  }
+
+  onLayout = ({ nativeEvent }: { nativeEvent: any }) => {
+    const { width, height } = nativeEvent.layout
+    this.setState({ width, height })
   }
 
   render () {
     return (
-      <AudioRecorder
-        visible={this.state.audioRecorderVisible}
-        onFinishedRecording={this._handleAudioRecorderResponse}
-        onCancel={this._onAudioRecorderCancel}
-      />
+      <View
+        onLayout={this.onLayout}
+        style={{ flex: 1, backgroundColor: 'transparent' }}
+        testID='attachment-picker.container'
+      >
+        <Modal
+          visible={this.state.audioRecorderVisible}
+          transparent={true}
+          style={style.modal}
+          animationType='fade'
+          onLayout={this.onLayout}
+        >
+          <View style={style.audioRecorderContainer}>
+            <View style={{ height: 250 }}>
+              <AudioRecorder
+                onFinishedRecording={this._handleAudioRecorderResponse}
+                onCancel={this._onAudioRecorderCancel}
+              />
+            </View>
+          </View>
+        </Modal>
+      </View>
     )
   }
 
@@ -110,21 +152,33 @@ export default class AttachmentPicker extends Component<any, Props, any> {
     }
   }
 
-  _handleImagePickerResponse (callback: Callback) {
+  _handleImagePickerResponse (callback: Callback, type: MediaType) {
     return (response: any) => {
+      if (response.error) {
+        if (IMAGE_PICKER_PERMISSION_ERRORS[response.error]) {
+          Permissions.alert(IMAGE_PICKER_PERMISSION_ERRORS[response.error])
+        } else {
+          AlertIOS.alert(
+            i18n('Error'),
+            response.error,
+            [{ text: i18n('OK'), onPress: null, style: 'cancel' }],
+          )
+        }
+      }
       if (response.didCancel || !response.uri) {
         return
       }
       const { uri, fileSize, fileName } = response
       const extension = uri.substring(uri.lastIndexOf('.'))
-      let name = fileName || `${i18n('Media Attachment')}${extension}`
+      const timestamp = (new Date()).toISOString()
+      let name = fileName || `${timestamp}${extension}`
       const attachment = {
         uri,
         size: fileSize,
         display_name: name,
         mime_class: extension.toLowerCase() === '.mov' ? 'video' : 'image',
       }
-      callback(attachment)
+      callback(attachment, type)
     }
   }
 
@@ -135,7 +189,7 @@ export default class AttachmentPicker extends Component<any, Props, any> {
       display_name: response.fileName,
       mime_class: 'audio',
     }
-    this.state.recordAudioCallback(attachment)
+    this.state.recordAudioCallback(attachment, 'audio')
   }
 
   _onAudioRecorderCancel = () => {
@@ -155,7 +209,16 @@ export default class AttachmentPicker extends Component<any, Props, any> {
         size: fileSize,
         mime_class: 'file',
       }
-      callback(attachment)
+      callback(attachment, 'file')
     }
   }
 }
+
+const style = StyleSheet.create({
+  audioRecorderContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0,0,0,0.8)',
+  },
+})

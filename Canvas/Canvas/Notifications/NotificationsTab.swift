@@ -19,10 +19,9 @@
 import UIKit
 import Foundation
 import TechDebt
-import SoIconic
-import SuchActivity
-import TooLegit
-import SoPretty
+import CanvasCore
+
+
 
 func NotificationsTab(session: Session) throws -> UIViewController {
     let title = NSLocalizedString("Notifications", comment: "Notifications tab title")

@@ -29,7 +29,6 @@ import { LinkButton, Button } from '../../../common/buttons'
 import colors from '../../../common/colors'
 import Images from '../../../images'
 import Avatar from '../../../common/components/Avatar'
-import { formattedDate } from '../../../utils/dateUtils'
 import WebContainer from '../../../common/components/WebContainer'
 import i18n from 'format-message'
 import Navigator from '../../../routing/Navigator'
@@ -92,10 +91,10 @@ export default class Reply extends Component <any, Props, any> {
 
     let user = this._userFromParticipants(reply, participants)
     let message = reply.deleted ? `<i style="color:${colors.grey4}">${i18n('Deleted this reply.')}</i>` : reply.message
-    const unreadDot = this._renderUnreadDot(readState)
+    const unreadDot = this._renderUnreadDot(reply, readState)
     return (
       <View style={style.parentRow}>
-        <ThreadedLinesView depth={depth} avatarSize={AVATAR_SIZE} marginRight={AVATAR_MARGIN_RIGHT}/>
+        <ThreadedLinesView reply={reply} depth={depth} avatarSize={AVATAR_SIZE} marginRight={AVATAR_MARGIN_RIGHT}/>
         <View style={style.colA}>
           { unreadDot }
           {user &&
@@ -121,7 +120,7 @@ export default class Reply extends Component <any, Props, any> {
                 {user.display_name}
               </Text>
             }
-            <Text style={style.date}>{formattedDate(reply.updated_at)}</Text>
+            <Text style={style.date}>{i18n("{ date, date, 'MMM d' } at { date, time, short }", { date: new Date(reply.updated_at) })}</Text>
             <WebContainer scrollEnabled={false} style={{ flex: 1 }} html={message} navigator={this.props.navigator}/>
 
             {reply.attachment &&
@@ -173,8 +172,8 @@ export default class Reply extends Component <any, Props, any> {
     )
   }
 
-  _renderUnreadDot (state: ReadState) {
-    return state === 'unread' ? (<View style={style.unreadDot}/>) : <View />
+  _renderUnreadDot (reply: Reply, state: ReadState) {
+    return state === 'unread' && !reply.deleted ? (<View style={style.unreadDot}/>) : <View />
   }
 
   _actionMore = () => {

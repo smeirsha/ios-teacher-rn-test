@@ -20,14 +20,15 @@ import React from 'react'
 import { Compose, mapStateToProps } from '../Compose'
 import renderer from 'react-test-renderer'
 import explore from '../../../../test/helpers/explore'
-import api from 'canvas-api'
-import { apiResponse } from 'canvas-api/utils/testHelpers'
+import api from '../../../canvas-api'
+import { apiResponse } from '../../../canvas-api/utils/testHelpers'
 
 let template = {
   ...require('../../../__templates__/helm'),
   ...require('../../../__templates__/addressBook'),
   ...require('../../../__templates__/course'),
   ...require('../../../__templates__/conversations'),
+  ...require('../../../__templates__/attachment'),
 }
 
 let defaultProps = {
@@ -50,7 +51,7 @@ jest
     },
   }))
   .mock('TouchableOpacity', () => 'TouchableOpacity')
-  .mock('canvas-api')
+  .mock('../../../canvas-api')
   .mock('../../../routing/Screen')
 
 describe('Compose', () => {
@@ -127,7 +128,7 @@ describe('Compose', () => {
     let course = template.course()
     const recipient = template.addressBookResult()
     let component = renderer.create(
-      <Compose {...defaultProps} navigator={navigator} />
+      <Compose {...defaultProps} />
     )
     const instance = component.getInstance()
     instance._bodyChanged('body of the message')
@@ -207,6 +208,7 @@ describe('Compose', () => {
     })
     const props = {
       ...defaultProps,
+      contextCode: 'course_1',
       recipients: [u1],
       subject: 'new conversation subject',
       onlySendIndividualMessages: false,
@@ -227,6 +229,8 @@ describe('Compose', () => {
       body: 'new conversation',
       subject: 'new conversation subject',
       group_conversation: true,
+      attachment_ids: [],
+      context_code: 'course_1',
     })
   })
 
@@ -241,6 +245,7 @@ describe('Compose', () => {
       onlySendIndividualMessages: true,
       conversationID: '1',
       includedMessages: [template.conversationMessage({ id: '1' }), template.conversationMessage({ id: '2' })],
+      contextCode: 'course_1',
     }
 
     let response = apiResponse(template.conversation(props.includedMessages[0]))
@@ -260,6 +265,45 @@ describe('Compose', () => {
       group_conversation: true,
       bulk_message: 1,
       included_messages: ['1', '2'],
+      attachment_ids: [],
+      context_code: 'course_1',
+    })
+  })
+
+  it('adds message with attachments on send', () => {
+    const u1 = template.addressBookResult({
+      id: '1',
+    })
+    const props = {
+      ...defaultProps,
+      recipients: [u1],
+      subject: 'new conversation subject',
+      onlySendIndividualMessages: false,
+      contextCode: 'course_1',
+      navigator: template.navigator({
+        show: jest.fn((route, options, props) => {
+          props.onComplete([template.attachment({ id: '234' })])
+        }),
+      }),
+    }
+
+    let response = apiResponse(template.conversation())
+    api.createConversation.mockReturnValueOnce(response())
+
+    const screen = renderer.create(
+      <Compose {...props} />
+    )
+    const attachButton: any = explore(screen.toJSON()).selectRightBarButton('compose-message.attach')
+    attachButton.action()
+    const sendButton: any = explore(screen.toJSON()).selectRightBarButton('compose-message.send')
+    sendButton.action()
+    expect(api.createConversation).toHaveBeenCalledWith({
+      recipients: ['1'],
+      body: '',
+      subject: 'new conversation subject',
+      group_conversation: true,
+      attachment_ids: ['234'],
+      context_code: 'course_1',
     })
   })
 

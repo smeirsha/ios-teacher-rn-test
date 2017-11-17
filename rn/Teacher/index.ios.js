@@ -28,18 +28,15 @@ import {
 } from 'react-native'
 import store from './src/redux/store'
 import setupI18n from './i18n/setup'
-import { setSession } from 'canvas-api'
+import { setSession } from './src/canvas-api'
 import { registerScreens } from './src/routing/register-screens'
 import { setupBrandingFromNativeBrandingInfo } from './src/common/branding'
 import logout from './src/redux/logout-action'
 import loginVerify from './src/common/login-verify'
 import { hydrateStoreFromPersistedState } from './src/redux/middleware/persist'
 import hydrate from './src/redux/hydrate-action'
-
-import { Client, Configuration } from 'bugsnag-react-native'
-const configuration = new Configuration()
-configuration.notifyReleaseStages = ['testflight', 'production']
-global.crashReporter = new Client(configuration)
+import { beginUpdatingUnreadCount, stopUpdatingUnreadCount } from './src/modules/inbox/update-unread-count'
+import App, { type AppId } from './src/modules/app'
 
 global.v12 = false
 
@@ -56,35 +53,47 @@ const Helm = NativeModules.Helm
 
 Helm.initLoadingStateIfRequired()
 
-const loginHandler = async (info: {
+const loginHandler = async ({
+  appId,
+  authToken,
+  baseURL,
+  branding,
+  user,
+  skipHydrate,
+}: {
+  appId: AppId,
   authToken: string,
   baseURL: string,
   branding: Object,
   user: SessionUser,
   skipHydrate: boolean,
 }) => {
-  if (info.user) {
+  App.setCurrentApp(appId)
+  stopUpdatingUnreadCount()
+
+  if (user) {
     // flow already thinks the id is a string but it's not so coerce ;)
-    info.user.id = info.user.id.toString()
+    user.id = user.id.toString()
   }
 
-  if (info.branding) {
-    setupBrandingFromNativeBrandingInfo(info.branding)
+  if (branding) {
+    setupBrandingFromNativeBrandingInfo(branding)
   }
 
-  if (!info.authToken) {
+  if (!authToken) {
     setSession(null)
     store.dispatch(logout)
   } else {
     PushNotifications.requestPermissions()
-    setSession(info)
-    if (!info.skipHydrate) {
+    setSession({ authToken, baseURL, user })
+    if (!skipHydrate) {
       await hydrateStoreFromPersistedState(store)
     } else {
       store.dispatch(hydrate())
     }
-    Helm.initTabs()
+    Helm.loginComplete()
     loginVerify()
+    beginUpdatingUnreadCount()
   }
 }
 

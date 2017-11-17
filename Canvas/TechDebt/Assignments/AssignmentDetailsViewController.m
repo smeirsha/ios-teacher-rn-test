@@ -21,17 +21,14 @@
 
 #import "AssignmentDetailsViewController.h"
 #import "iCanvasErrorHandler.h"
-#import "UIWebView+LinkProcessing.h"
 #import "UIWebView+RemoveShadow.h"
 #import "UIWebView+SafeAPIURL.h"
 #import "Router.h"
 #import "CBIModuleProgressNotifications.h"
-@import SoPretty;
 @import CanvasKit;
 #import "CBILog.h"
 @import CanvasKeymaster;
-@import PageKit;
-@import Secrets;
+@import CanvasCore;
 
 @interface AssignmentDetailsViewController () <UIWebViewDelegate>
 @end
@@ -64,6 +61,10 @@
     }
     
     [self.webView removeShadow];
+    
+    if (@available(iOS 11.0, *)) {
+        self.webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
 
     [NSHTTPCookieStorage sharedHTTPCookieStorage].cookieAcceptPolicy = NSHTTPCookieAcceptPolicyAlways;
 }
@@ -173,7 +174,6 @@
     
     if (webView.loading == NO) {
         [webView replaceHREFsWithAPISafeURLs];
-        [webView replaceYoutubeLinksWithInlineVideo];
     }
     
     DDLogVerbose(@"AssignmentDetailViewController posting module item progress update");

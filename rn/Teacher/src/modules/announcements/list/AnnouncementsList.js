@@ -24,13 +24,15 @@ import {
   FlatList,
 } from 'react-native'
 import i18n from 'format-message'
-import moment from 'moment'
 
 import Screen from '../../../routing/Screen'
 import refresh from '../../../utils/refresh'
 import Row from '../../../common/components/rows/Row'
 import Actions from './actions'
 import Images from '../../../images'
+import RowSeparator from '../../../common/components/rows/RowSeparator'
+import ActivityIndicatorView from '../../../common/components/ActivityIndicatorView'
+import ListEmptyComponent from '../../../common/components/ListEmptyComponent'
 
 type State = AsyncState & {
   announcements: Discussion[],
@@ -43,9 +45,12 @@ type OwnProps = {
 
 export type Props = OwnProps & State & typeof Actions & RefreshProps & NavigationProps
 
-export class AnnouncementsList extends Component<any, Props, any> {
+export class AnnouncementsList extends Component<Props, any> {
 
   render () {
+    if (this.props.pending && !this.props.refreshing) {
+      return <ActivityIndicatorView />
+    }
     return (
       <Screen
         navBarStyle='dark'
@@ -67,6 +72,10 @@ export class AnnouncementsList extends Component<any, Props, any> {
             testID='announcements.list.list'
             refreshing={Boolean(this.props.pending)}
             onRefresh={this.props.refresh}
+            ItemSeparatorComponent={RowSeparator}
+            ListEmptyComponent={
+              <ListEmptyComponent title={i18n('There are no announcements to display.')} />
+            }
           />
         </View>
       </Screen>
@@ -76,8 +85,8 @@ export class AnnouncementsList extends Component<any, Props, any> {
   renderRow = ({ item, index }: { item: Discussion, index: number }) => {
     return (
       <Row
-        title={item.title}
-        subtitle={moment(item.delayed_post_at || item.posted_at).format(`MMM D [${i18n('at')}] h:mm A`)}
+        title={item.title || i18n('No Title')}
+        subtitle={i18n("{ date, date, 'MMM d'} at { date, time, short }", { date: new Date(item.delayed_post_at || item.posted_at) })}
         border='bottom'
         height='auto'
         disclosureIndicator={true}
@@ -140,4 +149,4 @@ const Refreshed = refresh(
   props => Boolean(props.pending)
 )(AnnouncementsList)
 const Connected = connect(mapStateToProps, Actions)(Refreshed)
-export default (Connected: Component<any, Props, any>)
+export default (Connected: Component<Props, any>)

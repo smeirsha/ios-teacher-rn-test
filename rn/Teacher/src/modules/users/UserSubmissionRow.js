@@ -18,22 +18,23 @@
 * @flow
 */
 
+import i18n from 'format-message'
 import React, { Component } from 'react'
 import {
   View,
   StyleSheet,
 } from 'react-native'
 
-import i18n from 'format-message'
 import Icon from '../../common/components/PublishedIcon'
 import { Text } from '../../common/text'
 import Row from '../../common/components/rows/Row'
 import Images from '../../images'
-import { statusProp, dueDate } from '../submissions/list/get-submissions-props'
+import { gradeProp, statusProp, dueDate } from '../submissions/list/get-submissions-props'
 import SubmissionStatus from '../submissions/list/SubmissionStatus'
 import LinearGradient from 'react-native-linear-gradient'
 import Token from '../../common/components/Token'
 import colors from '../../common/colors'
+import { formatGradeText } from '../../common/formatters'
 
 type Props = {
   assignment: Assignment,
@@ -43,7 +44,7 @@ type Props = {
   onPress: (Assignment) => void,
 }
 
-export default class UserSubmissionRow extends Component<any, Props, any> {
+export default class UserSubmissionRow extends Component<Props, any> {
   onPress = () => {
     const assignment = this.props.assignment
     this.props.onPress(assignment)
@@ -61,15 +62,8 @@ export default class UserSubmissionRow extends Component<any, Props, any> {
   }
 
   grade = () => {
-    let grade = this.props.submission.grade
-    if (this.props.assignment.grading_type === 'points') {
-      grade = i18n('{points}/{possible}', { points: this.props.submission.score, possible: this.props.assignment.points_possible })
-    } else if (this.props.submission.grade === 'complete') {
-      grade = i18n('Complete')
-    } else if (this.props.submission.grade === 'incomplete') {
-      grade = i18n('Incomplete')
-    }
-
+    const grade = formatGradeText(this.props.submission.grade, this.props.assignment.grading_type, this.props.assignment.points_possible)
+    const flex = Math.min(1, (this.props.submission.score || 0) / this.props.assignment.points_possible)
     return (
       <View style={styles.gradeWrapper}>
         <View style={styles.progressWrapper}>
@@ -81,7 +75,7 @@ export default class UserSubmissionRow extends Component<any, Props, any> {
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
               style={{
-                flex: Math.min(1, this.props.submission.score || 0 / this.props.assignment.points_possible),
+                flex,
                 height: 18,
               }}
               colors={['#008EE2', '#00C1F3']}
@@ -98,6 +92,7 @@ export default class UserSubmissionRow extends Component<any, Props, any> {
     const hasGrade = submission &&
                      submission.grade &&
                      submission.grade_matches_current_submission
+    const needsGrading = gradeProp(submission) === 'ungraded'
 
     return (
       <View>
@@ -112,10 +107,10 @@ export default class UserSubmissionRow extends Component<any, Props, any> {
             height='auto'
           >
             {this.submissionStatus()}
-            {hasGrade && !this.props.submission.excused && this.grade()}
-            {!hasGrade && this.props.submission && !this.props.submission.excused &&
+            {hasGrade && !submission.excused && this.grade()}
+            {needsGrading &&
               <View style={{ flexDirection: 'row' }}>
-                <Token color='#FC5E13'>Needs Grading</Token>
+                <Token color='#FC5E13'>{i18n('Needs Grading')}</Token>
               </View>
             }
           </Row>

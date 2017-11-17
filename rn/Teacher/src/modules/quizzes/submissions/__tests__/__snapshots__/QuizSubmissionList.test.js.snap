@@ -11,8 +11,12 @@ exports[`QuizSubmissionList loads correctly when data is supplied 1`] = `
   <View
     style={
       Object {
+        "alignItems": "center",
         "borderBottomColor": "lightgrey",
         "borderBottomWidth": 0.5,
+        "flexDirection": "row",
+        "height": "auto",
+        "justifyContent": "space-between",
         "paddingBottom": 8,
         "paddingHorizontal": 16,
         "paddingTop": 16,
@@ -22,9 +26,8 @@ exports[`QuizSubmissionList loads correctly when data is supplied 1`] = `
     <View
       style={
         Object {
-          "alignItems": "flex-end",
-          "flexDirection": "row",
-          "justifyContent": "space-between",
+          "flex": 1,
+          "flexDirection": "column",
         }
       }
     >
@@ -34,6 +37,7 @@ exports[`QuizSubmissionList loads correctly when data is supplied 1`] = `
         allowFontScaling={true}
         disabled={false}
         ellipsizeMode="tail"
+        numberOfLines={1}
         style={
           Array [
             Object {
@@ -54,72 +58,86 @@ exports[`QuizSubmissionList loads correctly when data is supplied 1`] = `
       >
         All Submissions
       </Text>
-      <View
-        accessibilityComponentType={undefined}
-        accessibilityLabel="Filter Submissions"
-        accessibilityTraits="button"
-        accessible={true}
-        collapsable={undefined}
-        hitSlop={undefined}
-        isTVSelectable={true}
-        nativeID={undefined}
-        onLayout={undefined}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          Object {
-            "marginBottom": 1,
-            "opacity": 1,
-          }
+    </View>
+    <View
+      accessibilityComponentType={undefined}
+      accessibilityLabel="Filter Submissions"
+      accessibilityTraits="button"
+      accessible={true}
+      collapsable={undefined}
+      hitSlop={
+        Object {
+          "bottom": 15,
+          "left": 15,
+          "right": 15,
+          "top": 15,
         }
-        testID="submission-list.filter"
-        tvParallaxProperties={undefined}
-      >
-        <View>
-          <Text
-            accessible={true}
-            allowFontScaling={true}
-            disabled={false}
-            ellipsizeMode="tail"
-            style={
+      }
+      isTVSelectable={true}
+      nativeID={undefined}
+      onLayout={undefined}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "marginBottom": 1,
+          "opacity": 1,
+          "width": "auto",
+        }
+      }
+      testID="submission-list.filter"
+      tvParallaxProperties={undefined}
+    >
+      <View>
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          disabled={false}
+          ellipsizeMode="tail"
+          style={
+            Array [
+              Object {
+                "fontFamily": ".SFUIDisplay",
+              },
+              Object {
+                "color": "#2D3B45",
+                "fontSize": 16,
+              },
               Array [
                 Object {
-                  "fontFamily": ".SFUIDisplay",
+                  "color": "#374A59",
+                  "fontSize": 14,
                 },
                 Object {
-                  "color": "#2D3B45",
-                  "fontSize": 16,
+                  "fontFamily": ".SFUIDisplay-bold",
                 },
-                Array [
-                  Object {
-                    "color": "#374A59",
-                    "fontSize": 14,
-                  },
-                  Object {
-                    "fontFamily": ".SFUIDisplay-bold",
-                  },
-                  Object {
-                    "color": "#374A59",
-                  },
-                  Object {},
-                ],
                 Object {
-                  "fontFamily": ".SFUIDisplay",
+                  "color": "#374A59",
                 },
-              ]
-            }
-          >
-            Filter
-          </Text>
-        </View>
+                Object {},
+              ],
+              Object {
+                "fontFamily": ".SFUIDisplay",
+              },
+            ]
+          }
+        >
+          Filter
+        </Text>
       </View>
     </View>
   </View>
   <RCTScrollView
+    ItemSeparatorComponent={[Function]}
+    ListEmptyComponent={
+      <ListEmptyComponent
+        title="No results"
+      />
+    }
     data={
       Array [
         Object {
@@ -128,6 +146,7 @@ exports[`QuizSubmissionList loads correctly when data is supplied 1`] = `
           "grade": "8",
           "name": "Bill Murray",
           "score": 8,
+          "sectionID": "1",
           "status": "submitted",
           "userID": "1",
         },
@@ -171,14 +190,7 @@ exports[`QuizSubmissionList loads correctly when data is supplied 1`] = `
         onLayout={[Function]}
         style={null}
       >
-        <View
-          style={
-            Object {
-              "borderBottomColor": "lightgrey",
-              "borderBottomWidth": 0.5,
-            }
-          }
-        >
+        <View>
           <View
             accessibilityComponentType={undefined}
             accessibilityLabel={undefined}
@@ -416,8 +428,12 @@ exports[`QuizSubmissionList loads with a filter type 1`] = `
   <View
     style={
       Object {
+        "alignItems": "center",
         "borderBottomColor": "lightgrey",
         "borderBottomWidth": 0.5,
+        "flexDirection": "row",
+        "height": "auto",
+        "justifyContent": "space-between",
         "paddingBottom": 8,
         "paddingHorizontal": 16,
         "paddingTop": 16,
@@ -427,9 +443,8 @@ exports[`QuizSubmissionList loads with a filter type 1`] = `
     <View
       style={
         Object {
-          "alignItems": "flex-end",
-          "flexDirection": "row",
-          "justifyContent": "space-between",
+          "flex": 1,
+          "flexDirection": "column",
         }
       }
     >
@@ -439,6 +454,7 @@ exports[`QuizSubmissionList loads with a filter type 1`] = `
         allowFontScaling={true}
         disabled={false}
         ellipsizeMode="tail"
+        numberOfLines={1}
         style={
           Array [
             Object {
@@ -459,72 +475,86 @@ exports[`QuizSubmissionList loads with a filter type 1`] = `
       >
         Graded
       </Text>
-      <View
-        accessibilityComponentType={undefined}
-        accessibilityLabel="Clear Filter Submissions"
-        accessibilityTraits="button"
-        accessible={true}
-        collapsable={undefined}
-        hitSlop={undefined}
-        isTVSelectable={true}
-        nativeID={undefined}
-        onLayout={undefined}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          Object {
-            "marginBottom": 1,
-            "opacity": 1,
-          }
+    </View>
+    <View
+      accessibilityComponentType={undefined}
+      accessibilityLabel="Filter Submissions"
+      accessibilityTraits="button"
+      accessible={true}
+      collapsable={undefined}
+      hitSlop={
+        Object {
+          "bottom": 15,
+          "left": 15,
+          "right": 15,
+          "top": 15,
         }
-        testID="submission-list.filter"
-        tvParallaxProperties={undefined}
-      >
-        <View>
-          <Text
-            accessible={true}
-            allowFontScaling={true}
-            disabled={false}
-            ellipsizeMode="tail"
-            style={
+      }
+      isTVSelectable={true}
+      nativeID={undefined}
+      onLayout={undefined}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "marginBottom": 1,
+          "opacity": 1,
+          "width": "auto",
+        }
+      }
+      testID="submission-list.filter"
+      tvParallaxProperties={undefined}
+    >
+      <View>
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          disabled={false}
+          ellipsizeMode="tail"
+          style={
+            Array [
+              Object {
+                "fontFamily": ".SFUIDisplay",
+              },
+              Object {
+                "color": "#2D3B45",
+                "fontSize": 16,
+              },
               Array [
                 Object {
-                  "fontFamily": ".SFUIDisplay",
+                  "color": "#374A59",
+                  "fontSize": 14,
                 },
                 Object {
-                  "color": "#2D3B45",
-                  "fontSize": 16,
+                  "fontFamily": ".SFUIDisplay-bold",
                 },
-                Array [
-                  Object {
-                    "color": "#374A59",
-                    "fontSize": 14,
-                  },
-                  Object {
-                    "fontFamily": ".SFUIDisplay-bold",
-                  },
-                  Object {
-                    "color": "#374A59",
-                  },
-                  Object {},
-                ],
                 Object {
-                  "fontFamily": ".SFUIDisplay",
+                  "color": "#374A59",
                 },
-              ]
-            }
-          >
-            Clear Filter
-          </Text>
-        </View>
+                Object {},
+              ],
+              Object {
+                "fontFamily": ".SFUIDisplay",
+              },
+            ]
+          }
+        >
+          Filter (1)
+        </Text>
       </View>
     </View>
   </View>
   <RCTScrollView
+    ItemSeparatorComponent={[Function]}
+    ListEmptyComponent={
+      <ListEmptyComponent
+        title="No results"
+      />
+    }
     data={
       Array [
         Object {
@@ -533,6 +563,7 @@ exports[`QuizSubmissionList loads with a filter type 1`] = `
           "grade": "8",
           "name": "Bill Murray",
           "score": 8,
+          "sectionID": "1",
           "status": "submitted",
           "userID": "1",
         },
@@ -576,14 +607,7 @@ exports[`QuizSubmissionList loads with a filter type 1`] = `
         onLayout={[Function]}
         style={null}
       >
-        <View
-          style={
-            Object {
-              "borderBottomColor": "lightgrey",
-              "borderBottomWidth": 0.5,
-            }
-          }
-        >
+        <View>
           <View
             accessibilityComponentType={undefined}
             accessibilityLabel={undefined}
@@ -797,8 +821,12 @@ exports[`QuizSubmissionList navigate to submission settings 1`] = `
   <View
     style={
       Object {
+        "alignItems": "center",
         "borderBottomColor": "lightgrey",
         "borderBottomWidth": 0.5,
+        "flexDirection": "row",
+        "height": "auto",
+        "justifyContent": "space-between",
         "paddingBottom": 8,
         "paddingHorizontal": 16,
         "paddingTop": 16,
@@ -808,9 +836,8 @@ exports[`QuizSubmissionList navigate to submission settings 1`] = `
     <View
       style={
         Object {
-          "alignItems": "flex-end",
-          "flexDirection": "row",
-          "justifyContent": "space-between",
+          "flex": 1,
+          "flexDirection": "column",
         }
       }
     >
@@ -820,6 +847,7 @@ exports[`QuizSubmissionList navigate to submission settings 1`] = `
         allowFontScaling={true}
         disabled={false}
         ellipsizeMode="tail"
+        numberOfLines={1}
         style={
           Array [
             Object {
@@ -840,72 +868,86 @@ exports[`QuizSubmissionList navigate to submission settings 1`] = `
       >
         All Submissions
       </Text>
-      <View
-        accessibilityComponentType={undefined}
-        accessibilityLabel="Filter Submissions"
-        accessibilityTraits="button"
-        accessible={true}
-        collapsable={undefined}
-        hitSlop={undefined}
-        isTVSelectable={true}
-        nativeID={undefined}
-        onLayout={undefined}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          Object {
-            "marginBottom": 1,
-            "opacity": 1,
-          }
+    </View>
+    <View
+      accessibilityComponentType={undefined}
+      accessibilityLabel="Filter Submissions"
+      accessibilityTraits="button"
+      accessible={true}
+      collapsable={undefined}
+      hitSlop={
+        Object {
+          "bottom": 15,
+          "left": 15,
+          "right": 15,
+          "top": 15,
         }
-        testID="submission-list.filter"
-        tvParallaxProperties={undefined}
-      >
-        <View>
-          <Text
-            accessible={true}
-            allowFontScaling={true}
-            disabled={false}
-            ellipsizeMode="tail"
-            style={
+      }
+      isTVSelectable={true}
+      nativeID={undefined}
+      onLayout={undefined}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "marginBottom": 1,
+          "opacity": 1,
+          "width": "auto",
+        }
+      }
+      testID="submission-list.filter"
+      tvParallaxProperties={undefined}
+    >
+      <View>
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          disabled={false}
+          ellipsizeMode="tail"
+          style={
+            Array [
+              Object {
+                "fontFamily": ".SFUIDisplay",
+              },
+              Object {
+                "color": "#2D3B45",
+                "fontSize": 16,
+              },
               Array [
                 Object {
-                  "fontFamily": ".SFUIDisplay",
+                  "color": "#374A59",
+                  "fontSize": 14,
                 },
                 Object {
-                  "color": "#2D3B45",
-                  "fontSize": 16,
+                  "fontFamily": ".SFUIDisplay-bold",
                 },
-                Array [
-                  Object {
-                    "color": "#374A59",
-                    "fontSize": 14,
-                  },
-                  Object {
-                    "fontFamily": ".SFUIDisplay-bold",
-                  },
-                  Object {
-                    "color": "#374A59",
-                  },
-                  Object {},
-                ],
                 Object {
-                  "fontFamily": ".SFUIDisplay",
+                  "color": "#374A59",
                 },
-              ]
-            }
-          >
-            Filter
-          </Text>
-        </View>
+                Object {},
+              ],
+              Object {
+                "fontFamily": ".SFUIDisplay",
+              },
+            ]
+          }
+        >
+          Filter
+        </Text>
       </View>
     </View>
   </View>
   <RCTScrollView
+    ItemSeparatorComponent={[Function]}
+    ListEmptyComponent={
+      <ListEmptyComponent
+        title="No results"
+      />
+    }
     data={
       Array [
         Object {
@@ -914,6 +956,7 @@ exports[`QuizSubmissionList navigate to submission settings 1`] = `
           "grade": "8",
           "name": "Bill Murray",
           "score": 8,
+          "sectionID": "1",
           "status": "submitted",
           "userID": "1",
         },
@@ -957,14 +1000,7 @@ exports[`QuizSubmissionList navigate to submission settings 1`] = `
         onLayout={[Function]}
         style={null}
       >
-        <View
-          style={
-            Object {
-              "borderBottomColor": "lightgrey",
-              "borderBottomWidth": 0.5,
-            }
-          }
-        >
+        <View>
           <View
             accessibilityComponentType={undefined}
             accessibilityLabel={undefined}

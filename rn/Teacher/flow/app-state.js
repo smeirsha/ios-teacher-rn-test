@@ -42,6 +42,8 @@ export type CourseContentState = {
   announcements: AsyncRefs,
   groups: AsyncRefs,
   attendanceTool: AttendanceToolState,
+  pages: AsyncRefs,
+  gradingPeriods: AsyncRefs,
 }
 
 export type GroupState = AsyncState & {
@@ -68,11 +70,19 @@ export type PendingCommentState = AsyncState & {
   localID: string, // a uuid assigned for a new comment
   commentID?: string,
   comment: SubmissionCommentParams,
+  mediaComment?: MediaComment,
 }
 
 export type PendingCommentsState = {
   // by userID since we may not have a submission
   [string]: Array<PendingCommentState>,
+}
+
+export type AsyncActionState = {
+  pending: number,
+  total: number,
+  lastResolvedDate?: date,
+  lastError?: ?string,
 }
 
 export type PendingNewDiscussionState = {
@@ -102,12 +112,17 @@ export type SubmissionState = AsyncState & {
   rubricGradePending: boolean,
   selectedIndex: ?number,
   selectedAttachmentIndex: ?number,
+  lastGradedAt: ?number,
 }
 
 export type QuizState = AsyncState & {
   data: Quiz,
   quizSubmissions: AsyncRefs,
   submissions: AsyncRefs,
+}
+
+export type PageState = {
+  data: Page,
 }
 
 export type QuizSubmissionState = AsyncState & {
@@ -147,6 +162,7 @@ export type SubmissionsState = { [string]: SubmissionState }
 export type QuizzesState = { [string]: QuizState }
 export type QuizSubmissionsState = { [string]: QuizSubmissionState }
 export type DiscussionsState = { [string]: DiscussionState & PendingDiscussionReplyState }
+export type PagesState = { [string]: PageState }
 
 export type Entities = {
   courses: CoursesState,
@@ -162,6 +178,7 @@ export type Entities = {
   quizSubmissions: QuizSubmissionsState,
   discussions: DiscussionsState,
   courseDetailsTabSelectedRow: CourseDetailsTabSelectedRowState,
+  pages: PagesState,
 }
 
 export type FavoriteCoursesState = AsyncState
@@ -180,8 +197,14 @@ export type InboxState = {
   archived: AsyncRefs,
 }
 
+export type ToDoState = {
+  items: ToDoItem[],
+}
+
 export type AppState = {
   favoriteCourses: FavoriteCoursesState,
   entities: Entities,
   inbox: InboxState,
+  toDo: ToDoState,
+  asyncActions: { [string]: AsyncActionState },
 }

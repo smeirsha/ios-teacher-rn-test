@@ -54,16 +54,18 @@ const pendingComments: Reducer<PendingCommentsState, any> = handleActions({
         [userID]: [...userComments, newComment],
       }
     },
-    resolved: (state, { result, localID, userID }) => {
+    resolved: (state, { result, localID, userID, mediaFilePath }) => {
       const comments = state[userID] || []
       const { submission_comments } = result.data
-      const commentID = submission_comments[submission_comments.length - 1].id
+      const { id, media_comment: mc } = submission_comments[submission_comments.length - 1]
+      const mediaComment = mc ? { ...mc, url: mediaFilePath } : null
+
       return {
         ...state,
         [userID]: comments.map(
           comment => comment.localID !== localID
             ? comment
-            : { ...comment, pending: 0, error: undefined, commentID }
+            : { ...comment, pending: 0, error: undefined, commentID: id, mediaComment }
         ),
       }
     },

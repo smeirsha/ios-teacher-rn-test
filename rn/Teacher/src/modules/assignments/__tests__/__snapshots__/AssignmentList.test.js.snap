@@ -42,6 +42,7 @@ exports[`applyFilter doesnt apply any filter when the cancel button is pressed 1
           },
           Object {
             "color": "#2d3b44",
+            "flex": 1,
             "fontSize": 20,
             "fontWeight": "600",
           },
@@ -53,6 +54,14 @@ exports[`applyFilter doesnt apply any filter when the cancel button is pressed 1
     </Text>
     <TouchableOpacity
       accessibilityTraits="button"
+      hitSlop={
+        Object {
+          "bottom": 15,
+          "left": 15,
+          "right": 15,
+          "top": 15,
+        }
+      }
       onPress={[Function]}
       style={
         Object {
@@ -102,6 +111,11 @@ exports[`applyFilter doesnt apply any filter when the cancel button is pressed 1
   </View>
   <RCTScrollView
     ItemSeparatorComponent={undefined}
+    ListEmptyComponent={
+      <ListEmptyComponent
+        title="There are no assignments to display."
+      />
+    }
     data={
       Array [
         Object {
@@ -109,7 +123,7 @@ exports[`applyFilter doesnt apply any filter when the cancel button is pressed 1
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "discussion_topic": Object {
@@ -118,7 +132,7 @@ exports[`applyFilter doesnt apply any filter when the cancel button is pressed 1
               "due_at": "2037-06-01T05:59:00Z",
               "grading_type": "points",
               "html_url": "http://hostname.tld/whatever",
-              "id": 123456789,
+              "id": "123456789",
               "lock_at": "2037-06-01T05:59:59Z",
               "name": "learn to write code",
               "needs_grading_count": 0,
@@ -141,7 +155,7 @@ exports[`applyFilter doesnt apply any filter when the cancel button is pressed 1
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "discussion_topic": Object {
@@ -150,7 +164,7 @@ exports[`applyFilter doesnt apply any filter when the cancel button is pressed 1
               "due_at": "2037-06-01T05:59:00Z",
               "grading_type": "points",
               "html_url": "http://hostname.tld/whatever",
-              "id": 123456789,
+              "id": "123456789",
               "lock_at": "2037-06-01T05:59:59Z",
               "name": "learn to write code",
               "needs_grading_count": 0,
@@ -169,8 +183,8 @@ exports[`applyFilter doesnt apply any filter when the cancel button is pressed 1
               "updated_at": "2017-03-17T19:15:25Z",
             },
           ],
-          "id": 1,
-          "key": 1,
+          "id": "1",
+          "key": "1",
           "name": "Learn React Native",
           "position": 1,
         },
@@ -210,7 +224,7 @@ exports[`applyFilter doesnt apply any filter when the cancel button is pressed 1
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "discussion_topic": Object {
@@ -219,7 +233,7 @@ exports[`applyFilter doesnt apply any filter when the cancel button is pressed 1
               "due_at": "2037-06-01T05:59:00Z",
               "grading_type": "points",
               "html_url": "http://hostname.tld/whatever",
-              "id": 123456789,
+              "id": "123456789",
               "lock_at": "2037-06-01T05:59:59Z",
               "name": "learn to write code",
               "needs_grading_count": 0,
@@ -242,7 +256,7 @@ exports[`applyFilter doesnt apply any filter when the cancel button is pressed 1
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "discussion_topic": Object {
@@ -251,7 +265,7 @@ exports[`applyFilter doesnt apply any filter when the cancel button is pressed 1
               "due_at": "2037-06-01T05:59:00Z",
               "grading_type": "points",
               "html_url": "http://hostname.tld/whatever",
-              "id": 123456789,
+              "id": "123456789",
               "lock_at": "2037-06-01T05:59:59Z",
               "name": "learn to write code",
               "needs_grading_count": 0,
@@ -270,8 +284,8 @@ exports[`applyFilter doesnt apply any filter when the cancel button is pressed 1
               "updated_at": "2017-03-17T19:15:25Z",
             },
           ],
-          "id": 1,
-          "key": 1,
+          "id": "1",
+          "key": "1",
           "name": "Learn React Native",
           "position": 1,
         },
@@ -300,10 +314,11 @@ exports[`applyFilter doesnt apply any filter when the cancel button is pressed 1
               Object {
                 "backgroundColor": "#F5F5F5",
                 "flex": 1,
-                "height": 24,
+                "height": "auto",
                 "justifyContent": "center",
                 "paddingLeft": 16,
                 "paddingRight": 8,
+                "paddingVertical": 4,
               },
               Object {
                 "borderBottomColor": "#C7CDD1",
@@ -367,9 +382,6 @@ exports[`applyFilter doesnt apply any filter when the cancel button is pressed 1
               onPress={[Function]}
               style={
                 Array [
-                  Object {
-                    "height": undefined,
-                  },
                   undefined,
                   Object {
                     "borderBottomColor": "#C7CDD1",
@@ -387,10 +399,11 @@ exports[`applyFilter doesnt apply any filter when the cancel button is pressed 1
                       "backgroundColor": "white",
                       "flex": 1,
                       "flexDirection": "row",
-                      "paddingBottom": 12.8,
+                      "minHeight": 54,
+                      "paddingBottom": 12,
                       "paddingLeft": 16,
                       "paddingRight": 16,
-                      "paddingTop": 12.8,
+                      "paddingTop": 12,
                     },
                     Object {
                       "backgroundColor": "white",
@@ -522,7 +535,7 @@ exports[`applyFilter doesnt apply any filter when the cancel button is pressed 1
                     }
                     testID="assignment-list.assignment-list-row.cell-123456789-subtitle-lbl"
                   >
-                    Due May 31, 2037 at 10:59 PM
+                    Due May 31, 2037 at 11:59 PM
                   </Text>
                   <View />
                 </View>
@@ -621,6 +634,7 @@ exports[`applyFilter will apply a new filter 1`] = `
           },
           Object {
             "color": "#2d3b44",
+            "flex": 1,
             "fontSize": 20,
             "fontWeight": "600",
           },
@@ -632,6 +646,14 @@ exports[`applyFilter will apply a new filter 1`] = `
     </Text>
     <TouchableOpacity
       accessibilityTraits="button"
+      hitSlop={
+        Object {
+          "bottom": 15,
+          "left": 15,
+          "right": 15,
+          "top": 15,
+        }
+      }
       onPress={[Function]}
       style={
         Object {
@@ -681,6 +703,11 @@ exports[`applyFilter will apply a new filter 1`] = `
   </View>
   <RCTScrollView
     ItemSeparatorComponent={undefined}
+    ListEmptyComponent={
+      <ListEmptyComponent
+        title="There are no assignments to display."
+      />
+    }
     data={
       Array [
         Object {
@@ -688,7 +715,7 @@ exports[`applyFilter will apply a new filter 1`] = `
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "due_at": "2037-06-01T05:59:00Z",
@@ -716,7 +743,7 @@ exports[`applyFilter will apply a new filter 1`] = `
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "due_at": "2037-06-01T05:59:00Z",
@@ -781,7 +808,7 @@ exports[`applyFilter will apply a new filter 1`] = `
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "due_at": "2037-06-01T05:59:00Z",
@@ -809,7 +836,7 @@ exports[`applyFilter will apply a new filter 1`] = `
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "due_at": "2037-06-01T05:59:00Z",
@@ -863,10 +890,11 @@ exports[`applyFilter will apply a new filter 1`] = `
               Object {
                 "backgroundColor": "#F5F5F5",
                 "flex": 1,
-                "height": 24,
+                "height": "auto",
                 "justifyContent": "center",
                 "paddingLeft": 16,
                 "paddingRight": 8,
+                "paddingVertical": 4,
               },
               Object {
                 "borderBottomColor": "#C7CDD1",
@@ -930,9 +958,6 @@ exports[`applyFilter will apply a new filter 1`] = `
               onPress={[Function]}
               style={
                 Array [
-                  Object {
-                    "height": undefined,
-                  },
                   undefined,
                   Object {
                     "borderBottomColor": "#C7CDD1",
@@ -950,10 +975,11 @@ exports[`applyFilter will apply a new filter 1`] = `
                       "backgroundColor": "white",
                       "flex": 1,
                       "flexDirection": "row",
-                      "paddingBottom": 12.8,
+                      "minHeight": 54,
+                      "paddingBottom": 12,
                       "paddingLeft": 16,
                       "paddingRight": 16,
-                      "paddingTop": 12.8,
+                      "paddingTop": 12,
                     },
                     Object {
                       "backgroundColor": "white",
@@ -1085,7 +1111,7 @@ exports[`applyFilter will apply a new filter 1`] = `
                     }
                     testID="assignment-list.assignment-list-row.cell-1-subtitle-lbl"
                   >
-                    Due May 31, 2037 at 10:59 PM
+                    Due May 31, 2037 at 11:59 PM
                   </Text>
                   <View />
                 </View>
@@ -1184,6 +1210,7 @@ exports[`filter button only shows when there are grading periods 1`] = `
           },
           Object {
             "color": "#2d3b44",
+            "flex": 1,
             "fontSize": 20,
             "fontWeight": "600",
           },
@@ -1196,6 +1223,11 @@ exports[`filter button only shows when there are grading periods 1`] = `
   </View>
   <RCTScrollView
     ItemSeparatorComponent={undefined}
+    ListEmptyComponent={
+      <ListEmptyComponent
+        title="There are no assignments to display."
+      />
+    }
     data={
       Array [
         Object {
@@ -1203,7 +1235,7 @@ exports[`filter button only shows when there are grading periods 1`] = `
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "discussion_topic": Object {
@@ -1212,7 +1244,7 @@ exports[`filter button only shows when there are grading periods 1`] = `
               "due_at": "2037-06-01T05:59:00Z",
               "grading_type": "points",
               "html_url": "http://hostname.tld/whatever",
-              "id": 123456789,
+              "id": "123456789",
               "lock_at": "2037-06-01T05:59:59Z",
               "name": "learn to write code",
               "needs_grading_count": 0,
@@ -1235,7 +1267,7 @@ exports[`filter button only shows when there are grading periods 1`] = `
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "discussion_topic": Object {
@@ -1244,7 +1276,7 @@ exports[`filter button only shows when there are grading periods 1`] = `
               "due_at": "2037-06-01T05:59:00Z",
               "grading_type": "points",
               "html_url": "http://hostname.tld/whatever",
-              "id": 123456789,
+              "id": "123456789",
               "lock_at": "2037-06-01T05:59:59Z",
               "name": "learn to write code",
               "needs_grading_count": 0,
@@ -1263,8 +1295,8 @@ exports[`filter button only shows when there are grading periods 1`] = `
               "updated_at": "2017-03-17T19:15:25Z",
             },
           ],
-          "id": 1,
-          "key": 1,
+          "id": "1",
+          "key": "1",
           "name": "Learn React Native",
           "position": 1,
         },
@@ -1304,7 +1336,7 @@ exports[`filter button only shows when there are grading periods 1`] = `
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "discussion_topic": Object {
@@ -1313,7 +1345,7 @@ exports[`filter button only shows when there are grading periods 1`] = `
               "due_at": "2037-06-01T05:59:00Z",
               "grading_type": "points",
               "html_url": "http://hostname.tld/whatever",
-              "id": 123456789,
+              "id": "123456789",
               "lock_at": "2037-06-01T05:59:59Z",
               "name": "learn to write code",
               "needs_grading_count": 0,
@@ -1336,7 +1368,7 @@ exports[`filter button only shows when there are grading periods 1`] = `
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "discussion_topic": Object {
@@ -1345,7 +1377,7 @@ exports[`filter button only shows when there are grading periods 1`] = `
               "due_at": "2037-06-01T05:59:00Z",
               "grading_type": "points",
               "html_url": "http://hostname.tld/whatever",
-              "id": 123456789,
+              "id": "123456789",
               "lock_at": "2037-06-01T05:59:59Z",
               "name": "learn to write code",
               "needs_grading_count": 0,
@@ -1364,8 +1396,8 @@ exports[`filter button only shows when there are grading periods 1`] = `
               "updated_at": "2017-03-17T19:15:25Z",
             },
           ],
-          "id": 1,
-          "key": 1,
+          "id": "1",
+          "key": "1",
           "name": "Learn React Native",
           "position": 1,
         },
@@ -1394,10 +1426,11 @@ exports[`filter button only shows when there are grading periods 1`] = `
               Object {
                 "backgroundColor": "#F5F5F5",
                 "flex": 1,
-                "height": 24,
+                "height": "auto",
                 "justifyContent": "center",
                 "paddingLeft": 16,
                 "paddingRight": 8,
+                "paddingVertical": 4,
               },
               Object {
                 "borderBottomColor": "#C7CDD1",
@@ -1461,9 +1494,6 @@ exports[`filter button only shows when there are grading periods 1`] = `
               onPress={[Function]}
               style={
                 Array [
-                  Object {
-                    "height": undefined,
-                  },
                   undefined,
                   Object {
                     "borderBottomColor": "#C7CDD1",
@@ -1481,10 +1511,11 @@ exports[`filter button only shows when there are grading periods 1`] = `
                       "backgroundColor": "white",
                       "flex": 1,
                       "flexDirection": "row",
-                      "paddingBottom": 12.8,
+                      "minHeight": 54,
+                      "paddingBottom": 12,
                       "paddingLeft": 16,
                       "paddingRight": 16,
-                      "paddingTop": 12.8,
+                      "paddingTop": 12,
                     },
                     Object {
                       "backgroundColor": "white",
@@ -1616,7 +1647,7 @@ exports[`filter button only shows when there are grading periods 1`] = `
                     }
                     testID="assignment-list.assignment-list-row.cell-123456789-subtitle-lbl"
                   >
-                    Due May 31, 2037 at 10:59 PM
+                    Due May 31, 2037 at 11:59 PM
                   </Text>
                   <View />
                 </View>
@@ -1715,6 +1746,7 @@ exports[`renders correctly 1`] = `
           },
           Object {
             "color": "#2d3b44",
+            "flex": 1,
             "fontSize": 20,
             "fontWeight": "600",
           },
@@ -1726,6 +1758,14 @@ exports[`renders correctly 1`] = `
     </Text>
     <TouchableOpacity
       accessibilityTraits="button"
+      hitSlop={
+        Object {
+          "bottom": 15,
+          "left": 15,
+          "right": 15,
+          "top": 15,
+        }
+      }
       onPress={[Function]}
       style={
         Object {
@@ -1775,6 +1815,11 @@ exports[`renders correctly 1`] = `
   </View>
   <RCTScrollView
     ItemSeparatorComponent={undefined}
+    ListEmptyComponent={
+      <ListEmptyComponent
+        title="There are no assignments to display."
+      />
+    }
     data={
       Array [
         Object {
@@ -1782,13 +1827,13 @@ exports[`renders correctly 1`] = `
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "due_at": "2037-06-01T05:59:00Z",
               "grading_type": "points",
               "html_url": "http://hostname.tld/whatever",
-              "id": 123456789,
+              "id": "123456789",
               "lock_at": "2037-06-01T05:59:59Z",
               "name": "learn to write code",
               "needs_grading_count": 0,
@@ -1810,13 +1855,13 @@ exports[`renders correctly 1`] = `
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "due_at": "2037-06-01T05:59:00Z",
               "grading_type": "points",
               "html_url": "http://hostname.tld/whatever",
-              "id": 123456789,
+              "id": "123456789",
               "lock_at": "2037-06-01T05:59:59Z",
               "name": "learn to write code",
               "needs_grading_count": 0,
@@ -1834,8 +1879,8 @@ exports[`renders correctly 1`] = `
               "updated_at": "2017-03-17T19:15:25Z",
             },
           ],
-          "id": 1,
-          "key": 1,
+          "id": "1",
+          "key": "1",
           "name": "Learn React Native",
           "position": 1,
         },
@@ -1875,13 +1920,13 @@ exports[`renders correctly 1`] = `
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "due_at": "2037-06-01T05:59:00Z",
               "grading_type": "points",
               "html_url": "http://hostname.tld/whatever",
-              "id": 123456789,
+              "id": "123456789",
               "lock_at": "2037-06-01T05:59:59Z",
               "name": "learn to write code",
               "needs_grading_count": 0,
@@ -1903,13 +1948,13 @@ exports[`renders correctly 1`] = `
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "due_at": "2037-06-01T05:59:00Z",
               "grading_type": "points",
               "html_url": "http://hostname.tld/whatever",
-              "id": 123456789,
+              "id": "123456789",
               "lock_at": "2037-06-01T05:59:59Z",
               "name": "learn to write code",
               "needs_grading_count": 0,
@@ -1927,8 +1972,8 @@ exports[`renders correctly 1`] = `
               "updated_at": "2017-03-17T19:15:25Z",
             },
           ],
-          "id": 1,
-          "key": 1,
+          "id": "1",
+          "key": "1",
           "name": "Learn React Native",
           "position": 1,
         },
@@ -1957,10 +2002,11 @@ exports[`renders correctly 1`] = `
               Object {
                 "backgroundColor": "#F5F5F5",
                 "flex": 1,
-                "height": 24,
+                "height": "auto",
                 "justifyContent": "center",
                 "paddingLeft": 16,
                 "paddingRight": 8,
+                "paddingVertical": 4,
               },
               Object {
                 "borderBottomColor": "#C7CDD1",
@@ -2024,9 +2070,6 @@ exports[`renders correctly 1`] = `
               onPress={[Function]}
               style={
                 Array [
-                  Object {
-                    "height": undefined,
-                  },
                   undefined,
                   Object {
                     "borderBottomColor": "#C7CDD1",
@@ -2044,10 +2087,11 @@ exports[`renders correctly 1`] = `
                       "backgroundColor": "white",
                       "flex": 1,
                       "flexDirection": "row",
-                      "paddingBottom": 12.8,
+                      "minHeight": 54,
+                      "paddingBottom": 12,
                       "paddingLeft": 16,
                       "paddingRight": 16,
-                      "paddingTop": 12.8,
+                      "paddingTop": 12,
                     },
                     Object {
                       "backgroundColor": "white",
@@ -2179,7 +2223,7 @@ exports[`renders correctly 1`] = `
                     }
                     testID="assignment-list.assignment-list-row.cell-123456789-subtitle-lbl"
                   >
-                    Due May 31, 2037 at 10:59 PM
+                    Due May 31, 2037 at 11:59 PM
                   </Text>
                   <View />
                 </View>
@@ -2302,6 +2346,7 @@ exports[`selecting clear filter will remove any applied filters 1`] = `
           },
           Object {
             "color": "#2d3b44",
+            "flex": 1,
             "fontSize": 20,
             "fontWeight": "600",
           },
@@ -2313,6 +2358,14 @@ exports[`selecting clear filter will remove any applied filters 1`] = `
     </Text>
     <TouchableOpacity
       accessibilityTraits="button"
+      hitSlop={
+        Object {
+          "bottom": 15,
+          "left": 15,
+          "right": 15,
+          "top": 15,
+        }
+      }
       onPress={[Function]}
       style={
         Object {
@@ -2362,6 +2415,11 @@ exports[`selecting clear filter will remove any applied filters 1`] = `
   </View>
   <RCTScrollView
     ItemSeparatorComponent={undefined}
+    ListEmptyComponent={
+      <ListEmptyComponent
+        title="There are no assignments to display."
+      />
+    }
     data={
       Array [
         Object {
@@ -2369,7 +2427,7 @@ exports[`selecting clear filter will remove any applied filters 1`] = `
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "discussion_topic": Object {
@@ -2378,7 +2436,7 @@ exports[`selecting clear filter will remove any applied filters 1`] = `
               "due_at": "2037-06-01T05:59:00Z",
               "grading_type": "points",
               "html_url": "http://hostname.tld/whatever",
-              "id": 123456789,
+              "id": "123456789",
               "lock_at": "2037-06-01T05:59:59Z",
               "name": "learn to write code",
               "needs_grading_count": 0,
@@ -2401,7 +2459,7 @@ exports[`selecting clear filter will remove any applied filters 1`] = `
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "discussion_topic": Object {
@@ -2410,7 +2468,7 @@ exports[`selecting clear filter will remove any applied filters 1`] = `
               "due_at": "2037-06-01T05:59:00Z",
               "grading_type": "points",
               "html_url": "http://hostname.tld/whatever",
-              "id": 123456789,
+              "id": "123456789",
               "lock_at": "2037-06-01T05:59:59Z",
               "name": "learn to write code",
               "needs_grading_count": 0,
@@ -2429,8 +2487,8 @@ exports[`selecting clear filter will remove any applied filters 1`] = `
               "updated_at": "2017-03-17T19:15:25Z",
             },
           ],
-          "id": 1,
-          "key": 1,
+          "id": "1",
+          "key": "1",
           "name": "Learn React Native",
           "position": 1,
         },
@@ -2470,7 +2528,7 @@ exports[`selecting clear filter will remove any applied filters 1`] = `
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "discussion_topic": Object {
@@ -2479,7 +2537,7 @@ exports[`selecting clear filter will remove any applied filters 1`] = `
               "due_at": "2037-06-01T05:59:00Z",
               "grading_type": "points",
               "html_url": "http://hostname.tld/whatever",
-              "id": 123456789,
+              "id": "123456789",
               "lock_at": "2037-06-01T05:59:59Z",
               "name": "learn to write code",
               "needs_grading_count": 0,
@@ -2502,7 +2560,7 @@ exports[`selecting clear filter will remove any applied filters 1`] = `
             Object {
               "assignment_group_id": 1376,
               "automatic_peer_reviews": false,
-              "course_id": 987654321,
+              "course_id": "987654321",
               "created_at": "2017-03-17T19:15:25Z",
               "description": "a course that can take any beginner to professional in a matter of microseconds.  Harness the power of your favorite languages like PHP and Cold Fusion.",
               "discussion_topic": Object {
@@ -2511,7 +2569,7 @@ exports[`selecting clear filter will remove any applied filters 1`] = `
               "due_at": "2037-06-01T05:59:00Z",
               "grading_type": "points",
               "html_url": "http://hostname.tld/whatever",
-              "id": 123456789,
+              "id": "123456789",
               "lock_at": "2037-06-01T05:59:59Z",
               "name": "learn to write code",
               "needs_grading_count": 0,
@@ -2530,8 +2588,8 @@ exports[`selecting clear filter will remove any applied filters 1`] = `
               "updated_at": "2017-03-17T19:15:25Z",
             },
           ],
-          "id": 1,
-          "key": 1,
+          "id": "1",
+          "key": "1",
           "name": "Learn React Native",
           "position": 1,
         },
@@ -2560,10 +2618,11 @@ exports[`selecting clear filter will remove any applied filters 1`] = `
               Object {
                 "backgroundColor": "#F5F5F5",
                 "flex": 1,
-                "height": 24,
+                "height": "auto",
                 "justifyContent": "center",
                 "paddingLeft": 16,
                 "paddingRight": 8,
+                "paddingVertical": 4,
               },
               Object {
                 "borderBottomColor": "#C7CDD1",
@@ -2627,9 +2686,6 @@ exports[`selecting clear filter will remove any applied filters 1`] = `
               onPress={[Function]}
               style={
                 Array [
-                  Object {
-                    "height": undefined,
-                  },
                   undefined,
                   Object {
                     "borderBottomColor": "#C7CDD1",
@@ -2647,10 +2703,11 @@ exports[`selecting clear filter will remove any applied filters 1`] = `
                       "backgroundColor": "white",
                       "flex": 1,
                       "flexDirection": "row",
-                      "paddingBottom": 12.8,
+                      "minHeight": 54,
+                      "paddingBottom": 12,
                       "paddingLeft": 16,
                       "paddingRight": 16,
-                      "paddingTop": 12.8,
+                      "paddingTop": 12,
                     },
                     Object {
                       "backgroundColor": "white",
@@ -2782,7 +2839,7 @@ exports[`selecting clear filter will remove any applied filters 1`] = `
                     }
                     testID="assignment-list.assignment-list-row.cell-123456789-subtitle-lbl"
                   >
-                    Due May 31, 2037 at 10:59 PM
+                    Due May 31, 2037 at 11:59 PM
                   </Text>
                   <View />
                 </View>

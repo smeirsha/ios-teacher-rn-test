@@ -17,15 +17,9 @@
     
 
 import UIKit
-
-import TooLegit
-import SoLazy
-import SoPretty
-import SoPersistent
-import EnrollmentKit
 import ReactiveSwift
-import CalendarKit
 import Crashlytics
+import CanvasCore
 
 open class CalendarMonthViewController: UIViewController, CalendarViewDelegate, CalendarViewDataSource {
 
@@ -46,6 +40,7 @@ open class CalendarMonthViewController: UIViewController, CalendarViewDelegate, 
     // Data Variables
     fileprivate var session: Session!
 
+    var allCoursesCollection: FetchedCollection<Course>!
     var favCoursesCollection: FetchedCollection<Course>!
     var eventsCollection: FetchedCollection<CalendarEvent>!
 
@@ -137,6 +132,8 @@ open class CalendarMonthViewController: UIViewController, CalendarViewDelegate, 
                 self?.updateCalendarEvents()
             }
 
+        allCoursesCollection = try! Course.allCoursesCollection(session)
+        
         updateCalendarEvents()
     }
 
@@ -225,22 +222,8 @@ open class CalendarMonthViewController: UIViewController, CalendarViewDelegate, 
         return true
     }
 
-    open func calendarViewColorsForMarkingDate(_ calendarView: CalendarView, date: Date) -> [UIColor] {
-        let calEvents = calendarEventsForDate(date as Date)
-
-        var colorsForDate = Set<UIColor>()
-        for calEvent in calEvents {
-            guard let context = ContextID(canvasContext: calEvent.contextCode), let color = session.enrollmentsDataSource[context]?.color else {
-                colorsForDate.insert(UIColor.calendarTintColor)
-                continue
-            }
-
-            if let c = color.value {
-                colorsForDate.insert(c)
-            }
-        }
-
-        return Array(colorsForDate)
+    open func calendarViewNumberOfEventsForDate(_ calendarView: CalendarView, date: Date) -> Int {
+        return calendarEventsForDate(date).count
     }
 
     // ---------------------------------------------
@@ -287,10 +270,11 @@ open class CalendarMonthViewController: UIViewController, CalendarViewDelegate, 
     }
 
     open func selectedContextCodes() -> [String] {
+        guard let collection = (!favCoursesCollection.isEmpty ? favCoursesCollection : allCoursesCollection) else { return [] }
         var contextCodes: [String] = []
-        for i in 0..<favCoursesCollection.numberOfItemsInSection(0) {
+        for i in 0..<collection.numberOfItemsInSection(0) {
             let indexPath = IndexPath(row: i, section: 0)
-            contextCodes.append(favCoursesCollection[indexPath].contextID.canvasContextID)
+            contextCodes.append(collection[indexPath].contextID.canvasContextID)
         }
 
         return contextCodes

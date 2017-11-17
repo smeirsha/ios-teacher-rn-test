@@ -13,15 +13,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
-    
-    
 
 #import <Foundation/Foundation.h>
 
-@protocol CBIConversationStarter <NSObject>
-- (void)startAConversationWithRecipients:(NSArray *)conversationRecipients;
+@interface CBIConversationRecipient : NSObject
+@property (nonnull, nonatomic) NSString *name;
+@property (nonnull, nonatomic) NSString *id;
+@property (nullable, nonatomic) NSString *avatarURL;
+
+- (instancetype _Nonnull)initWithName:(NSString * _Nonnull)name id:(NSString * _Nonnull)id avatarURL:(NSString * _Nullable)avatarURL;
 @end
 
-@interface CBIConversationStarter : NSObject <CBIConversationStarter>
-+ (instancetype)sharedConversationStarter;
+@interface CBIConversationStarter : NSObject
++ (void)setConversationStarter:(void (^ _Nonnull)(NSArray<CBIConversationRecipient *> * _Nonnull, NSString * _Nonnull context))starter;
++ (void)startAConversationWithRecipients:(NSArray<CBIConversationRecipient *> * _Nonnull)recipients inContext:(NSString * _Nonnull)context;
 @end

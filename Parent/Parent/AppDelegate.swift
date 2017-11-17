@@ -14,20 +14,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
     
-    
-
 import UIKit
-
-import TooLegit
-import Keymaster
-import ObserverAlertKit
-import TooLegit
-import WhizzyWig
+import CanvasCore
 import Fabric
 import Crashlytics
-import Airwolf
-import Armchair
-import Secrets
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -45,7 +35,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         Fabric.with([Crashlytics.self])
         BuddyBuildSDK.setup()
-        self.setupRatingsPrompt()
         
         let notificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
         UIApplication.shared.registerUserNotificationSettings(notificationSettings)
@@ -84,17 +73,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         return true
     }
-
-    func setupRatingsPrompt() {
-        guard let appID = Secrets.fetch(.parentAppStoreID) else { return }
-        
-        Armchair.appID(appID)
-        Armchair.shouldPromptIfRated(false)
-        Armchair.daysBeforeReminding(5)
-        Armchair.significantEventsUntilPrompt(15)
-        Armchair.daysUntilPrompt(5)
-        Armchair.usesUntilPrompt(10)
-        Armchair.useMainAppBundleForLocalizations(true)
+    
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        AppStoreReview.requestReview()
     }
     
     func application(_ application: UIApplication, handleActionWithIdentifier identifier: String?, for notification: UILocalNotification, withResponseInfo responseInfo: [AnyHashable: Any], completionHandler: @escaping () -> Void) {

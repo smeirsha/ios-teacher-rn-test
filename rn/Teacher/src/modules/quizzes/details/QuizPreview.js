@@ -56,7 +56,7 @@ export class QuizPreview extends Component<any, LocalProps, any> {
   }
 
   onMessage = (event: any) => {
-    const message = event.nativeEvent.data
+    const message = event.body
     if (!message) return
     switch (message) {
       case 'done':
@@ -71,17 +71,20 @@ export class QuizPreview extends Component<any, LocalProps, any> {
 
   onLoadEnd = (event: any) => {
     const js = `
+      var results = document.querySelector('.quiz-submission')
       var button = document.getElementById('preview_quiz_button')
       var instructions = document.getElementById('quiz-instructions')
       var login = document.getElementById('login_form')
-      if (button) {
+      if (results) {
+        results.scrollIntoView(true)
+      } else if (button) {
         button.click()
       } else if (login) {
-        window.postMessage('login')
+        window.webkit.messageHandlers.reactNative.postMessage('login')
       } else if (instructions) {
-        window.postMessage('done')
+        window.webkit.messageHandlers.reactNative.postMessage('done')
       } else {
-        window.postMessage('error')
+        window.webkit.messageHandlers.reactNative.postMessage('error')
       }
     `
     this.webView.injectJavaScript(js)
@@ -115,19 +118,25 @@ export class QuizPreview extends Component<any, LocalProps, any> {
         ]}
       >
         <View style={style.container}>
-          { this.state.error && <View style={style.errorContainer}>
-                                  <Text>{i18n('There was an error loading the quiz preview.')}</Text>
-                                </View> }
-          { this.state.waiting && <ActivityIndicatorView style={{ flex: 1 }} /> }
-          { !this.state.error && <View style={ this.state.waiting ? style.waitingWebView : style.webView }>
-                                   <AuthenticatedWebView style={ this.state.waiting ? style.waitingWebView : style.webView }
-                                                         source={{ uri }}
-                                                         automaticallyAdjustContentInsets={false}
-                                                         onMessage={this.onMessage}
-                                                         ref={this.captureRef}
-                                                         onLoadEnd={this.onLoadEnd}
-                                                         onError={this.onError} />
-                                  </View>}
+          { this.state.error &&
+            <View style={style.errorContainer}>
+              <Text>{i18n('There was an error loading the quiz preview.')}</Text>
+            </View>
+          }
+          { this.state.waiting &&
+            <ActivityIndicatorView style={{ flex: 1 }} />
+          }
+          { !this.state.error &&
+            <View style={ this.state.waiting ? style.waitingWebView : style.webView }>
+              <AuthenticatedWebView style={ this.state.waiting ? style.waitingWebView : style.webView }
+                                    source={{ uri }}
+                                    automaticallyAdjustContentInsets={false}
+                                    onMessage={this.onMessage}
+                                    ref={this.captureRef}
+                                    onLoadEnd={this.onLoadEnd}
+                                    onError={this.onError} />
+            </View>
+          }
         </View>
       </Screen>
     )
@@ -162,4 +171,4 @@ export function mapStateToProps ({ entities }: AppState, { courseID, quizID }: P
 }
 
 let Connected = connect(mapStateToProps, {})(QuizPreview)
-export default (Connected: Component<any, Props, any>)
+export default (Connected: Component<Props, any>)

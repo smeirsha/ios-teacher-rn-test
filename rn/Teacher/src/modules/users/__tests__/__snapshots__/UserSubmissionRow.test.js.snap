@@ -35,9 +35,6 @@ exports[`UserSubmissionRow renders 1`] = `
             "backgroundColor": "transparent",
           },
           Array [
-            Object {
-              "height": undefined,
-            },
             undefined,
             Object {
               "borderBottomColor": "#C7CDD1",
@@ -57,10 +54,11 @@ exports[`UserSubmissionRow renders 1`] = `
               "backgroundColor": "white",
               "flex": 1,
               "flexDirection": "row",
-              "paddingBottom": 12.8,
+              "minHeight": 54,
+              "paddingBottom": 12,
               "paddingLeft": 16,
               "paddingRight": 16,
-              "paddingTop": 12.8,
+              "paddingTop": 12,
             },
             Object {
               "backgroundColor": "white",
@@ -236,11 +234,11 @@ exports[`UserSubmissionRow renders 1`] = `
                   }
                 }
               >
-                <BVLinearGradient
+                <LinearGradient
                   colors={
                     Array [
-                      4278226658,
-                      4278239731,
+                      "#008EE2",
+                      "#00C1F3",
                     ]
                   }
                   end={
@@ -249,7 +247,6 @@ exports[`UserSubmissionRow renders 1`] = `
                       "y": 0,
                     }
                   }
-                  locations={null}
                   start={
                     Object {
                       "x": 0,
@@ -258,7 +255,7 @@ exports[`UserSubmissionRow renders 1`] = `
                   }
                   style={
                     Object {
-                      "flex": 1,
+                      "flex": 0.8,
                       "height": 18,
                     }
                   }
@@ -338,9 +335,6 @@ exports[`UserSubmissionRow renders complete 1`] = `
             "backgroundColor": "transparent",
           },
           Array [
-            Object {
-              "height": undefined,
-            },
             undefined,
             Object {
               "borderBottomColor": "#C7CDD1",
@@ -360,10 +354,11 @@ exports[`UserSubmissionRow renders complete 1`] = `
               "backgroundColor": "white",
               "flex": 1,
               "flexDirection": "row",
-              "paddingBottom": 12.8,
+              "minHeight": 54,
+              "paddingBottom": 12,
               "paddingLeft": 16,
               "paddingRight": 16,
-              "paddingTop": 12.8,
+              "paddingTop": 12,
             },
             Object {
               "backgroundColor": "white",
@@ -539,11 +534,11 @@ exports[`UserSubmissionRow renders complete 1`] = `
                   }
                 }
               >
-                <BVLinearGradient
+                <LinearGradient
                   colors={
                     Array [
-                      4278226658,
-                      4278239731,
+                      "#008EE2",
+                      "#00C1F3",
                     ]
                   }
                   end={
@@ -552,7 +547,6 @@ exports[`UserSubmissionRow renders complete 1`] = `
                       "y": 0,
                     }
                   }
-                  locations={null}
                   start={
                     Object {
                       "x": 0,
@@ -641,9 +635,6 @@ exports[`UserSubmissionRow renders excused 1`] = `
             "backgroundColor": "transparent",
           },
           Array [
-            Object {
-              "height": undefined,
-            },
             undefined,
             Object {
               "borderBottomColor": "#C7CDD1",
@@ -663,10 +654,11 @@ exports[`UserSubmissionRow renders excused 1`] = `
               "backgroundColor": "white",
               "flex": 1,
               "flexDirection": "row",
-              "paddingBottom": 12.8,
+              "minHeight": 54,
+              "paddingBottom": 12,
               "paddingLeft": 16,
               "paddingRight": 16,
-              "paddingTop": 12.8,
+              "paddingTop": 12,
             },
             Object {
               "backgroundColor": "white",
@@ -849,9 +841,6 @@ exports[`UserSubmissionRow renders incomplete 1`] = `
             "backgroundColor": "transparent",
           },
           Array [
-            Object {
-              "height": undefined,
-            },
             undefined,
             Object {
               "borderBottomColor": "#C7CDD1",
@@ -871,10 +860,11 @@ exports[`UserSubmissionRow renders incomplete 1`] = `
               "backgroundColor": "white",
               "flex": 1,
               "flexDirection": "row",
-              "paddingBottom": 12.8,
+              "minHeight": 54,
+              "paddingBottom": 12,
               "paddingLeft": 16,
               "paddingRight": 16,
-              "paddingTop": 12.8,
+              "paddingTop": 12,
             },
             Object {
               "backgroundColor": "white",
@@ -1050,11 +1040,11 @@ exports[`UserSubmissionRow renders incomplete 1`] = `
                   }
                 }
               >
-                <BVLinearGradient
+                <LinearGradient
                   colors={
                     Array [
-                      4278226658,
-                      4278239731,
+                      "#008EE2",
+                      "#00C1F3",
                     ]
                   }
                   end={
@@ -1063,7 +1053,6 @@ exports[`UserSubmissionRow renders incomplete 1`] = `
                       "y": 0,
                     }
                   }
-                  locations={null}
                   start={
                     Object {
                       "x": 0,
@@ -1107,6 +1096,263 @@ exports[`UserSubmissionRow renders incomplete 1`] = `
               }
             >
               Incomplete
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+  <View />
+</View>
+`;
+
+exports[`UserSubmissionRow renders needs grading 1`] = `
+<View>
+  <View
+    style={
+      Object {
+        "marginLeft": -10,
+      }
+    }
+  >
+    <View
+      accessibilityComponentType={undefined}
+      accessibilityLabel={undefined}
+      accessibilityTraits={
+        Array [
+          "button",
+        ]
+      }
+      accessible={true}
+      hasTVPreferredFocus={undefined}
+      hitSlop={undefined}
+      isTVSelectable={true}
+      nativeID={undefined}
+      onLayout={undefined}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Array [
+          Object {
+            "backgroundColor": "transparent",
+          },
+          Array [
+            undefined,
+            Object {
+              "borderBottomColor": "#C7CDD1",
+              "borderBottomWidth": 0.5,
+            },
+          ],
+        ]
+      }
+      testID="user-submission-row.cell-1"
+      tvParallaxProperties={undefined}
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "white",
+              "flex": 1,
+              "flexDirection": "row",
+              "minHeight": 54,
+              "paddingBottom": 12,
+              "paddingLeft": 16,
+              "paddingRight": 16,
+              "paddingTop": 12,
+            },
+            Object {
+              "backgroundColor": "white",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Object {
+              "alignSelf": "flex-start",
+            }
+          }
+          testID="user-submission-row-icon-not-published-1.icon-img"
+        >
+          <View
+            accessibilityLabel="Not Published"
+            style={
+              Object {
+                "alignItems": "center",
+                "flex": 0,
+                "height": 32,
+                "width": 46,
+              }
+            }
+          >
+            <Image
+              source={1}
+              style={
+                Array [
+                  Object {
+                    "position": "absolute",
+                  },
+                  Object {
+                    "tintColor": "#fff",
+                  },
+                ]
+              }
+            />
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "backgroundColor": "white",
+                  "borderRadius": 8,
+                  "height": 16,
+                  "justifyContent": "center",
+                  "left": 20,
+                  "position": "absolute",
+                  "top": 10,
+                  "width": 16,
+                }
+              }
+            >
+              <Image
+                source={1}
+                style={
+                  Object {
+                    "height": 12,
+                    "tintColor": "#8B969E",
+                    "width": 12,
+                  }
+                }
+              />
+            </View>
+          </View>
+        </View>
+        <View
+          style={
+            Object {
+              "flex": 1,
+              "flexDirection": "column",
+              "justifyContent": "center",
+            }
+          }
+        >
+          <Text
+            accessible={true}
+            allowFontScaling={true}
+            disabled={false}
+            ellipsizeMode="tail"
+            numberOfLines={2}
+            style={
+              Array [
+                Object {
+                  "fontFamily": ".SFUIDisplay",
+                },
+                Object {
+                  "color": "#2D3B45",
+                  "fontSize": 16,
+                },
+                Array [
+                  Object {
+                    "fontWeight": "600",
+                  },
+                  undefined,
+                ],
+                Object {
+                  "fontFamily": ".SFUIDisplay-semibold",
+                },
+              ]
+            }
+          >
+            learn to write code
+          </Text>
+          <Text
+            accessible={true}
+            allowFontScaling={true}
+            disabled={false}
+            ellipsizeMode="tail"
+            style={
+              Array [
+                Object {
+                  "fontFamily": ".SFUIDisplay",
+                },
+                Object {
+                  "color": "#2D3B45",
+                  "fontSize": 16,
+                },
+                Array [
+                  Object {
+                    "fontSize": 14,
+                    "paddingTop": 2,
+                  },
+                  Object {
+                    "marginBottom": 8,
+                  },
+                  Object {
+                    "color": "#07AF1F",
+                  },
+                ],
+                Object {
+                  "fontFamily": ".SFUIDisplay",
+                },
+              ]
+            }
+          >
+            Submitted
+          </Text>
+          <View
+            style={
+              Object {
+                "flexDirection": "row",
+              }
+            }
+          >
+            <Text
+              accessible={true}
+              allowFontScaling={true}
+              color="#FC5E13"
+              disabled={false}
+              ellipsizeMode="tail"
+              style={
+                Array [
+                  Object {
+                    "fontFamily": ".SFUIDisplay",
+                  },
+                  Object {
+                    "color": "#2D3B45",
+                    "fontSize": 16,
+                  },
+                  Array [
+                    Object {
+                      "backgroundColor": "white",
+                      "borderRadius": 9,
+                      "borderWidth": 1,
+                      "fontSize": 11,
+                      "fontWeight": "500",
+                      "overflow": "hidden",
+                      "paddingBottom": 0,
+                      "paddingLeft": 6,
+                      "paddingRight": 6,
+                      "paddingTop": 3,
+                      "textAlign": "center",
+                    },
+                    Object {
+                      "borderColor": "#FC5E13",
+                      "color": "#FC5E13",
+                    },
+                    undefined,
+                  ],
+                  Object {
+                    "fontFamily": ".SFUIDisplay-medium",
+                  },
+                ]
+              }
+            >
+              NEEDS GRADING
             </Text>
           </View>
         </View>

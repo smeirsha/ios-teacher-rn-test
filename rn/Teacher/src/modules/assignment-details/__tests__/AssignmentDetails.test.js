@@ -21,9 +21,11 @@
 import { Alert } from 'react-native'
 import React from 'react'
 import { AssignmentDetails } from '../AssignmentDetails'
-import timezoneMock from 'timezone-mock'
 import explore from '../../../../test/helpers/explore'
 import RCTSFSafariViewController from 'react-native-sfsafariviewcontroller'
+import renderer from 'react-test-renderer'
+import { setSession } from '../../../canvas-api'
+import { defaultErrorTitle } from '../../../redux/middleware/error-handler'
 
 const template = {
   ...require('../../../__templates__/assignments'),
@@ -31,10 +33,8 @@ const template = {
   ...require('../../../__templates__/helm'),
   ...require('../../../__templates__/external-tool'),
   ...require('../../../__templates__/error'),
+  ...require('../../../__templates__/session'),
 }
-
-// Note: test renderer must be required after react-native.
-import renderer from 'react-test-renderer'
 
 jest
   .mock('../../../routing')
@@ -48,7 +48,7 @@ let assignment: any = template.assignment()
 let defaultProps = {
   navigator: template.navigator(),
   courseID: course.id,
-  assignmentID: assignment.assignmentID,
+  assignmentID: assignment.id,
   refreshAssignmentDetails: (courseID: string, assignmentID: string) => {},
   assignmentDetails: assignment,
   pending: 0,
@@ -58,13 +58,7 @@ let defaultProps = {
   getSessionlessLaunchURL: jest.fn(),
 }
 
-beforeEach(() => {
-  timezoneMock.register('US/Pacific')
-})
-
-afterEach(() => {
-  timezoneMock.unregister()
-})
+beforeAll(() => setSession(template.session()))
 
 test('renders', () => {
   let tree = renderer.create(
@@ -77,6 +71,13 @@ test('renders with no submission types', () => {
   defaultProps.assignmentDetails = template.assignment({ submission_types: ['none'] })
   let tree = renderer.create(
     <AssignmentDetails {...defaultProps} />
+  ).toJSON()
+  expect(tree).toMatchSnapshot()
+})
+
+test('renders as a designer', () => {
+  let tree = renderer.create(
+    <AssignmentDetails {...defaultProps} showSubmissionSummary={false} />
   ).toJSON()
   expect(tree).toMatchSnapshot()
 })
@@ -163,6 +164,8 @@ describe('external tool', () => {
     beforeEach(() => {
       RCTSFSafariViewController.open = jest.fn()
     })
+
+    setSession(template.session())
     const url = 'https://canvas.instructure.com/external_tool'
     const props = {
       ...defaultProps,
@@ -190,7 +193,6 @@ describe('external tool', () => {
 
   describe('sad path', () => {
     it('shows an alert', async () => {
-      // $FlowFixMe
       Alert.alert = jest.fn()
       const props = {
         ...defaultProps,
@@ -204,7 +206,7 @@ describe('external tool', () => {
       ).toJSON()
       const button: any = explore(tree).selectByID('assignment-details.launch-external-tool.button')
       await button.props.onPress()
-      expect(Alert.alert).toHaveBeenCalledWith('Unexpected Error', 'Network error')
+      expect(Alert.alert).toHaveBeenCalledWith(defaultErrorTitle(), 'Network error')
     })
   })
 })

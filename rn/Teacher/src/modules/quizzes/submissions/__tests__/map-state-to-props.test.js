@@ -17,10 +17,9 @@
 // @flow
 
 import mapStateToProps from '../map-state-to-props'
-import moment from 'moment'
 import shuffle from 'knuth-shuffle-seeded'
 
-jest.mock('knuth-shuffle-seeded', () => jest.fn())
+jest.mock('knuth-shuffle-seeded', () => jest.fn((input, seed) => input))
 
 const template = {
   ...require('../../../../__templates__/quiz'),
@@ -30,6 +29,7 @@ const template = {
   ...require('../../../../__templates__/submissions'),
   ...require('../../../../__templates__/quizSubmission'),
   ...require('../../../../__templates__/assignments'),
+  ...require('../../../../__templates__/section'),
   ...require('../../../../redux/__templates__/app-state'),
 }
 
@@ -66,6 +66,7 @@ describe('QuizSubmissionList mapStateToProps', () => {
     const s2 = template.submission({
       id: '2',
       user_id: e2.user.id,
+      workflow_state: 'graded',
     })
     const qs2 = template.quizSubmission({
       id: '2',
@@ -92,19 +93,26 @@ describe('QuizSubmissionList mapStateToProps', () => {
       user_id: u4.id,
       user: u4,
     })
+    const e4Dup = template.enrollment({
+      id: '5',
+      user_id: u4.id,
+      user: u4,
+    })
 
     const qs4 = template.quizSubmission({
       id: '4',
       quiz_id: quiz.id,
       user_id: u4.id,
       kept_score: null,
-      end_at: moment().subtract(1, 'days').format(),
+      end_at: (new Date(0)).toISOString(),
+      overdue_and_needs_submission: true,
+      workflow_state: 'untaken',
     })
 
     const appState = template.appState({
       entities: {
         courses: {
-          [course.id]: { enrollments: { refs: [e1.id, e2.id, e3.id, e4.id] } },
+          [course.id]: { enrollments: { refs: [e1.id, e2.id, e3.id, e4.id, e4Dup.id] } },
         },
         assignments: {
           '1': {
@@ -117,6 +125,7 @@ describe('QuizSubmissionList mapStateToProps', () => {
           [e2.id]: e2,
           [e3.id]: e3,
           [e4.id]: e4,
+          [e4Dup.id]: e4Dup,
         },
         quizzes: {
           [quiz.id]: {
@@ -133,31 +142,9 @@ describe('QuizSubmissionList mapStateToProps', () => {
         submissions: {
           [s2.id]: { submission: s2 },
         },
+        sections: [template.section({ course_id: course.id })],
       },
     })
-
-    shuffle.mockReturnValueOnce([
-      {
-        userID: '1',
-        grade: 'ungraded',
-        status: 'submitted',
-      },
-      {
-        userID: '2',
-        grade: 'B-',
-        status: 'submitted',
-      },
-      {
-        userID: '3',
-        grade: 'not_submitted',
-        status: 'none',
-      },
-      {
-        userID: '4',
-        grade: 'not_submitted',
-        status: 'late',
-      },
-    ])
 
     const result = mapStateToProps(appState, { courseID: course.id, quizID: quiz.id })
     expect(result).toMatchObject({
@@ -167,21 +154,25 @@ describe('QuizSubmissionList mapStateToProps', () => {
           userID: '1',
           grade: 'ungraded',
           status: 'submitted',
+          sectionID: '1',
         },
         {
           userID: '2',
           grade: 'B-',
           status: 'submitted',
+          sectionID: '1',
         },
         {
           userID: '3',
           grade: 'not_submitted',
           status: 'none',
+          sectionID: '1',
         },
         {
           userID: '4',
           grade: 'not_submitted',
           status: 'late',
+          sectionID: '1',
         },
       ],
       anonymous: true,
@@ -200,5 +191,66 @@ describe('QuizSubmissionList mapStateToProps', () => {
       quiz: undefined,
       anonymous: false,
     })
+  })
+
+  test('anonymous will be true if the quiz has anonymous submissions turned on', () => {
+    const course = template.course()
+    const quiz = template.quiz({
+      anonymous_submissions: true,
+    })
+
+    const appState = template.appState({
+      entities: {
+        courses: {
+          [course.id]: { enrollments: { refs: [] } },
+        },
+        enrollments: {},
+        quizzes: {
+          [quiz.id]: {
+            data: quiz,
+            quizSubmissions: { refs: [] },
+            submissions: { refs: [] },
+          },
+        },
+        quizSubmissions: {},
+        submissions: {},
+        sections: [template.section({ course_id: course.id })],
+      },
+    })
+
+    const result = mapStateToProps(appState, { courseID: course.id, quizID: quiz.id })
+    expect(result.anonymous).toEqual(true)
+    expect(shuffle).toHaveBeenCalled()
+  })
+
+  test('anonymous will be true if the course has anonymous grading turned on', () => {
+    const course = template.course()
+    const quiz = template.quiz()
+
+    const appState = template.appState({
+      entities: {
+        courses: {
+          [course.id]: {
+            enrollments: { refs: [] },
+            enabledFeatures: ['anonymous_grading'],
+          },
+        },
+        enrollments: {},
+        quizzes: {
+          [quiz.id]: {
+            data: quiz,
+            quizSubmissions: { refs: [] },
+            submissions: { refs: [] },
+          },
+        },
+        quizSubmissions: {},
+        submissions: {},
+        sections: [template.section({ course_id: course.id })],
+      },
+    })
+
+    const result = mapStateToProps(appState, { courseID: course.id, quizID: quiz.id })
+    expect(result.anonymous).toEqual(true)
+    expect(shuffle).toHaveBeenCalled()
   })
 })

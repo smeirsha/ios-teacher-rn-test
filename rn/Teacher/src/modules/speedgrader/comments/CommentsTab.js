@@ -21,8 +21,11 @@ import { connect } from 'react-redux'
 import {
   View,
   FlatList,
+  LayoutAnimation,
+  ActionSheetIOS,
+  AppState,
 } from 'react-native'
-import { getSession } from 'canvas-api'
+import { getSession } from '../../../canvas-api'
 import CommentRow, { type CommentRowProps, type CommentContent } from './CommentRow'
 import CommentInput, { type Comment } from './CommentInput'
 import DrawerState from '../utils/drawer-state'
@@ -31,15 +34,40 @@ import SpeedGraderActions from '../actions'
 import { type SubmittedContentDataProps } from './SubmittedContent'
 import CommentStatus from './CommentStatus'
 import Images from '../../../images'
+import MediaComment, { type Media } from '../../../common/components/MediaComment'
+import Permissions from '../../../common/permissions'
 import i18n from 'format-message'
 import filesize from 'filesize'
 import striptags from 'striptags'
+
+const Actions = {
+  ...SubmissionCommentActions,
+  ...SpeedGraderActions,
+}
 
 export class CommentsTab extends Component<any, CommentsTabProps, any> {
   constructor (props: CommentsTabProps) {
     super(props)
 
-    this.state = { shouldShowStatus: this.props.commentRows.some(c => c.pending) }
+    this.state = {
+      shouldShowStatus: this.props.commentRows.some(c => c.pending),
+      showingNewMediaComment: null,
+      appState: AppState.currentState,
+    }
+  }
+
+  componentDidMount () {
+    AppState.addEventListener('change', this._handleAppStateChange)
+  }
+
+  componentWillUnmount () {
+    AppState.removeEventListener('change', this._handleAppStateChange)
+  }
+
+  componentWillReceiveProps (newProps: CommentsTabProps) {
+    if (this.props.isCurrentStudent && !newProps.isCurrentStudent) {
+      this.setState({ showingNewMediaComment: null })
+    }
   }
 
   makeAComment = (comment: Comment) => {
@@ -54,6 +82,63 @@ export class CommentsTab extends Component<any, CommentsTabProps, any> {
       assignmentID,
       userID,
       { ...comment, groupComment: !this.props.gradeIndividually },
+    )
+  }
+
+  addMedia = () => {
+    ActionSheetIOS.showActionSheetWithOptions({
+      options: [
+        i18n('Record Audio'),
+        i18n('Record Video'),
+        i18n('Cancel'),
+      ],
+      cancelButtonIndex: 2,
+    }, (i) => [this.addAudio, this.addVideo, () => {}][i]())
+  }
+
+  addAudio = async () => {
+    const permitted = await Permissions.checkMicrophone()
+    if (permitted) {
+      LayoutAnimation.easeInEaseOut()
+      this.setState({ showingNewMediaComment: 'audio' })
+    } else {
+      Permissions.alert('microphone')
+    }
+  }
+
+  addVideo = async () => {
+    const permitted = await Permissions.checkCamera()
+    if (permitted) {
+      LayoutAnimation.easeInEaseOut()
+      this.setState({ showingNewMediaComment: 'video' })
+    } else {
+      Permissions.alert('camera')
+    }
+  }
+
+  makeAMediaComment = (media: Media) => {
+    const { mediaID, mediaType, filePath } = media
+    const {
+      courseID,
+      assignmentID,
+      userID,
+    } = this.props
+    LayoutAnimation.easeInEaseOut()
+    this.setState({
+      shouldShowStatus: true,
+      showingNewMediaComment: null,
+    })
+    this.props.makeAComment(
+      courseID,
+      assignmentID,
+      userID,
+      {
+        type: 'media',
+        mediaID,
+        mediaType,
+        groupComment: !this.props.gradeIndividually,
+      },
+      filePath,
     )
   }
 
@@ -85,7 +170,6 @@ export class CommentsTab extends Component<any, CommentsTabProps, any> {
       style={{ transform: [{ rotate: '180deg' }] }}
       retryPendingComment={this.makeAComment}
       deletePendingComment={this.deletePendingComment}
-      onAvatarPress={this.navigateToContextCard}
       switchFile={this.switchFile}
       localID={item.key}
     />
@@ -95,6 +179,7 @@ export class CommentsTab extends Component<any, CommentsTabProps, any> {
   }
 
   render () {
+    // $FlowFixMe
     const rows = this.props.commentRows
     let hasPending = this.props.commentRows.some(c => c.pending)
     return (
@@ -113,14 +198,55 @@ export class CommentsTab extends Component<any, CommentsTabProps, any> {
             userID={this.props.userID}
           />
         }
-        <CommentInput
-          allowMediaComments={false}
-          makeComment={this.makeAComment}
-          drawerState={this.props.drawerState}
-          disabled={hasPending}
-        />
+        { this.state.showingNewMediaComment == null &&
+          <CommentInput
+            makeComment={this.makeAComment}
+            drawerState={this.props.drawerState}
+            disabled={hasPending}
+            addMedia={this.addMedia}
+          />
+        }
+        <View
+          style={{ height: this.state.showingNewMediaComment === 'audio' ? 240 : 0, overflow: 'hidden' }}
+          testID='speedgrader.comments.comments-tab.audio-recorder.container'
+        >
+          { this.state.showingNewMediaComment === 'audio' &&
+            <MediaComment
+              onFinishedUploading={this.makeAMediaComment}
+              onCancel={this.onMediaCommentCancel}
+              mediaType='audio'
+            />
+          }
+        </View>
+
+        <View
+          style={{ height: this.state.showingNewMediaComment === 'video' ? 235 : 0, overflow: 'hidden' }}
+          testID='speedgrader.comments.comments-tab.camera.container'
+        >
+          { this.state.showingNewMediaComment === 'video' &&
+            <View style={{ flex: 1 }}>
+              <MediaComment
+                onFinishedUploading={this.makeAMediaComment}
+                onCancel={this.onMediaCommentCancel}
+                mediaType='video'
+              />
+            </View>
+          }
+        </View>
       </View>
     )
+  }
+
+  onMediaCommentCancel = () => {
+    LayoutAnimation.easeInEaseOut()
+    this.setState({ showingNewMediaComment: null })
+  }
+
+  _handleAppStateChange = (nextAppState) => {
+    if (nextAppState.match(/inactive|background/) && this.state.appState === 'active') {
+      this.setState({ showingNewMediaComment: null })
+    }
+    this.setState({ appState: nextAppState })
   }
 }
 
@@ -133,10 +259,9 @@ type RoutingProps = {
   submissionID: ?string,
   gradeIndividually: boolean,
   drawerState: DrawerState,
-  navigator: Navigator,
 }
 
-type CommentsTabProps = CommentRows & RoutingProps & typeof SubmissionCommentActions & typeof SpeedGraderActions
+type CommentsTabProps = CommentRows & RoutingProps & typeof SubmissionCommentActions & typeof SpeedGraderActions & NavigationProps
 
 type CommentRowData = {
   error?: string,
@@ -155,17 +280,25 @@ function extractComments (submissionComments: SubmissionComment[]): Array<Commen
   const myUserID = session ? session.user.id : '😲'
 
   return submissionComments
-    .filter(comment => !comment.media_comment) // TODO don't exclmedia comments
     .map(comment => ({
       key: 'comment-' + comment.id,
       name: comment.author_name,
-      userID: comment.author.id,
       date: new Date(comment.created_at),
       avatarURL: comment.author.avatar_image_url,
       from: comment.author.id === myUserID ? 'me' : 'them',
-      contents: { type: 'text', message: comment.comment },
+      contents: comment.media_comment ? contentForMediaComment(comment.media_comment) : { type: 'text', message: comment.comment },
       pending: 0,
     }))
+}
+
+function contentForMediaComment (mediaComment: MediaComment): CommentContent {
+  return {
+    type: 'media',
+    mediaID: mediaComment.media_id,
+    mediaType: mediaComment.media_type,
+    url: mediaComment.url,
+    displayName: mediaComment.display_name,
+  }
 }
 
 function contentForAttempt (attempt: Submission, assignment: Assignment): Array<SubmittedContentDataProps> {
@@ -250,7 +383,6 @@ function rowForSubmission (user: User, attempt: Submission, assignment: Assignme
     key: `submission-${attemptNumber}`,
     name: user.name,
     avatarURL: user.avatar_url,
-    userID: user.id,
     from: 'them',
     date: new Date(submittedAt),
     contents: {
@@ -266,6 +398,7 @@ function rowForSubmission (user: User, attempt: Submission, assignment: Assignme
 function extractAttempts (submission: SubmissionWithHistory, assignment: Assignment): Array<CommentRowData> {
   if (!submission.submission_history) return []
   return submission.submission_history
+    .filter(attempt => attempt.attempt != null)
     .map(attempt => rowForSubmission(submission.user, attempt, assignment))
 }
 
@@ -281,9 +414,8 @@ function extractPendingComments (assignments: ?AssignmentContentState, userID): 
     key: pending.localID,
     from: 'me',
     name: session.user.name,
-    userId: session.user.id,
     avatarURL: session.user.avatar_url,
-    contents: pending.comment,
+    contents: pending.mediaComment ? { ...pending.comment, url: pending.mediaComment.url } : pending.comment,
     pending: pending.pending,
     error: pending.error || undefined, // this fixes flow even though error could already be undefined...
   }))
@@ -315,9 +447,5 @@ export function mapStateToProps ({ entities }: AppState, ownProps: RoutingProps)
   }
 }
 
-const Connected = connect(
-  mapStateToProps,
-  { ...SubmissionCommentActions, ...SpeedGraderActions }
-)(CommentsTab)
-
+const Connected = connect(mapStateToProps, Actions)(CommentsTab)
 export default (Connected: any)

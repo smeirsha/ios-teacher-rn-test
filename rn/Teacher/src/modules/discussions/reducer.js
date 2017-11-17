@@ -30,7 +30,7 @@ import composeReducers from '../../redux/compose-reducers'
 import { parseErrorMessage } from '../../redux/middleware/error-handler'
 
 const { refreshDiscussions } = ListActions
-const { refreshDiscussionEntries, refreshSingleDiscussion, createEntry, editEntry, deleteDiscussionEntry, deletePendingReplies, markAllAsRead } = DetailsActions
+const { refreshDiscussionEntries, refreshSingleDiscussion, createEntry, editEntry, deleteDiscussionEntry, deletePendingReplies, markAllAsRead, markEntryAsRead } = DetailsActions
 const { refreshAnnouncements } = AnnouncementListActions
 const {
   createDiscussion,
@@ -92,8 +92,8 @@ export function addOrUpdateReply (reply: DiscussionReply, localIndexPath: number
   for (let i = 0; i < localIndexPath.length; i++) {
     let index = localIndexPath[i]
     if (!isAdd && i === localIndexPath.length - 1) {
-      const replies = r[index].replies
-      r[index] = Object.assign(reply, r[index])
+      const replies = r[index] && r[index].replies ? r[index].replies : []
+      r[index] = r[index] ? Object.assign(r[index], reply) : { ...reply }
       r[index] = {
         ...r[index],
         replies: replies,
@@ -183,7 +183,7 @@ const handleAsyncDiscussions = handleAsync({
       .reduce((incoming, discussion) => ({
         ...incoming,
         [discussion.id]: {
-          data: discussion,
+          data: { ...(state[discussion.id] && state[discussion.id].data), ...discussion },
           pending: 0,
           error: null,
         },
@@ -209,7 +209,7 @@ export const discussionData: Reducer<DiscussionState, any> = handleActions({
       let pendingRepliesNeedingToBeRemoved = []
       for (let i = 0; i < pendingReplyKeys.length; i++) {
         let reply = pendingReplies[pendingReplyKeys[i]]
-        if (reply && !newEntriesContainsReply(newEntries, reply.data)) {
+        if (reply && !reply.data.editor_id && !newEntriesContainsReply(newEntries, reply.data)) {
           pendingRepliesNeedingToBeRemoved.push(pendingReplyKeys[i])
         } else {
           if (reply && reply.data.deleted) {
@@ -508,6 +508,20 @@ export const discussionData: Reducer<DiscussionState, any> = handleActions({
         },
       },
     }),
+  }),
+  [markEntryAsRead.toString()]: handleAsync({
+    resolved: (state, { discussionID, entryID }) => {
+      let unreadEntries = [...state[discussionID].unread_entries || []]
+      let index = unreadEntries.indexOf(entryID)
+      if (index > -1) unreadEntries.splice(index, 1)
+      return {
+        ...state,
+        [discussionID]: {
+          ...state[discussionID],
+          unread_entries: unreadEntries,
+        },
+      }
+    },
   }),
   [markAllAsRead.toString()]: handleAsync({
     pending: (state, { discussionID, courseID }) => ({

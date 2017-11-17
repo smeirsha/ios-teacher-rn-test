@@ -10,7 +10,7 @@ Array [
       "is_announcement": true,
       "message": "required",
       "require_initial_post": false,
-      "title": null,
+      "title": "No Title",
     },
   ],
 ]
@@ -166,6 +166,8 @@ exports[`AnnouncementEdit renders 1`] = `
       visible={false}
     />
     <RCTScrollView
+      automaticallyAdjustContentInsets={false}
+      contentContainerStyle={undefined}
       contentInset={
         Object {
           "bottom": 0,
@@ -227,9 +229,6 @@ exports[`AnnouncementEdit renders 1`] = `
           style={
             Array [
               Object {
-                "height": 54,
-              },
-              Object {
                 "borderTopColor": "#C7CDD1",
                 "borderTopWidth": 0.5,
               },
@@ -249,10 +248,11 @@ exports[`AnnouncementEdit renders 1`] = `
                   "backgroundColor": "white",
                   "flex": 1,
                   "flexDirection": "row",
-                  "paddingBottom": 12.8,
+                  "minHeight": 54,
+                  "paddingBottom": 12,
                   "paddingLeft": 16,
                   "paddingRight": 16,
-                  "paddingTop": 12.8,
+                  "paddingTop": 12,
                 },
                 Object {
                   "backgroundColor": "white",
@@ -331,6 +331,15 @@ exports[`AnnouncementEdit renders 1`] = `
             contentHeight={150}
             defaultValue="Gather tribute or face my curse."
             keyboardAware={false}
+            navigator={
+              Object {
+                "dismiss": [Function],
+                "dismissAllModals": [Function],
+                "pop": [Function],
+                "show": [Function],
+                "traitCollection": [Function],
+              }
+            }
             onChangeValue={[Function]}
             placeholder="Add description (required)"
             scrollEnabled={true}
@@ -379,9 +388,6 @@ exports[`AnnouncementEdit renders 1`] = `
           style={
             Array [
               Object {
-                "height": 54,
-              },
-              Object {
                 "borderTopColor": "#C7CDD1",
                 "borderTopWidth": 0.5,
               },
@@ -401,10 +407,11 @@ exports[`AnnouncementEdit renders 1`] = `
                   "backgroundColor": "white",
                   "flex": 1,
                   "flexDirection": "row",
-                  "paddingBottom": 12.8,
+                  "minHeight": 54,
+                  "paddingBottom": 12,
                   "paddingLeft": 16,
                   "paddingRight": 16,
-                  "paddingTop": 12.8,
+                  "paddingTop": 12,
                 },
                 Object {
                   "backgroundColor": "white",
@@ -492,9 +499,6 @@ exports[`AnnouncementEdit renders 1`] = `
           onPress={[Function]}
           style={
             Array [
-              Object {
-                "height": 54,
-              },
               undefined,
               Object {
                 "borderBottomColor": "#C7CDD1",
@@ -512,10 +516,11 @@ exports[`AnnouncementEdit renders 1`] = `
                   "backgroundColor": "white",
                   "flex": 1,
                   "flexDirection": "row",
-                  "paddingBottom": 12.8,
+                  "minHeight": 54,
+                  "paddingBottom": 12,
                   "paddingLeft": 16,
                   "paddingRight": 16,
-                  "paddingTop": 12.8,
+                  "paddingTop": 12,
                 },
                 Object {
                   "backgroundColor": "white",
@@ -646,7 +651,7 @@ exports[`AnnouncementEdit updates with new props 1`] = `
         ]
       }
       transparent={true}
-      visible={false}
+      visible={true}
     >
       <View
         style={
@@ -748,6 +753,8 @@ exports[`AnnouncementEdit updates with new props 1`] = `
       visible={false}
     />
     <RCTScrollView
+      automaticallyAdjustContentInsets={false}
+      contentContainerStyle={undefined}
       contentInset={
         Object {
           "bottom": 0,
@@ -809,9 +816,6 @@ exports[`AnnouncementEdit updates with new props 1`] = `
           style={
             Array [
               Object {
-                "height": 54,
-              },
-              Object {
                 "borderTopColor": "#C7CDD1",
                 "borderTopWidth": 0.5,
               },
@@ -831,10 +835,11 @@ exports[`AnnouncementEdit updates with new props 1`] = `
                   "backgroundColor": "white",
                   "flex": 1,
                   "flexDirection": "row",
-                  "paddingBottom": 12.8,
+                  "minHeight": 54,
+                  "paddingBottom": 12,
                   "paddingLeft": 16,
                   "paddingRight": 16,
-                  "paddingTop": 12.8,
+                  "paddingTop": 12,
                 },
                 Object {
                   "backgroundColor": "white",
@@ -913,6 +918,15 @@ exports[`AnnouncementEdit updates with new props 1`] = `
             contentHeight={150}
             defaultValue="Gather tribute or face my curse."
             keyboardAware={false}
+            navigator={
+              Object {
+                "dismiss": [Function],
+                "dismissAllModals": [Function],
+                "pop": [Function],
+                "show": [Function],
+                "traitCollection": [Function],
+              }
+            }
             onChangeValue={[Function]}
             placeholder="Add description (required)"
             scrollEnabled={true}
@@ -961,9 +975,6 @@ exports[`AnnouncementEdit updates with new props 1`] = `
           style={
             Array [
               Object {
-                "height": 54,
-              },
-              Object {
                 "borderTopColor": "#C7CDD1",
                 "borderTopWidth": 0.5,
               },
@@ -983,10 +994,11 @@ exports[`AnnouncementEdit updates with new props 1`] = `
                   "backgroundColor": "white",
                   "flex": 1,
                   "flexDirection": "row",
-                  "paddingBottom": 12.8,
+                  "minHeight": 54,
+                  "paddingBottom": 12,
                   "paddingLeft": 16,
                   "paddingRight": 16,
-                  "paddingTop": 12.8,
+                  "paddingTop": 12,
                 },
                 Object {
                   "backgroundColor": "white",
@@ -1074,9 +1086,6 @@ exports[`AnnouncementEdit updates with new props 1`] = `
           onPress={[Function]}
           style={
             Array [
-              Object {
-                "height": 54,
-              },
               undefined,
               Object {
                 "borderBottomColor": "#C7CDD1",
@@ -1094,10 +1103,11 @@ exports[`AnnouncementEdit updates with new props 1`] = `
                   "backgroundColor": "white",
                   "flex": 1,
                   "flexDirection": "row",
-                  "paddingBottom": 12.8,
+                  "minHeight": 54,
+                  "paddingBottom": 12,
                   "paddingLeft": 16,
                   "paddingRight": 16,
-                  "paddingTop": 12.8,
+                  "paddingTop": 12,
                 },
                 Object {
                   "backgroundColor": "white",

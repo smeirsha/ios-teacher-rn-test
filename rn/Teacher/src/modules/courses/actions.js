@@ -17,7 +17,7 @@
 // @flow
 
 import { createAction } from 'redux-actions'
-import canvas from 'canvas-api'
+import canvas from '../../canvas-api'
 
 export const UPDATE_COURSE_DETAILS_SELECTED_TAB_SELECTED_ROW_ACTION: string = 'course-details.selected-tab.selected-row'
 
@@ -39,6 +39,13 @@ export let CoursesActions = (api: CanvasApi): * => ({
     return {
       promise: api.getCourseGradingPeriods(courseID),
       handlesError: true,
+      courseID,
+    }
+  }),
+  getCourseEnabledFeatures: createAction('courses.getCourseEnabledFeatures', (courseID: string) => {
+    return {
+      promise: api.getCourseEnabledFeatures(courseID),
+      courseID,
     }
   }),
 })

@@ -17,7 +17,8 @@
 /* @flow */
 
 import { createAction } from 'redux-actions'
-import canvas from 'canvas-api'
+import canvas from '../../canvas-api'
+import { updateUnreadCount } from './update-unread-count'
 
 export function createInboxAction (api: any, scope: InboxScope, next?: Function): any {
   return {
@@ -69,9 +70,24 @@ export let InboxActions = (api: CanvasApi): * => ({
       conversationID,
     }
   }),
-  markAsRead: createAction('inbox.mark-as-read', (conversationID: string) => {
+  deleteConversationMessage: createAction('inbox.delete-conversation-message', (conversationID: string, messageID: string) => {
     return {
-      promise: api.markConversationAsRead(conversationID),
+      promise: api.deleteConversationMessage(conversationID, messageID),
+      conversationID,
+      messageID,
+    }
+  }),
+  markAsRead: createAction('inbox.mark-as-read', (conversationID: string) => {
+    let promise = api
+      .markConversationAsRead(conversationID)
+    if (promise.then) { // for testing
+      promise = promise.then(result => {
+        updateUnreadCount()
+        return result
+      })
+    }
+    return {
+      promise,
       conversationID,
     }
   }),

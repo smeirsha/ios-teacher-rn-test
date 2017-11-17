@@ -32,7 +32,6 @@ import {
 } from 'react-native'
 import i18n from 'format-message'
 import colors from '../../../common/colors'
-import { formattedDueDate } from '../../../common/formatters'
 import AssignmentDates from '../../../common/AssignmentDates'
 import { type Assignee } from '../../assignee-picker/map-state-to-props'
 import uuid from 'uuid/v1'
@@ -43,7 +42,7 @@ import Images from '../../../images'
 import DisclosureIndicator from '../../../common/components/DisclosureIndicator'
 import Navigator from '../../../routing/Navigator'
 import RequiredFieldSubscript from '../../../common/components/RequiredFieldSubscript'
-import { formattedDate, extractDateFromString } from '../../../utils/dateUtils'
+import { extractDateFromString } from '../../../utils/dateUtils'
 import RowWithDateInput from '../../../common/components/rows/RowWithDateInput'
 
 type Props = {
@@ -85,7 +84,7 @@ type State = {
 // These this component is rendered, it makes a copy of the assignment overrides and uses that as display
 // At any time, you can call the results method to get an updated view on edits that were made
 // Call validate to perform validation. (validation checks to see if there are any assignees, that's all. :))
-export default class AssignmentDatesEditor extends Component<any, Props, any> {
+export default class AssignmentDatesEditor extends Component<Props, any> {
   state: State
   layouts: any
 
@@ -127,9 +126,9 @@ export default class AssignmentDatesEditor extends Component<any, Props, any> {
   }
 
   checkDueDate (date: StagedAssignmentDate) {
-    let dueDate = extractDateFromString(formattedDate(date.due_at))
-    let lockDate = extractDateFromString(formattedDate(date.lock_at))
-    let unlockDate = extractDateFromString(formattedDate(date.unlock_at))
+    let dueDate = extractDateFromString(date.due_at)
+    let lockDate = extractDateFromString(date.lock_at)
+    let unlockDate = extractDateFromString(date.unlock_at)
     if (!dueDate) {
       return true
     }
@@ -139,8 +138,8 @@ export default class AssignmentDatesEditor extends Component<any, Props, any> {
   }
 
   checkLockDates (date: StagedAssignmentDate) {
-    let lockDate = extractDateFromString(formattedDate(date.lock_at))
-    let unlockDate = extractDateFromString(formattedDate(date.unlock_at))
+    let lockDate = extractDateFromString(date.lock_at)
+    let unlockDate = extractDateFromString(date.unlock_at)
     if (!lockDate || !unlockDate) {
       return true
     }
@@ -485,8 +484,6 @@ export default class AssignmentDatesEditor extends Component<any, Props, any> {
   renderDateType = (date: StagedAssignmentDate, type: ModifyDateType, selected: boolean) => {
     if (type === 'none') return <View />
 
-    const stringDate = date[type] ? formattedDueDate(new Date(date[type])) : '--'
-
     let title = i18n('Due Date')
     switch (type) {
       case 'unlock_at':
@@ -508,7 +505,7 @@ export default class AssignmentDatesEditor extends Component<any, Props, any> {
     return (
       <RowWithDateInput
         title={title}
-        date={stringDate}
+        date={date[type]}
         onPress={modifyFunction}
         showRemoveButton={date[type]}
         selected={selected}
@@ -516,7 +513,7 @@ export default class AssignmentDatesEditor extends Component<any, Props, any> {
     )
   }
 
-  renderDate = (date: StagedAssignmentDate) => {
+  renderDate = (date: StagedAssignmentDate, index: number) => {
     let title = i18n('Assign To')
     let requiredAssigneesText = i18n('Assignees required')
     let requiredDueDateText = i18n("'Due Date' must be between 'Available From' and 'Available Until' dates")
@@ -527,7 +524,7 @@ export default class AssignmentDatesEditor extends Component<any, Props, any> {
 
     const canEditAssignees = this.props.canEditAssignees || this.props.canEditAssignees == null
 
-    return (<View>
+    return (<View key={index}>
               <View style={styles.dateContainer} key={date.id || 'base'} onLayout={ (event) => { this.layouts[date.id] = event.nativeEvent.layout } } >
                 <EditSectionHeader title={title} style={styles.headerText}>
                   {removeButton}
@@ -589,7 +586,8 @@ const styles = StyleSheet.create({
   dateContainer: {
   },
   row: {
-    height: 54,
+    minHeight: 54,
+    height: 'auto',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.seperatorColor,
   },
@@ -625,7 +623,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
   },
   button: {
-    height: 54,
+    minHeight: 54,
+    height: 'auto',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.seperatorColor,
     borderTopWidth: StyleSheet.hairlineWidth,

@@ -27,9 +27,6 @@ exports[`default icon 1`] = `
         "backgroundColor": "transparent",
       },
       Array [
-        Object {
-          "height": 54,
-        },
         undefined,
         Object {
           "borderBottomColor": "#C7CDD1",
@@ -49,10 +46,11 @@ exports[`default icon 1`] = `
           "backgroundColor": "white",
           "flex": 1,
           "flexDirection": "row",
-          "paddingBottom": 12.8,
+          "minHeight": 54,
+          "paddingBottom": 12,
           "paddingLeft": 16,
           "paddingRight": 16,
-          "paddingTop": 12.8,
+          "paddingTop": 12,
         },
         Object {
           "backgroundColor": "white",
@@ -171,9 +169,6 @@ exports[`renders correctly 1`] = `
         "backgroundColor": "transparent",
       },
       Array [
-        Object {
-          "height": 54,
-        },
         undefined,
         Object {
           "borderBottomColor": "#C7CDD1",
@@ -193,10 +188,11 @@ exports[`renders correctly 1`] = `
           "backgroundColor": "white",
           "flex": 1,
           "flexDirection": "row",
-          "paddingBottom": 12.8,
+          "minHeight": 54,
+          "paddingBottom": 12,
           "paddingLeft": 16,
           "paddingRight": 16,
-          "paddingTop": 12.8,
+          "paddingTop": 12,
         },
         Object {
           "backgroundColor": "white",

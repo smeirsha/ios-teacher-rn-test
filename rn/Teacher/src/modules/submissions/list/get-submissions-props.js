@@ -58,9 +58,9 @@ export function statusProp (submission: ?Submission, dueDate: ?string): Submissi
 }
 
 export function gradeProp (submission: ?Submission): GradeProp {
-  if (!submission ||
-    (submission.workflow_state === 'unsubmitted' &&
-     !submission.excused)) {
+  // a submission may be excused and (submitted or not submitted)
+  // a submission may be graded and (submitted or not submitted)
+  if (!submission) {
     return 'not_submitted'
   }
 
@@ -68,24 +68,30 @@ export function gradeProp (submission: ?Submission): GradeProp {
     return 'excused'
   }
 
-  if (submission.grade && submission.grade_matches_current_submission) {
+  if (!submission.submitted_at && !submission.grade) {
+    return 'not_submitted'
+  }
+
+  if (submission.grade != null && submission.grade_matches_current_submission) {
     return submission.grade
   }
 
   return 'ungraded'
 }
 
-function submissionProps (user: User, submission: ?SubmissionWithHistory, dueDate: ?string): SubmissionDataProps {
+function submissionProps (enrollment: Enrollment, submission: ?SubmissionWithHistory, dueDate: ?string, sectionIDs: { string: [string] }): SubmissionDataProps {
+  let { user, course_section_id: sectionID } = enrollment
   const { id, name } = user
   const avatarURL = user.avatar_url
   const status = statusProp(submission, dueDate)
   const grade = gradeProp(submission)
   const score = submission ? submission.score : null
+  const allSectionIDs = sectionIDs[id]
   let submissionID
   if (submission) {
     submissionID = submission.id
   }
-  return { userID: id, avatarURL, name, status, grade, submissionID, submission, score }
+  return { userID: id, avatarURL, name, status, grade, submissionID, submission, score, sectionID, allSectionIDs }
 }
 
 export function dueDate (assignment: Assignment, user: ?User): ?string {
@@ -129,15 +135,22 @@ export function getSubmissionsProps (entities: Entities, courseID: string, assig
   const courseContent = entities.courses[courseID]
   const enrollments = getEnrollments(courseContent, entities.enrollments)
 
+  const sectionIDs = enrollments.reduce((memo, enrollment) => {
+    const userID = enrollment.user_id
+    const existing = memo[userID] || []
+    return { ...memo, [userID]: [...existing, enrollment.course_section_id] }
+  }, {})
+
   // submissions
   const assignmentContent = entities.assignments[assignmentID]
   const submissionsByUserID = getSubmissionsByUserID(assignmentContent, entities.submissions)
 
   const submissions = uniqueEnrollments(enrollments)
-    .filter(enrollment =>
-      enrollment.type === 'StudentEnrollment' ||
-      enrollment.type === 'StudentViewEnrollment'
-    )
+    .filter(e => {
+      return e.type === 'StudentEnrollment' &&
+              (e.enrollment_state === 'active' ||
+              e.enrollment_state === 'invited')
+    })
     .sort((e1, e2) => {
       if (e1.type !== e2.type) {
         if (e1.type === 'StudentEnrollment') {
@@ -150,9 +163,8 @@ export function getSubmissionsProps (entities: Entities, courseID: string, assig
     })
     .map(enrollment => {
       const submission: ?SubmissionWithHistory = submissionsByUserID[enrollment.user_id]
-      const user = enrollment.user
-      const due = dueDate(assignmentContent.data, user)
-      return submissionProps(user, submission, due)
+      const due = assignmentContent && dueDate(assignmentContent.data, enrollment.user)
+      return submissionProps(enrollment, submission, due, sectionIDs)
     })
 
   const pending = pendingProp(assignmentContent, courseContent)

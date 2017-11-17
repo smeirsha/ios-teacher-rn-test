@@ -37,6 +37,7 @@ import SectionHeader from '../../../common/components/rows/SectionHeader'
 import Screen from '../../../routing/Screen'
 import Images from '../../../images'
 import ActivityIndicatorView from '../../../common/components/ActivityIndicatorView'
+import ListEmptyComponent from '../../../common/components/ListEmptyComponent'
 
 const { refreshDiscussions } = ListActions
 const { updateDiscussion, deleteDiscussion } = EditActions
@@ -61,13 +62,7 @@ export type Props = State & typeof Actions & OwnProps & {
   navigator: Navigator,
 }
 
-const HEADERS = {
-  'A_locked': i18n('Closed for Comments'),
-  'B_discussion': i18n('Discussions'),
-  'C_pinned': i18n('Pinned Discussions'),
-}
-
-export class DiscussionsList extends Component<any, Props, any> {
+export class DiscussionsList extends Component<Props, any> {
 
   renderRow = ({ item, index }: { item: Discussion, index: number }) => {
     return (
@@ -82,7 +77,12 @@ export class DiscussionsList extends Component<any, Props, any> {
   }
 
   renderSectionHeader = ({ section }: any) => {
-    return <SectionHeader title={HEADERS[section.key]} key={HEADERS[section.key]} />
+    const HEADERS = {
+      'A_locked': i18n('Closed for Comments'),
+      'B_discussion': i18n('Discussions'),
+      'C_pinned': i18n('Pinned Discussions'),
+    }
+    return <SectionHeader title={HEADERS[section.key]} sectionKey={HEADERS[section.key]} />
   }
 
   _selectedDiscussion = (discussion: Discussion) => {
@@ -111,8 +111,8 @@ export class DiscussionsList extends Component<any, Props, any> {
         this._confirmDeleteDiscussion(discussion)
         return
       }
-      let updatedDiscussion = Object.assign({}, discussion)
 
+      let updatedDiscussion = { id: discussion.id, locked: discussion.locked, pinned: discussion.pinned }
       if (button === 0) { updatedDiscussion.pinned = !updatedDiscussion.pinned; updatedDiscussion.locked = false }
       if (button === 1) { updatedDiscussion.locked = !updatedDiscussion.locked; updatedDiscussion.pinned = false }
 
@@ -194,6 +194,9 @@ export class DiscussionsList extends Component<any, Props, any> {
             onRefresh={this.props.refresh}
             keyExtractor={(item, index) => item.id}
             testID='discussion-list.list'
+            ListEmptyComponent={
+              <ListEmptyComponent title={i18n('There are no discussions to display.')} />
+            }
           />
         </View>
       </Screen>
@@ -260,4 +263,4 @@ const Refreshed = refresh(
   props => Boolean(props.pending)
 )(DiscussionsList)
 const Connected = connect(mapStateToProps, Actions)(Refreshed)
-export default (Connected: Component<any, Props, any>)
+export default (Connected: Component<Props, any>)

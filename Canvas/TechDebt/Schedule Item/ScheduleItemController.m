@@ -46,11 +46,8 @@
 #import "CKIClient+CBIClient.h"
 #import "CKRichTextInputView.h"
 @import CanvasKit;
-@import SoPretty;
+@import CanvasCore;
 @import CanvasKeymaster;
-
-#define TOP_INSET 64
-#define BOTTOM_INSET 80
 
 @interface ScheduleItemController() <UIWebViewDelegate, UIPopoverControllerDelegate, CKCommentViewControllerDelegate, UIAlertViewDelegate, CKRichTextInputViewDelegate> {
     CKSubmission *currentSubmission;

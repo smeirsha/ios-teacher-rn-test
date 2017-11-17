@@ -37,6 +37,7 @@ import Screen from '../../../routing/Screen'
 import { type TraitCollection } from '../../../routing/Navigator'
 import { isRegularDisplayMode } from '../../../routing/utils'
 import ActivityIndicatorView from '../../../common/components/ActivityIndicatorView'
+import ListEmptyComponent from '../../../common/components/ListEmptyComponent'
 
 const { NativeAccessibility } = NativeModules
 
@@ -61,7 +62,7 @@ const HEADERS = {
   'survey': i18n('Survey'),
 }
 
-export class QuizzesList extends Component<any, Props, any> {
+export class QuizzesList extends Component<Props, any> {
   isRegularScreenDisplayMode: boolean
   didSelectFirstItem = false
   data: any = []
@@ -114,7 +115,7 @@ export class QuizzesList extends Component<any, Props, any> {
   }
 
   renderSectionHeader = ({ section }: any) => {
-    return <SectionHeader title={HEADERS[section.key]} key={section.key} top={section.index === 0} />
+    return <SectionHeader title={HEADERS[section.key]} sectionKey={section.key} top={section.index === 0} />
   }
 
   _selectedQuiz = (quiz: Quiz) => {
@@ -161,10 +162,8 @@ export class QuizzesList extends Component<any, Props, any> {
       return <ActivityIndicatorView />
     }
 
-    if (this.data.length === 0) {
-      this.data = this._getData()
-      this.selectFirstListItemIfNecessary()
-    }
+    this.data = this._getData()
+    this.selectFirstListItemIfNecessary()
 
     return (
       <Screen
@@ -183,6 +182,10 @@ export class QuizzesList extends Component<any, Props, any> {
             onRefresh={this.props.refresh}
             keyExtractor={(item, index) => item.id}
             testID='quiz-list.list'
+            extraData
+            ListEmptyComponent={
+              <ListEmptyComponent title={i18n('There are no quizzes to display.')} />
+            }
           />
         </View>
       </Screen>
@@ -234,4 +237,4 @@ const Refreshed = refresh(
   props => Boolean(props.pending)
 )(QuizzesList)
 const Connected = connect(mapStateToProps, Actions)(Refreshed)
-export default (Connected: Component<any, Props, any>)
+export default (Connected: Component<Props, any>)

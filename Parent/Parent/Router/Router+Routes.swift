@@ -19,15 +19,13 @@
 import UIKit
 
 import Result
-import TooLegit
-import Keymaster
+
+
 import ReactiveSwift
 import ReactiveCocoa
-import EnrollmentKit
-import Airwolf
-import SoLazy
-import SoPersistent
-import SoSupportive
+import CanvasCore
+
+import CanvasCore
 import Marshal
 
 let LoggedInNotificationContentsSession = "LoggedInNotificationContentsSession"
@@ -251,7 +249,7 @@ extension Router {
             }
             dashboardVC.addStudentAction = { [weak dashboardVC] in
                 guard let dashboardVC = dashboardVC else { return }
-                self.route(dashboardVC, toURL: self.addStudentRoute())
+                self.route(dashboardVC, toURL: self.addStudentRoute(), modal: true)
             }
             
             return dashboardVC
@@ -262,7 +260,7 @@ extension Router {
         return { params in
             let selectDomainViewController = SelectDomainViewController.new()
             selectDomainViewController.dataSource = ParentSelectDomainDataSource.instance
-            selectDomainViewController.pickedDomainAction = { [weak self, weak selectDomainViewController] domain in
+            selectDomainViewController.pickedDomainAction = { [weak self, weak selectDomainViewController] domain, authenticationProvider in
                 guard let session = self?.session else {
                     fatalError("You can't add a user without a session")
                 }
@@ -274,7 +272,7 @@ extension Router {
                             print("Error adding Student Domain: \(e)")
                             var createAccountTitle = NSLocalizedString("Unable to Add Student", comment: "Title for alert when failing to add student domain")
                             var createAccountMessage = e.localizedDescription
-                            if e.code == 401 {
+                            if e.code == 401 || e.code == 400 {
                                 createAccountMessage = NSLocalizedString("Invalid student domain.\nPlease double-check the domain and try again.", comment: "Alert Message for invalid domain")
                             } else if e.code == 403 {
                                 createAccountMessage = NSLocalizedString("This institution has not enabled access to the Canvas Parent mobile app.", comment: "Alert Message for institution not authorized")
@@ -304,8 +302,12 @@ extension Router {
                             selectDomainViewController?.present(alert, animated: true, completion: nil)
                         case .completed:
                             do {
-                                let addVC = try AddStudentViewController(session: session, domain: domain, useBackButton: true) { result in
-                                    let _ = selectDomainViewController?.navigationController?.popToRootViewController(animated: true)
+                                let addVC = try AddStudentViewController(session: session, domain: domain, authenticationProvider: authenticationProvider) { result in
+                                    if let presentor = selectDomainViewController?.presentingViewController {
+                                        presentor.dismiss(animated: true)
+                                    } else {
+                                        let _ = selectDomainViewController?.navigationController?.popToRootViewController(animated: true)
+                                    }
                                 }
                                 addVC.prompt = NSLocalizedString("Enter student's login information", comment: "Prompt for logging in as student")
                                 selectDomainViewController?.navigationController?.pushViewController(addVC, animated: true)
@@ -324,7 +326,7 @@ extension Router {
             selectDomainViewController.allowMultipleUsers = false
             selectDomainViewController.useMobileVerify = false
             selectDomainViewController.prompt = NSLocalizedString("Find your student's school or district", comment: "Domain Picker Search Placeholder")
-            return selectDomainViewController
+            return UINavigationController(rootViewController: selectDomainViewController)
         }
     }
 
@@ -372,7 +374,7 @@ extension Router {
 
             settingsVC.addObserveeAction = { [weak settingsVC] session in
                 guard let settingsVC = settingsVC else { return }
-                self.route(settingsVC, toURL: self.addStudentRoute())
+                self.route(settingsVC, toURL: self.addStudentRoute(), modal: true)
             }
 
             settingsVC.requestFeatureAction = { [weak settingsVC] session in

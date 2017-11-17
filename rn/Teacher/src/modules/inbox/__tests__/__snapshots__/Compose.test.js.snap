@@ -23,6 +23,13 @@ exports[`Compose renders 1`] = `
         "testID": "compose-message.send",
         "title": "Send",
       },
+      Object {
+        "accessibilityLabel": "Edit attachments (0)",
+        "action": [Function],
+        "badge": false,
+        "image": 1,
+        "testID": "compose-message.attach",
+      },
     ]
   }
   title="New Message"
@@ -141,6 +148,7 @@ exports[`Compose renders 1`] = `
       </View>
     </Modal>
     <RCTScrollView
+      automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         Object {
           "flexGrow": 1,
@@ -310,9 +318,6 @@ exports[`Compose renders 1`] = `
                 "backgroundColor": "transparent",
               },
               Array [
-                Object {
-                  "height": 54,
-                },
                 undefined,
                 Object {
                   "borderBottomColor": "#C7CDD1",
@@ -332,10 +337,11 @@ exports[`Compose renders 1`] = `
                   "backgroundColor": "white",
                   "flex": 1,
                   "flexDirection": "row",
-                  "paddingBottom": 12.8,
+                  "minHeight": 54,
+                  "paddingBottom": 12,
                   "paddingLeft": 16,
                   "paddingRight": 16,
-                  "paddingTop": 12.8,
+                  "paddingTop": 12,
                 },
                 Object {
                   "backgroundColor": "white",
@@ -426,7 +432,7 @@ exports[`Compose renders 1`] = `
             </View>
           </View>
         </View>
-        <ScrollViewDisabler
+        <View
           style={
             Array [
               Object {
@@ -439,7 +445,8 @@ exports[`Compose renders 1`] = `
               },
               Object {
                 "borderBottomWidth": 0,
-                "paddingVertical": 10,
+                "paddingBottom": 40,
+                "paddingTop": 10,
               },
             ]
           }
@@ -466,7 +473,7 @@ exports[`Compose renders 1`] = `
             }
             testID="compose-message.body-text-input"
           />
-        </ScrollViewDisabler>
+        </View>
       </View>
     </RCTScrollView>
   </View>
@@ -495,6 +502,13 @@ exports[`Compose renders after picking a course 1`] = `
         "style": "done",
         "testID": "compose-message.send",
         "title": "Send",
+      },
+      Object {
+        "accessibilityLabel": "Edit attachments (0)",
+        "action": [Function],
+        "badge": false,
+        "image": 1,
+        "testID": "compose-message.attach",
       },
     ]
   }
@@ -614,6 +628,7 @@ exports[`Compose renders after picking a course 1`] = `
       </View>
     </Modal>
     <RCTScrollView
+      automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         Object {
           "flexGrow": 1,
@@ -876,9 +891,6 @@ exports[`Compose renders after picking a course 1`] = `
                 "backgroundColor": "transparent",
               },
               Array [
-                Object {
-                  "height": 54,
-                },
                 undefined,
                 Object {
                   "borderBottomColor": "#C7CDD1",
@@ -898,10 +910,11 @@ exports[`Compose renders after picking a course 1`] = `
                   "backgroundColor": "white",
                   "flex": 1,
                   "flexDirection": "row",
-                  "paddingBottom": 12.8,
+                  "minHeight": 54,
+                  "paddingBottom": 12,
                   "paddingLeft": 16,
                   "paddingRight": 16,
-                  "paddingTop": 12.8,
+                  "paddingTop": 12,
                 },
                 Object {
                   "backgroundColor": "white",
@@ -992,7 +1005,7 @@ exports[`Compose renders after picking a course 1`] = `
             </View>
           </View>
         </View>
-        <ScrollViewDisabler
+        <View
           style={
             Array [
               Object {
@@ -1005,7 +1018,8 @@ exports[`Compose renders after picking a course 1`] = `
               },
               Object {
                 "borderBottomWidth": 0,
-                "paddingVertical": 10,
+                "paddingBottom": 40,
+                "paddingTop": 10,
               },
             ]
           }
@@ -1032,7 +1046,7 @@ exports[`Compose renders after picking a course 1`] = `
             }
             testID="compose-message.body-text-input"
           />
-        </ScrollViewDisabler>
+        </View>
       </View>
     </RCTScrollView>
   </View>
@@ -1061,6 +1075,13 @@ exports[`Compose renders reply 1`] = `
         "style": "done",
         "testID": "compose-message.send",
         "title": "Send",
+      },
+      Object {
+        "accessibilityLabel": "Edit attachments (0)",
+        "action": [Function],
+        "badge": false,
+        "image": 1,
+        "testID": "compose-message.attach",
       },
     ]
   }
@@ -1180,6 +1201,7 @@ exports[`Compose renders reply 1`] = `
       </View>
     </Modal>
     <RCTScrollView
+      automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         Object {
           "flexGrow": 1,
@@ -1423,9 +1445,6 @@ exports[`Compose renders reply 1`] = `
                 "backgroundColor": "transparent",
               },
               Array [
-                Object {
-                  "height": 54,
-                },
                 undefined,
                 Object {
                   "borderBottomColor": "#C7CDD1",
@@ -1445,10 +1464,11 @@ exports[`Compose renders reply 1`] = `
                   "backgroundColor": "white",
                   "flex": 1,
                   "flexDirection": "row",
-                  "paddingBottom": 12.8,
+                  "minHeight": 54,
+                  "paddingBottom": 12,
                   "paddingLeft": 16,
                   "paddingRight": 16,
-                  "paddingTop": 12.8,
+                  "paddingTop": 12,
                 },
                 Object {
                   "backgroundColor": "white",
@@ -1539,7 +1559,7 @@ exports[`Compose renders reply 1`] = `
             </View>
           </View>
         </View>
-        <ScrollViewDisabler
+        <View
           style={
             Array [
               Object {
@@ -1552,7 +1572,8 @@ exports[`Compose renders reply 1`] = `
               },
               Object {
                 "borderBottomWidth": 0,
-                "paddingVertical": 10,
+                "paddingBottom": 40,
+                "paddingTop": 10,
               },
             ]
           }
@@ -1579,7 +1600,7 @@ exports[`Compose renders reply 1`] = `
             }
             testID="compose-message.body-text-input"
           />
-        </ScrollViewDisabler>
+        </View>
       </View>
     </RCTScrollView>
   </View>
@@ -1608,6 +1629,13 @@ exports[`Compose renders with passed in recipients 1`] = `
         "style": "done",
         "testID": "compose-message.send",
         "title": "Send",
+      },
+      Object {
+        "accessibilityLabel": "Edit attachments (0)",
+        "action": [Function],
+        "badge": false,
+        "image": 1,
+        "testID": "compose-message.attach",
       },
     ]
   }
@@ -1727,6 +1755,7 @@ exports[`Compose renders with passed in recipients 1`] = `
       </View>
     </Modal>
     <RCTScrollView
+      automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         Object {
           "flexGrow": 1,
@@ -1896,9 +1925,6 @@ exports[`Compose renders with passed in recipients 1`] = `
                 "backgroundColor": "transparent",
               },
               Array [
-                Object {
-                  "height": 54,
-                },
                 undefined,
                 Object {
                   "borderBottomColor": "#C7CDD1",
@@ -1918,10 +1944,11 @@ exports[`Compose renders with passed in recipients 1`] = `
                   "backgroundColor": "white",
                   "flex": 1,
                   "flexDirection": "row",
-                  "paddingBottom": 12.8,
+                  "minHeight": 54,
+                  "paddingBottom": 12,
                   "paddingLeft": 16,
                   "paddingRight": 16,
-                  "paddingTop": 12.8,
+                  "paddingTop": 12,
                 },
                 Object {
                   "backgroundColor": "white",
@@ -2012,7 +2039,7 @@ exports[`Compose renders with passed in recipients 1`] = `
             </View>
           </View>
         </View>
-        <ScrollViewDisabler
+        <View
           style={
             Array [
               Object {
@@ -2025,7 +2052,8 @@ exports[`Compose renders with passed in recipients 1`] = `
               },
               Object {
                 "borderBottomWidth": 0,
-                "paddingVertical": 10,
+                "paddingBottom": 40,
+                "paddingTop": 10,
               },
             ]
           }
@@ -2052,7 +2080,7 @@ exports[`Compose renders with passed in recipients 1`] = `
             }
             testID="compose-message.body-text-input"
           />
-        </ScrollViewDisabler>
+        </View>
       </View>
     </RCTScrollView>
   </View>

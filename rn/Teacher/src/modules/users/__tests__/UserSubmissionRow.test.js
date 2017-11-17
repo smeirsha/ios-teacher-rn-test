@@ -28,7 +28,7 @@ let templates = {
 
 let defaultProps = {
   assignment: templates.assignment({ id: '1', points_possible: 10 }),
-  submission: templates.submission({ id: '1', assignment_id: '1', score: 8 }),
+  submission: templates.submission({ id: '1', assignment_id: '1', score: 8, grade: 8 }),
   tintColor: '#fff',
 }
 
@@ -65,6 +65,16 @@ describe('UserSubmissionRow', () => {
 
   it('renders excused', () => {
     let submission = templates.submission({ id: '1', assignment_id: '1', excused: true })
+
+    let view = renderer.create(
+      <UserSubmissionRow {...defaultProps} submission={submission} />
+    )
+
+    expect(view.toJSON()).toMatchSnapshot()
+  })
+
+  it('renders needs grading', () => {
+    let submission = templates.submission({ id: '1', assignment_id: '1', grade: null })
 
     let view = renderer.create(
       <UserSubmissionRow {...defaultProps} submission={submission} />

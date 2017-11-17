@@ -18,18 +18,17 @@
 
 import UIKit
 
-import TooLegit
+
 import Result
 import CoreData
 import ReactiveSwift
-import SoPersistent
-import EnrollmentKit
-import CalendarKit
-import ObserverAlertKit
-import SoPretty
-import SoLazy
-import Airwolf
-import Armchair
+
+import CanvasCore
+import CanvasCore
+
+
+import CanvasCore
+
 
 typealias DashboardSettingsAction = (_ session: Session)->Void
 typealias DashboardSelectCalendarEventAction = (_ session: Session, _ observeeID: String, _ calendarEvent: CalendarEvent)->Void
@@ -68,14 +67,16 @@ class DashboardViewController: UIViewController {
     var selectCalendarEventAction: DashboardSelectCalendarEventAction? = nil
     var selectAlertAction: DashboardSelectAlertAction? = nil
 
-    var logoutAction: ((Void)->Void)? = nil
-    var addStudentAction: ((Void)->Void)? = nil
+    var logoutAction: (()->Void)? = nil
+    var addStudentAction: (()->Void)? = nil
 
     var currentStudent: Student? {
         didSet {
             if let student = currentStudent {
-                let colorScheme = ColorCoordinator.colorSchemeForStudentID(student.id)
-                backgroundView.transitionToColors(colorScheme.tintTopColor, tintBottomColor: colorScheme.tintBottomColor)
+                if !UIAccessibilityIsReduceTransparencyEnabled() {
+                    let colorScheme = ColorCoordinator.colorSchemeForStudentID(student.id)
+                    backgroundView.transitionToColors(colorScheme.tintTopColor, tintBottomColor: colorScheme.tintBottomColor)
+                }
             }
 
             observeeNameLabel.text = currentStudent?.name.uppercased() ?? ""
@@ -108,11 +109,16 @@ class DashboardViewController: UIViewController {
     // MARK: - Lifecycle
     // ---------------------------------------------
     override func viewDidLoad() {
+
         super.viewDidLoad()
 
-        self.backgroundView = self.insertTriangleBackgroundView()
-        let colorScheme = ColorCoordinator.colorSchemeForParent()
-        backgroundView.transitionToColors(colorScheme.tintTopColor, tintBottomColor: colorScheme.tintBottomColor)
+        if UIAccessibilityIsReduceTransparencyEnabled() {
+            observeeNameLabel.textColor = UIColor.black
+        } else {
+            self.backgroundView = self.insertTriangleBackgroundView()
+            let colorScheme = ColorCoordinator.colorSchemeForParent()
+            backgroundView.transitionToColors(colorScheme.tintTopColor, tintBottomColor: colorScheme.tintBottomColor)
+        }
 
         do {
             try setupCarousel()
@@ -126,8 +132,6 @@ class DashboardViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        Armchair.showPromptIfNecessary()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -146,7 +150,11 @@ class DashboardViewController: UIViewController {
     // MARK: - View Setup
     // ---------------------------------------------
     override var preferredStatusBarStyle : UIStatusBarStyle {
-        return .lightContent
+        if UIAccessibilityIsReduceTransparencyEnabled() {
+            return .default
+        } else {
+            return .lightContent
+        }
     }
 
     func setupCarousel() throws {
@@ -199,7 +207,7 @@ class DashboardViewController: UIViewController {
         settingsButton.setImage(UIImage(named: "icon_cog_fill")?.withRenderingMode(.alwaysTemplate), for: .selected)
         settingsButton.accessibilityLabel = NSLocalizedString("Settings", comment: "Settings Button Title")
         settingsButton.accessibilityIdentifier = "settings_button"
-        settingsButton.tintColor = UIColor.white
+        settingsButton.tintColor = UIAccessibilityIsReduceTransparencyEnabled() ? UIColor.black : UIColor.white
     }
 
     func setupNoStudentsViewController() throws {

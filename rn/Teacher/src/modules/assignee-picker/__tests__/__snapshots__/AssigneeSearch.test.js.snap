@@ -8,6 +8,12 @@ exports[`render correctly 1`] = `
     }
   }
 >
+  <SearchBar
+    onCancelButtonPress={[Function]}
+    onChangeText={[Function]}
+    onSearchButtonPress={[Function]}
+    placeholder="Search"
+  />
   <RCTScrollView
     ItemSeparatorComponent={undefined}
     ListEmptyComponent={
@@ -15,14 +21,7 @@ exports[`render correctly 1`] = `
         title="No results"
       />
     }
-    ListHeaderComponent={
-      <SearchBar
-        onCancelButtonPress={[Function]}
-        onChangeText={[Function]}
-        onSearchButtonPress={[Function]}
-        placeholder="Search"
-      />
-    }
+    ListHeaderComponent={<RowSeparator />}
     data={
       Array [
         Object {
@@ -86,10 +85,19 @@ exports[`render correctly 1`] = `
     onEndReachedThreshold={2}
     onLayout={[Function]}
     onMomentumScrollEnd={[Function]}
+    onRefresh={[Function]}
     onScroll={[Function]}
     onScrollBeginDrag={[Function]}
     onScrollEndDrag={[Function]}
     onViewableItemsChanged={undefined}
+    refreshControl={
+      <RefreshControlMock
+        onRefresh={[Function]}
+        progressViewOffset={undefined}
+        refreshing={false}
+      />
+    }
+    refreshing={false}
     renderItem={[Function]}
     renderSectionHeader={[Function]}
     scrollEventThrottle={50}
@@ -158,16 +166,22 @@ exports[`render correctly 1`] = `
     updateCellsBatchingPeriod={50}
     windowSize={21}
   >
+    <RCTRefreshControl />
     <View>
       <View
         onLayout={[Function]}
         style={null}
       >
-        <SearchBar
-          onCancelButtonPress={[Function]}
-          onChangeText={[Function]}
-          onSearchButtonPress={[Function]}
-          placeholder="Search"
+        <View
+          style={
+            Array [
+              Object {
+                "backgroundColor": "#C7CDD1",
+                "height": 0.5,
+              },
+              undefined,
+            ]
+          }
         />
       </View>
       <View
@@ -203,7 +217,7 @@ exports[`render correctly 1`] = `
                 "borderBottomColor": "#C7CDD1",
                 "borderBottomWidth": 0.5,
                 "flex": 1,
-                "height": 54,
+                "height": "auto",
               },
             ]
           }
@@ -219,6 +233,7 @@ exports[`render correctly 1`] = `
                 "flexDirection": "row",
                 "paddingLeft": 16,
                 "paddingRight": 16,
+                "paddingVertical": 8,
               }
             }
           >
@@ -329,10 +344,11 @@ exports[`render correctly 1`] = `
               Object {
                 "backgroundColor": "#F5F5F5",
                 "flex": 1,
-                "height": 24,
+                "height": "auto",
                 "justifyContent": "center",
                 "paddingLeft": 16,
                 "paddingRight": 8,
+                "paddingVertical": 4,
               },
               Object {
                 "borderBottomColor": "#C7CDD1",
@@ -399,7 +415,7 @@ exports[`render correctly 1`] = `
                 "borderBottomColor": "#C7CDD1",
                 "borderBottomWidth": 0.5,
                 "flex": 1,
-                "height": 54,
+                "height": "auto",
               },
             ]
           }
@@ -415,6 +431,7 @@ exports[`render correctly 1`] = `
                 "flexDirection": "row",
                 "paddingLeft": 16,
                 "paddingRight": 16,
+                "paddingVertical": 8,
               }
             }
           >
@@ -552,10 +569,11 @@ exports[`render correctly 1`] = `
               Object {
                 "backgroundColor": "#F5F5F5",
                 "flex": 1,
-                "height": 24,
+                "height": "auto",
                 "justifyContent": "center",
                 "paddingLeft": 16,
                 "paddingRight": 8,
+                "paddingVertical": 4,
               },
               Object {
                 "borderBottomColor": "#C7CDD1",
@@ -622,7 +640,7 @@ exports[`render correctly 1`] = `
                 "borderBottomColor": "#C7CDD1",
                 "borderBottomWidth": 0.5,
                 "flex": 1,
-                "height": 54,
+                "height": "auto",
               },
             ]
           }
@@ -638,6 +656,7 @@ exports[`render correctly 1`] = `
                 "flexDirection": "row",
                 "paddingLeft": 16,
                 "paddingRight": 16,
+                "paddingVertical": 8,
               }
             }
           >
@@ -775,10 +794,11 @@ exports[`render correctly 1`] = `
               Object {
                 "backgroundColor": "#F5F5F5",
                 "flex": 1,
-                "height": 24,
+                "height": "auto",
                 "justifyContent": "center",
                 "paddingLeft": 16,
                 "paddingRight": 8,
+                "paddingVertical": 4,
               },
               Object {
                 "borderBottomColor": "#C7CDD1",
@@ -836,6 +856,12 @@ exports[`render correctly 2`] = `
     }
   }
 >
+  <SearchBar
+    onCancelButtonPress={[Function]}
+    onChangeText={[Function]}
+    onSearchButtonPress={[Function]}
+    placeholder="Search"
+  />
   <RCTScrollView
     ItemSeparatorComponent={undefined}
     ListEmptyComponent={
@@ -843,14 +869,7 @@ exports[`render correctly 2`] = `
         title="No results"
       />
     }
-    ListHeaderComponent={
-      <SearchBar
-        onCancelButtonPress={[Function]}
-        onChangeText={[Function]}
-        onSearchButtonPress={[Function]}
-        placeholder="Search"
-      />
-    }
+    ListHeaderComponent={<RowSeparator />}
     data={
       Array [
         Object {
@@ -890,10 +909,19 @@ exports[`render correctly 2`] = `
     onEndReachedThreshold={2}
     onLayout={[Function]}
     onMomentumScrollEnd={[Function]}
+    onRefresh={[Function]}
     onScroll={[Function]}
     onScrollBeginDrag={[Function]}
     onScrollEndDrag={[Function]}
     onViewableItemsChanged={undefined}
+    refreshControl={
+      <RefreshControlMock
+        onRefresh={[Function]}
+        progressViewOffset={undefined}
+        refreshing={false}
+      />
+    }
+    refreshing={false}
     renderItem={[Function]}
     renderSectionHeader={[Function]}
     scrollEventThrottle={50}
@@ -936,16 +964,22 @@ exports[`render correctly 2`] = `
     updateCellsBatchingPeriod={50}
     windowSize={21}
   >
+    <RCTRefreshControl />
     <View>
       <View
         onLayout={[Function]}
         style={null}
       >
-        <SearchBar
-          onCancelButtonPress={[Function]}
-          onChangeText={[Function]}
-          onSearchButtonPress={[Function]}
-          placeholder="Search"
+        <View
+          style={
+            Array [
+              Object {
+                "backgroundColor": "#C7CDD1",
+                "height": 0.5,
+              },
+              undefined,
+            ]
+          }
         />
       </View>
       <View
@@ -959,10 +993,11 @@ exports[`render correctly 2`] = `
               Object {
                 "backgroundColor": "#F5F5F5",
                 "flex": 1,
-                "height": 24,
+                "height": "auto",
                 "justifyContent": "center",
                 "paddingLeft": 16,
                 "paddingRight": 8,
+                "paddingVertical": 4,
               },
               Object {
                 "borderBottomColor": "#C7CDD1",
@@ -1029,7 +1064,7 @@ exports[`render correctly 2`] = `
                 "borderBottomColor": "#C7CDD1",
                 "borderBottomWidth": 0.5,
                 "flex": 1,
-                "height": 54,
+                "height": "auto",
               },
             ]
           }
@@ -1045,6 +1080,7 @@ exports[`render correctly 2`] = `
                 "flexDirection": "row",
                 "paddingLeft": 16,
                 "paddingRight": 16,
+                "paddingVertical": 8,
               }
             }
           >
@@ -1182,10 +1218,11 @@ exports[`render correctly 2`] = `
               Object {
                 "backgroundColor": "#F5F5F5",
                 "flex": 1,
-                "height": 24,
+                "height": "auto",
                 "justifyContent": "center",
                 "paddingLeft": 16,
                 "paddingRight": 8,
+                "paddingVertical": 4,
               },
               Object {
                 "borderBottomColor": "#C7CDD1",
@@ -1252,7 +1289,7 @@ exports[`render correctly 2`] = `
                 "borderBottomColor": "#C7CDD1",
                 "borderBottomWidth": 0.5,
                 "flex": 1,
-                "height": 54,
+                "height": "auto",
               },
             ]
           }
@@ -1268,6 +1305,7 @@ exports[`render correctly 2`] = `
                 "flexDirection": "row",
                 "paddingLeft": 16,
                 "paddingRight": 16,
+                "paddingVertical": 8,
               }
             }
           >

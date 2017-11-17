@@ -17,14 +17,8 @@
     
 
 import UIKit
-
-import TooLegit
-import SoLazy
-import SoPretty
-import SoPersistent
-import EnrollmentKit
 import ReactiveSwift
-import CalendarKit
+import CanvasCore
 
 open class CalendarDayListViewController: UITableViewController {
     // ---------------------------------------------
@@ -46,7 +40,8 @@ open class CalendarDayListViewController: UITableViewController {
     // Private
     var eventsCollection: FetchedCollection<CalendarEvent>!
     var favCoursesCollection: FetchedCollection<Course>!
-
+    var allCoursesCollection: FetchedCollection<Course>!
+    
     var refresher: Refresher? {
         didSet {
             oldValue?.refreshControl.endRefreshing()
@@ -74,7 +69,6 @@ open class CalendarDayListViewController: UITableViewController {
     // Views
     var emptyView: NoResultsView? = nil
     var noResultsLabel: UILabel? = nil
-    fileprivate var customRefreshControl: CSGFlyingPandaRefreshControl? = nil
 
     // Date Formatters
     var dateFormatter = DateFormatter()
@@ -123,7 +117,9 @@ open class CalendarDayListViewController: UITableViewController {
             .observeValues { [weak self] _ in
                 self?.updateCalendarEvents()
             }.map(ScopedDisposable.init)
-
+        
+        allCoursesCollection = try! Course.allCoursesCollection(session)
+        
         updateCalendarEvents()
 
         dateFormatter.dateStyle = .medium
@@ -204,7 +200,8 @@ open class CalendarDayListViewController: UITableViewController {
         cell.titleLabel.text = calEvent.title
         cell.dueLabel.text = calEvent.dueText()
         cell.typeImage.image = calEvent.typeImage()
-
+        cell.locationLabel.text = calEvent.locationInfo.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        
         guard let context = ContextID(canvasContext: calEvent.contextCode), let color = session.enrollmentsDataSource[context]?.color.value else {
             cell.typeImage.tintColor = UIColor.calendarTintColor
             cell.courseLabel.text = ""
@@ -251,10 +248,11 @@ open class CalendarDayListViewController: UITableViewController {
     }
 
     open func selectedContextCodes() -> [String] {
+        guard let collection = !favCoursesCollection.isEmpty ? favCoursesCollection : allCoursesCollection else { return [] }
         var contextCodes: [String] = []
-        for i in 0..<favCoursesCollection.numberOfItemsInSection(0) {
+        for i in 0..<collection.numberOfItemsInSection(0) {
             let indexPath = IndexPath(row: i, section: 0)
-            contextCodes.append(favCoursesCollection[indexPath].contextID.canvasContextID)
+            contextCodes.append(collection[indexPath].contextID.canvasContextID)
         }
 
         return contextCodes

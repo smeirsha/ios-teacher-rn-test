@@ -39,15 +39,14 @@ import AssignmentActions from '../assignments/actions'
 import Images from '../../images'
 import Screen from '../../routing/Screen'
 import RCTSFSafariViewController from 'react-native-sfsafariviewcontroller'
-import { getSessionlessLaunchURL } from 'canvas-api'
-import { ERROR_TITLE, parseErrorMessage } from '../../redux/middleware/error-handler'
+import { alertError } from '../../redux/middleware/error-handler'
+import { getSessionlessLaunchURL } from '../../canvas-api'
 
 import {
   View,
   StyleSheet,
   TouchableOpacity,
   TouchableHighlight,
-  Alert,
 } from 'react-native'
 
 export class AssignmentDetails extends Component<any, AssignmentDetailsProps, any> {
@@ -55,8 +54,6 @@ export class AssignmentDetails extends Component<any, AssignmentDetailsProps, an
 
   render () {
     const assignment = this.props.assignmentDetails
-
-    let assignmentPoints = i18n('pts')
 
     let sectionTitleDue = i18n('Due')
 
@@ -97,7 +94,9 @@ export class AssignmentDetails extends Component<any, AssignmentDetailsProps, an
           <AssignmentSection isFirstRow={true} style={style.topContainer}>
             <Heading1 testID='assignment-details.assignment-name-lbl'>{assignment.name}</Heading1>
             <View style={style.pointsContainer}>
-              <Text style={style.points} testID='assignment-details.points-possible-lbl'>{assignment.points_possible} {assignmentPoints}</Text>
+              <Text style={style.points} testID='assignment-details.points-possible-lbl'>
+                {i18n('{ pointsPossible, number } pts', { pointsPossible: assignment.points_possible })}
+              </Text>
               <PublishedIcon published={assignment.published} style={style.publishedIcon} />
             </View>
           </AssignmentSection>
@@ -121,30 +120,32 @@ export class AssignmentDetails extends Component<any, AssignmentDetailsProps, an
             <SubmissionType data={assignment.submission_types} />
           </AssignmentSection>
 
-          <View style={style.section}>
-            <Text style={style.header} testID='assignment-details.assignment-section.submissions-title-lbl'>{sectionTitleSubmissions}</Text>
-            <View style={style.submissions} {...submissionContainerAccessibilityTraits}>
-              <View style={{ flex: 1, justifyContent: 'flex-start', flexDirection: 'row' }}>
-                <SubmissionBreakdownGraphSection submissionTypes={assignment.submission_types} onPress={this.onSubmissionDialPress} courseID={this.props.courseID} assignmentID={this.props.assignmentID} style={style.submission}/>
+          {this.props.showSubmissionSummary &&
+            <View style={style.section}>
+              <Text style={style.header} testID='assignment-details.assignment-section.submissions-title-lbl'>{sectionTitleSubmissions}</Text>
+              <View style={style.submissions} {...submissionContainerAccessibilityTraits}>
+                <View style={{ flex: 1, justifyContent: 'flex-start', flexDirection: 'row' }}>
+                  <SubmissionBreakdownGraphSection submissionTypes={assignment.submission_types} onPress={this.onSubmissionDialPress} courseID={this.props.courseID} assignmentID={this.props.assignmentID} style={style.submission}/>
+                </View>
+                <TouchableOpacity
+                  testID='assignment-details.assignment-section.submissions'
+                  accessibilityLabel={i18n('View all submissions')}
+                  accessibilityTraits='button'
+                  accessible={!noSubmissions}
+                  onPress={() => this.viewSubmissions()}
+                  style={{
+                    justifyContent: 'center',
+                    width: 44,
+                    alignItems: 'flex-end',
+                    marginTop: 8,
+                    marginBottom: 8,
+                  }}
+                >
+                  <DisclosureIndicator />
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                testID='assignment-details.assignment-section.submissions'
-                accessibilityLabel={i18n('View all submissions')}
-                accessibilityTraits='button'
-                accessible={!noSubmissions}
-                onPress={() => this.viewSubmissions()}
-                style={{
-                  justifyContent: 'center',
-                  width: 44,
-                  alignItems: 'flex-end',
-                  marginTop: 8,
-                  marginBottom: 8,
-                }}
-              >
-                <DisclosureIndicator />
-              </TouchableOpacity>
             </View>
-          </View>
+          }
 
           <View style={style.section}>
             <Text style={style.header} testID='assignment-details.description-section-title-lbl'>{i18n('Description')}</Text>
@@ -212,7 +213,7 @@ export class AssignmentDetails extends Component<any, AssignmentDetailsProps, an
       })
       url && RCTSFSafariViewController.open(url)
     } catch (e) {
-      Alert.alert(ERROR_TITLE, parseErrorMessage(e))
+      alertError(e)
     }
   }
 }
@@ -295,7 +296,7 @@ const style = StyleSheet.create({
 const assignementDetailsShape = PropTypes.shape({
   id: PropTypes.string,
   name: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+  description: PropTypes.string,
   created_at: PropTypes.string,
   updated_at: PropTypes.string,
   due_at: PropTypes.string,
@@ -321,7 +322,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
 })
 
 let Refreshed = refresh(
-  props => props.refreshAssignmentDetails(props.courseID, props.assignmentID),
+  props => props.refreshAssignmentDetails(props.courseID, props.assignmentID, props.showSubmissionSummary),
   props => !props.assignmentDetails,
   props => Boolean(props.pending)
 )(AssignmentDetails)

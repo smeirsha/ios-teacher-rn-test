@@ -32,8 +32,9 @@ import { default as TypeAheadSearch, type TypeAheadSearchResults } from '../../c
 import ListEmptyComponent from '../../common/components/ListEmptyComponent'
 import { Heading1 } from '../../common/text'
 import { LinkButton } from '../../common/buttons'
-import { httpClient } from 'canvas-api'
+import { httpClient } from '../../canvas-api'
 import axios from 'axios'
+import RowSeparator from '../../common/components/rows/RowSeparator'
 
 export type Props = NavigationProps & {
   onSelect: (selected: AddressBookResult[]) => void,
@@ -88,7 +89,7 @@ function localizedRoles (): { [string]: string } {
   }
 }
 
-export class PeopleList extends Component<any, Props, any> {
+export class PeopleList extends Component<Props, any> {
 
   typeAhead: TypeAheadSearch
 
@@ -100,7 +101,7 @@ export class PeopleList extends Component<any, Props, any> {
       searchString: '',
       error: null,
       pending: false,
-      context: this.props.context || '',
+      context: this.props.context || this._courseContext(),
       filters: [],
       showFilter: this.props.showFilter === undefined ? true : this.props.showFilter,
       marginBottom: global.tabBarHeight,
@@ -108,8 +109,15 @@ export class PeopleList extends Component<any, Props, any> {
   }
 
   componentDidMount () {
-    const context = `course_${this.props.course.id}`
+    const context = this._courseContext()
     this._fetchFilterOptions(context, this._fetchInitialActionSheetOptionsHandler)
+  }
+
+  _courseContext = (): string => {
+    if (this.props.courseID) {
+      return `course_${this.props.courseID}`
+    }
+    return ''
   }
 
   _fetchFilterOptions (context: string, handler: Function, showAll: boolean = false) {
@@ -309,6 +317,7 @@ export class PeopleList extends Component<any, Props, any> {
                 ListEmptyComponent={this.state.pending ? null : empty}
                 refreshing={this.state.pending}
                 onEndReached={() => this.typeAhead.next()}
+                ItemSeparatorComponent={RowSeparator}
               />
             </View>)
   }
@@ -384,4 +393,4 @@ export function mapStateToProps (state: AppState, { courseID }: RoutingParams): 
 }
 
 const Connected = connect(mapStateToProps, {})(PeopleList)
-export default (Connected: Component<any, Props, any>)
+export default (Connected: Component<Props, any>)

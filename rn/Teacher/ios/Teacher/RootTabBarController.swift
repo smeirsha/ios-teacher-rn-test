@@ -15,21 +15,12 @@
 //
 
 import UIKit
+import CanvasCore
 
 class RootTabBarController: UITabBarController {
     
-    let branding: Brand?
-    
-    init(branding: Brand?) {
-        self.branding = branding
+    init() {
         super.init(nibName: nil, bundle: nil)
-        
-        if let branding = branding {
-            UITabBar.appearance().tintColor = branding.primaryBrandColor
-            UITabBar.appearance().barTintColor = UIColor.white
-            UITabBar.appearance().unselectedItemTintColor = UIColor(red: 115/255.0, green: 129/255.0, blue: 140/255.0, alpha: 1)
-        }
-        
         self.delegate = self
     }
     
@@ -43,7 +34,7 @@ class RootTabBarController: UITabBarController {
     }
     
     func configureTabs() {
-        var controllers = [coursesTab(), inboxTab(), profileTab()]
+        var controllers = [coursesTab(), toDoTab(), inboxTab()]
         #if DEBUG
         controllers.append(stagingTab())
         #endif
@@ -57,25 +48,14 @@ class RootTabBarController: UITabBarController {
         enrollmentsVC.tabBarItem.accessibilityIdentifier = "tab-bar.courses-btn"
         return HelmNavigationController(rootViewController: enrollmentsVC)
     }
-    
-    func inboxTab() -> UIViewController {
-        let inboxVC = HelmViewController(moduleName: "/conversations", props: [:])
-        let inboxNav = HelmNavigationController(rootViewController: inboxVC)
-        
-        let inboxSplit = HelmSplitViewController()
-        let empty = HelmNavigationController()
-        if let brand = self.branding {
-            empty.navigationBar.barTintColor = brand.navBgColor
-            empty.navigationBar.tintColor = brand.navButtonColor
-            empty.navigationBar.isTranslucent = false
-        }
-        inboxSplit.viewControllers = [inboxNav, empty]
-        inboxSplit.tabBarItem = UITabBarItem(title: NSLocalizedString("Inbox", comment: ""), image: UIImage(named: "inbox"), selectedImage: nil)
-        inboxSplit.tabBarItem.accessibilityIdentifier = "tab-bar.inbox-btn"
-        inboxSplit.extendedLayoutIncludesOpaqueBars = true
-        return inboxSplit
+
+    func toDoTab() -> UIViewController {
+        let toDoVC = HelmViewController(moduleName: "/to-do", props: [:])
+        toDoVC.view.accessibilityIdentifier = "to-do-list.view"
+        toDoVC.tabBarItem = UITabBarItem(title: NSLocalizedString("To Do", comment: ""), image: UIImage(named: "todo"), selectedImage: nil)
+        toDoVC.tabBarItem.accessibilityIdentifier = "tab-bar.to-do-btn"
+        return HelmNavigationController(rootViewController: toDoVC)
     }
-    
     func profileTab() -> UIViewController {
         let profileVC = HelmViewController(moduleName: "/profile", props: [:])
         profileVC.tabBarItem = UITabBarItem(title: NSLocalizedString("Profile", comment: ""), image: UIImage(named: "profile"), selectedImage: nil)

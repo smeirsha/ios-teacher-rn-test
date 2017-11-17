@@ -18,14 +18,13 @@
 
 import Foundation
 import TechDebt
-import SoLazy
+import CanvasCore
 import Marshal
-import TooLegit
-import SoPersistent
-import PageKit
+import CanvasKeymaster
+import CanvasCore
 
 var currentSession: Session {
-    return TheKeymaster!.currentClient.authSession
+    return CanvasKeymaster.the().currentClient.authSession
 }
 
 extension Router {
@@ -48,7 +47,7 @@ extension Router {
         }
         
         let route: (UIViewController, URL)->() = { [weak self] viewController, url in
-            self?.route(from: viewController, to: url)
+            let _ = self?.route(from: viewController, to: url)
         }
         
 
@@ -81,9 +80,16 @@ extension Router {
         addContextRoute([.course, .group], subPath: "pages", handler: pagesListFactory)
         addContextRoute([.course, .group], subPath: "wiki", handler: pagesListFactory)
 
+        let moduleItemDetailFactory: (ContextID, [String: Any]) throws -> UIViewController? = { contextID, params in
+            guard let query = params["query"] as? [String: Any], let moduleItemID = query["module_item_id"] as? CustomStringConvertible else {
+                return nil
+            }
+            return try ModuleItemDetailViewController(session: currentSession, courseID: contextID.id, moduleItemID: moduleItemID.description, route: route)
+        }
+
         let pageDetailFactory: (ContextID, [String: Any]) throws -> UIViewController? = { contextID, params in
             let url = params["url"] as! String
-            return try Page.DetailViewController(session: currentSession, contextID: contextID, url: url, route: route)
+            return try moduleItemDetailFactory(contextID, params) ?? Page.DetailViewController(session: currentSession, contextID: contextID, url: url, route: route)
         }
         addContextRoute([.course, .group], subPath: "pages/:url", handler: pageDetailFactory)
         addContextRoute([.course, .group], subPath: "wiki/:url", handler: pageDetailFactory)
@@ -105,9 +111,45 @@ extension Router {
             return controller
         }
         addContextRoute([.course], subPath: "modules/:id/items/:itemID") { contextID, parameters in
-            let moduleID = (parameters["id"] as! CustomStringConvertible).description
             let itemID: String = try parameters.stringID("itemID")
-            return try ModuleItemDetailViewController(session: currentSession, courseID: contextID.id, moduleID: moduleID, moduleItemID: itemID, route: route)
+            return try ModuleItemDetailViewController(session: currentSession, courseID: contextID.id, moduleItemID: itemID, route: route)
+        }
+        // Commonly used in Router+Routes.m in Tech Debt when manually building url from module_item_id query param
+        addContextRoute([.course], subPath: "modules/items/:itemID") { contextID, parameters in
+            let itemID: String = try parameters.stringID("itemID")
+            return try ModuleItemDetailViewController(session: currentSession, courseID: contextID.id, moduleItemID: itemID, route: route)
+        }
+        addRoute("/conversations/:conversationID") { parameters, _ in
+            guard let params = parameters, let convoID = try? params.stringID("conversationID") else {
+                fatalError("How did this path match if there is no conversationID?")
+            }
+            return HelmViewController(moduleName: "/conversations/:conversationID", props: ["conversationID": convoID])
+        }
+        
+        CBIConversationStarter.setConversationStarter { recipients, context in
+            guard
+                let contextID = ContextID(canvasContext: context),
+                let enrollment = currentSession.enrollmentsDataSource[contextID] else {
+                    return
+            }
+            HelmManager.shared.present(
+                "/conversations/compose",
+                withProps: [
+                    "recipients": recipients.map { recipient in
+                        return [
+                            "name": recipient.name,
+                            "avatar_url": recipient.avatarURL,
+                            "id": recipient.id,
+                        ]
+                    },
+                    "contextCode": context,
+                    "contextName": enrollment.name,
+                ],
+                options: [
+                    "modal": true,
+                    "embedInNavigationController": true,
+                ]
+            )
         }
     }
 }

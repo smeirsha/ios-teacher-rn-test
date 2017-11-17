@@ -36,7 +36,6 @@ import AssignmentSection from '../../assignment-details/components/AssignmentSec
 import AssignmentDates from '../../assignment-details/components/AssignmentDates'
 import WebContainer from '../../../common/components/WebContainer'
 import Avatar from '../../../common/components/Avatar'
-import { formattedDate } from '../../../utils/dateUtils'
 import PublishedIcon from '../../assignment-details/components/PublishedIcon'
 import SubmissionBreakdownGraphSection from '../../assignment-details/components/SubmissionBreakdownGraphSection'
 import Images from '../../../images'
@@ -90,7 +89,7 @@ export type Props = State & OwnProps & RefreshProps & typeof Actions & Navigatio
   isAnnouncement?: boolean,
 }
 
-export class DiscussionDetails extends Component<any, Props, any> {
+export class DiscussionDetails extends Component<Props, any> {
   constructor (props: Props) {
     super(props)
     this.state = {
@@ -145,10 +144,11 @@ export class DiscussionDetails extends Component<any, Props, any> {
     const points = this._points(discussion)
     let user = discussion.author
     const assignmentID = this.props.assignment ? this.props.assignment.id : null
+    const date = new Date(discussion.delayed_post_at || discussion.posted_at)
     return (
       <View>
         <AssignmentSection isFirstRow={true} style={style.topContainer}>
-          <Heading1>{discussion.title}</Heading1>
+          <Heading1>{discussion.title || i18n('No Title')}</Heading1>
             { !this.props.isAnnouncement &&
               <View style={style.pointsContainer}>
                 {Boolean(points) && <Text style={style.points}>{points}</Text>}
@@ -188,14 +188,14 @@ export class DiscussionDetails extends Component<any, Props, any> {
             }
             <View style={[style.authorInfoContainer, { marginLeft: (user && user.display_name) ? global.style.defaultPadding : 0 }]}>
               { user && user.display_name && <Text style={style.authorName}>{user.display_name}</Text> }
-                <Text style={style.authorDate} testID='discussion.details.post-date-lbl'>{formattedDate(discussion.delayed_post_at || discussion.posted_at)}</Text>
+                <Text style={style.authorDate} testID='discussion.details.post-date-lbl'>{i18n("{ date, date, 'MMM d'} at { date, time, short }", { date })}</Text>
             </View>
           </View>
 
           { (Boolean(discussion.message) || Boolean(discussion.attachments)) &&
              <View style={style.message}>
                 { Boolean(discussion.message) &&
-                   <WebContainer style={{ flex: 1, color: colors.darkText }} scrollEnabled={false} html={discussion.message} navigator={this.props.navigator}/>
+                   <WebContainer style={{ flex: 1 }} scrollEnabled={false} html={discussion.message} navigator={this.props.navigator}/>
                 }
                 { Boolean(discussion.attachments) && discussion.attachments && discussion.attachments.length === 1 &&
                 // should only ever have 1, blocked by UI, but API returns array of 1 :facepalm:
@@ -348,11 +348,14 @@ export class DiscussionDetails extends Component<any, Props, any> {
             onViewableItemsChanged={this._markViewableAsRead}
             initialNumToRender={10}
             extraData={this.state.unread_entries}
+            keyExtractor={this.keyExtractor}
           />
         </View>
       </Screen>
     )
   }
+
+  keyExtractor = (item: Object, index: number) => `${index}`
 
   showEditActionSheet = () => {
     ActionSheetIOS.showActionSheetWithOptions(
@@ -674,4 +677,4 @@ let Refreshed = refresh(
   props => Boolean(props.pending)
 )(DiscussionDetails)
 let Connected = connect(mapStateToProps, Actions)(Refreshed)
-export default (Connected: Component<any, Props, any>)
+export default (Connected: Component<Props, any>)

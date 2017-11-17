@@ -49,21 +49,23 @@ export type SubmissionRowDataProps = {
   name: string,
   status: SubmissionStatusProp,
   grade: GradeProp,
+  gradingType: GradingType,
   score: ?number,
   disclosure?: boolean,
-  anonymous: boolean,
+  disabled?: boolean,
 }
 
 export type SubmissionRowProps = {
   onPress: () => void,
   onAvatarPress?: Function,
+  anonymous: boolean,
 } & SubmissionRowDataProps
 
 class Row extends Component<any, RowProps, any> {
   render () {
     const { onPress, testID, children, disclosure } = this.props
     return (
-      <View style={styles.row}>
+      <View>
         <TouchableHighlight style={styles.touchableHighlight} onPress={onPress} testID={testID} accessibilityTraits={['button']}>
           <View style={styles.container}>
             {children}
@@ -75,21 +77,16 @@ class Row extends Component<any, RowProps, any> {
   }
 }
 
-const Grade = ({ grade }: {grade: ?GradeProp}): * => {
-  if (!grade || grade === 'not_submitted') {
+const Grade = ({ grade, gradingType }: {grade: ?GradeProp, gradingType: GradingType}): * => {
+  if (!grade || grade === 'not_submitted' || grade === 'ungraded') {
     return null
-  }
-
-  if (grade === 'ungraded') {
-    const ungraded = i18n('Needs Grading')
-    return <Token style={{ alignSelf: 'center' }} color={ colors.primaryButton }>{ ungraded }</Token>
   }
 
   let gradeText = grade
   if (grade === 'excused') {
     gradeText = i18n('Excused')
   } else {
-    gradeText = formatGradeText(grade, 2)
+    gradeText = formatGradeText(grade, gradingType)
   }
 
   return <Text style={[ styles.gradeText, { alignSelf: 'center' } ]}>{ gradeText }</Text>
@@ -131,8 +128,13 @@ class SubmissionRow extends Component<any, SubmissionRowProps, any> {
             ellipsizeMode='tail'
             numberOfLines={2}>{name}</Text>
           <SubmissionStatus status={status} />
+          {grade === 'ungraded' &&
+            <Token style={{ alignSelf: 'flex-start', marginTop: 8 }} color={ colors.primaryButton }>
+              {i18n('Needs Grading')}
+            </Token>
+          }
         </View>
-        <Grade grade={grade} />
+        <Grade grade={grade} gradingType={this.props.gradingType} />
       </Row>
     )
   }
@@ -141,10 +143,6 @@ class SubmissionRow extends Component<any, SubmissionRowProps, any> {
 export default SubmissionRow
 
 const styles = StyleSheet.create({
-  row: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'lightgrey',
-  },
   touchableHighlight: {
     flex: 1,
   },

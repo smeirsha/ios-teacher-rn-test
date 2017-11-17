@@ -8,12 +8,10 @@ exports[`AttachmentRow renders 1`] = `
       "button",
     ]
   }
+  accessible={false}
   onPress={[Function]}
   style={
     Array [
-      Object {
-        "height": 54,
-      },
       undefined,
       undefined,
     ]
@@ -28,10 +26,11 @@ exports[`AttachmentRow renders 1`] = `
           "backgroundColor": "white",
           "flex": 1,
           "flexDirection": "row",
-          "paddingBottom": 12.8,
+          "minHeight": 54,
+          "paddingBottom": 12,
           "paddingLeft": 16,
           "paddingRight": 16,
-          "paddingTop": 12.8,
+          "paddingTop": 12,
         },
         Object {
           "backgroundColor": "white",
@@ -39,22 +38,20 @@ exports[`AttachmentRow renders 1`] = `
       ]
     }
   >
-    <Image
-      source={1}
+    <View
+      accessibilityLabel="Upload complete"
+      accessible={true}
       style={
-        Array [
-          Object {
-            "marginRight": 16,
-            "resizeMode": "contain",
-          },
-          Object {
-            "height": 20,
-            "tintColor": "#374A59",
-            "width": 20,
-          },
-        ]
+        Object {
+          "marginRight": 16,
+        }
       }
-    />
+    >
+      <Image
+        source={1}
+        testID="attachment-row.0.icon.complete"
+      />
+    </View>
     <View
       style={
         Object {
@@ -93,34 +90,6 @@ exports[`AttachmentRow renders 1`] = `
       >
         Attachment 1
       </Text>
-      <Text
-        accessible={true}
-        allowFontScaling={true}
-        disabled={false}
-        ellipsizeMode="tail"
-        style={
-          Array [
-            Object {
-              "fontFamily": ".SFUIDisplay",
-            },
-            Object {
-              "color": "#2D3B45",
-              "fontSize": 16,
-            },
-            Object {
-              "color": "#8B969E",
-              "fontSize": 14,
-              "marginTop": 2,
-            },
-            Object {
-              "fontFamily": ".SFUIDisplay",
-            },
-          ]
-        }
-        testID="attachment-row.0-subtitle-lbl"
-      >
-        Uploading...
-      </Text>
     </View>
     <View
       style={
@@ -140,6 +109,8 @@ exports[`AttachmentRow renders 1`] = `
         }
       >
         <TouchableHighlight
+          accessibilityLabel="Remove attachment"
+          accessibilityTraits="button"
           hitSlop={
             Object {
               "bottom": 8,
@@ -149,6 +120,7 @@ exports[`AttachmentRow renders 1`] = `
             }
           }
           onPress={[Function]}
+          testID="attachment-row.0.remove.btn"
           underlayColor="white"
         >
           <Image

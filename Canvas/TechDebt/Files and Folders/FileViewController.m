@@ -29,18 +29,14 @@
 #import "ContentLockViewController.h"
 #import "UIWebView+SafeAPIURL.h"
 #import "CBIModuleProgressNotifications.h"
-#import "RatingsController.h"
 #import "Analytics.h"
 #import "CBILog.h"
 #import "CKIClient+CBIClient.h"
 #import "CBIAssignmentDetailViewController.h"
 
-@import SoAnnotated;
 @import PSPDFKit;
 @import CanvasKeymaster;
-@import AssignmentKit;
-@import SoPersistent;
-@import SoAnnotated_PreSubmission;
+@import CanvasCore;
 
 // TODO: REMOVE
 
@@ -65,13 +61,6 @@
     self.view = webView;
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    UIWebView *webView = (UIWebView *)self.view;
-    [webView.scrollView setContentInset:UIEdgeInsetsMake(64, 0, 54, 0)];
-}
-
 - (void)setUrl:(NSURL *)url
 {
     if (url == _url) {
@@ -80,12 +69,6 @@
     _url = url;
     NSURLRequest *request = [NSURLRequest requestWithURL:self.url];
     [(UIWebView *)self.view loadRequest:request];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    [RatingsController appLoadedOnViewController:self];
 }
 
 #pragma mark - UIWebViewDelegate
@@ -198,9 +181,6 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    
-    [RatingsController appLoadedOnViewController:self];
-    
     [pdfDocPresenter savePDFAnnotations];
     
     if (_progressToolbar.cancelBlock && [self.presentedViewController isBeingPresented] == NO) {
@@ -221,6 +201,10 @@
 
 - (void)applyRoutingParameters:(NSDictionary *)params {
     [super applyRoutingParameters:params];
+    NSNumber *fileIdent = params[@"query"][@"preview"];
+    if (fileIdent) {
+        self.fileIdent = [fileIdent intValue];
+    }
     [self fetchFile];
 }
 

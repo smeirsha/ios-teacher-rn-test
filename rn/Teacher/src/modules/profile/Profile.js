@@ -14,6 +14,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+/* @flow */
+
 import React, { Component } from 'react'
 import {
   View,
@@ -37,13 +39,24 @@ import device from 'react-native-device-info'
 
 const { width: deviceWidth } = Dimensions.get('window')
 
-import { getSession } from 'canvas-api'
+import { getSession } from '../../canvas-api'
 
 export default class Profile extends Component {
 
   constructor (props: any) {
     super(props)
     this.secretTapCount = 0
+
+    const settingsActions = [
+      { title: i18n('Visit the Canvas Guides'), id: 'canvas-guides' },
+    ]
+    if (NativeModules.RNMail.canSendMail) {
+      settingsActions.push({ title: i18n('Report a Problem'), id: 'mail' })
+    }
+
+    settingsActions.push({ title: i18n('Terms of Use'), id: 'terms' })
+    settingsActions.push({ title: i18n('Cancel'), id: 'cancel' })
+    this.settingsActions = settingsActions
   }
 
   logout = () => {
@@ -59,34 +72,29 @@ export default class Profile extends Component {
   }
 
   settings = () => {
-    let buttons = [
-      i18n('Visit the Canvas Guides'),
-      i18n('Report a Problem'),
-      i18n('Terms of Use'),
-      i18n('Cancel'),
-    ]
     ActionSheetIOS.showActionSheetWithOptions({
-      options: buttons,
-      cancelButtonIndex: buttons.length - 1,
+      options: this.settingsActions.map(a => a.title),
+      cancelButtonIndex: this.settingsActions.length - 1,
     }, this.handleActions)
   }
 
   handleActions = (index: number) => {
-    switch (index) {
-      case 0:
+    const action = this.settingsActions[index]
+    switch (action.id) {
+      case 'canvas-guides':
         Linking.openURL('https://community.canvaslms.com/community/answers/guides/mobile-guide/content?filterID=contentstatus%5Bpublished%5D~category%5Btable-of-contents%5D')
         break
-      case 1:
+      case 'mail':
         NativeModules.RNMail.mail({
           subject: 'Canvas Teacher - Report a problem',
           recipients: ['support@instructure.com'],
         }, (error, event) => {
           if (error) {
-            AlertIOS.alert('Error', i18n('Error sending e-mail'))
+            AlertIOS.alert(i18n('Unavailable'), i18n('Mail is unavailable on your device.'))
           }
         })
         break
-      case 2:
+      case 'terms':
         Linking.openURL('https://www.canvaslms.com/policies/terms-of-use')
         break
       default:
@@ -108,10 +116,10 @@ export default class Profile extends Component {
         navBarStyle='dark'
         leftBarButtons={[
           {
-            image: Images.course.settings,
-            testID: 'profile.navigation-settings-btn',
-            action: this.settings,
-            accessibilityLabel: i18n('Profile actions'),
+            title: i18n('Done'),
+            testID: 'profile.navigation-dismiss-btn',
+            action: this.props.navigator.dismiss,
+            accessibilityLabel: i18n('Done'),
           },
         ]}
         rightBarButtons={[
@@ -119,6 +127,12 @@ export default class Profile extends Component {
             title: i18n('Log Out'),
             testID: 'profile.navigation-logout-btn',
             action: this.logout,
+          },
+          {
+            image: Images.course.settings,
+            testID: 'profile.navigation-settings-btn',
+            action: this.settings,
+            accessibilityLabel: i18n('Profile actions'),
           },
         ]}
       >

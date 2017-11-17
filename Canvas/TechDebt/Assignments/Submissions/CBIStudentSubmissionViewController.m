@@ -27,7 +27,6 @@
 #import "CBIAddSubmissionCommentViewModel.h"
 #import "CBISubmissionCommentViewModel.h"
 #import "VideoRecorderController.h"
-#import "RatingsController.h"
 #import <CanvasKit1/CKSubmissionComment.h>
 #import <CanvasKit1/CKMediaComment.h>
 #import <CanvasKit1/CKAudioCommentRecorderView.h>
@@ -40,11 +39,7 @@
 #import "ThreadedDiscussionViewController.h"
 
 @import CanvasKeymaster;
-@import SoPretty;
-@import AssignmentKit;
-@import FileKit;
-@import TooLegit;
-@import EnrollmentKit;
+@import CanvasCore;
 
 static const BOOL newSubmissionWorkflowFeatureEnabled = NO;
 
@@ -362,7 +357,6 @@ typedef enum CBISubmissionState : NSUInteger {
                 } completion:^(BOOL finished) {
                     [progressView removeFromSuperview];
                     progressView = nil;
-                    [RatingsController appLoadedOnViewController:self];
                 }];
             }];
         }
@@ -490,9 +484,7 @@ typedef enum CBISubmissionState : NSUInteger {
     CBIPostModuleItemProgressUpdate(self.viewModel.model.id, CKIModuleItemCompletionRequirementMustSubmit);
     [[self.viewModel refreshViewModelSignalForced:YES] subscribeError:^(NSError *error) {
         [self postUploadError];
-    } completed:^{
-        [RatingsController appLoadedOnViewController:self];
-    }];
+    } completed:^{}];
 }
 
 - (void)newSubmissionViewModel:(NewSubmissionViewModel *)submissionViewModel failedWith:(NSString *)error
@@ -573,7 +565,6 @@ typedef enum CBISubmissionState : NSUInteger {
         CBISubmissionCommentViewModel *newComment = [CBISubmissionCommentViewModel viewModelForModel:record.comments.lastObject];
         [self.viewModel.collectionController insertObjects:@[newComment]];
         success();
-        [RatingsController appLoadedOnViewController:self];
     } error:^(NSError *error) {
         @strongify(self);
         [self tappedAdComment:nil];

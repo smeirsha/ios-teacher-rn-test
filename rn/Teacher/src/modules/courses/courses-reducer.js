@@ -31,14 +31,16 @@ import { refs as quizzes } from '../quizzes/reducer'
 import { refs as discussions } from '../discussions/reducer'
 import { refs as announcements } from '../announcements/reducer'
 import attendanceTool from '../external-tools/attendance-tool-reducer'
-import find from 'lodash/find'
 import groups from '../groups/group-refs-reducer'
+import { refs as pages } from '../pages/reducer'
+import { refs as gradingPeriods } from '../assignments/grading-periods-reducer'
 
 // dummy's to appease combineReducers
 const course = (state) => (state || {})
 const color = (state) => (state || '#FFFFFF00')
 const pending = (state) => (state || 0)
 const error = (state) => (state || null)
+const enabledFeatures = (state) => (state || [])
 
 const courseContents: Reducer<CourseState, Action> = combineReducers({
   course,
@@ -54,9 +56,12 @@ const courseContents: Reducer<CourseState, Action> = combineReducers({
   announcements,
   groups,
   attendanceTool,
+  pages,
+  enabledFeatures,
+  gradingPeriods,
 })
 
-const { refreshCourses, updateCourseColor } = CourseListActions
+const { refreshCourses, updateCourseColor, getCourseEnabledFeatures } = CourseListActions
 const { updateCourse } = CourseSettingsActions
 
 export const defaultState: { [courseID: string]: CourseState & CourseContentState } = {}
@@ -70,20 +75,9 @@ const emptyCourseState: CourseContentState = {
   announcements: { pending: 0, refs: [] },
   groups: { pending: 0, refs: [] },
   attendanceTool: { pending: 0 },
-}
-
-// Filters out courses that are not teachers or tas or designers
-export function filterCourses (course: Course): boolean {
-  const enrollments = course.enrollments
-  if (!enrollments) return false
-  return !!find(enrollments, (e) => {
-    return [
-      'teacher',
-      'teacherenrollment',
-      'designer',
-      'ta',
-    ].includes(e.type.toLowerCase())
-  })
+  pages: { pending: 0, refs: [] },
+  enabledFeatures: [],
+  gradingPeriods: { pending: 0, refs: [] },
 }
 
 export const normalizeCourse = (course: Course, colors: { [courseId: string]: string } = {}, prevState: CourseContentState = emptyCourseState): CourseState => {
@@ -101,7 +95,7 @@ const coursesData: Reducer<CoursesState, any> = handleActions({
   [refreshCourses.toString()]: handleAsync({
     resolved: (state, { result: [coursesResponse, colorsResponse] }) => {
       const colors = groupCustomColors(colorsResponse.data).custom_colors.course
-      const courses = coursesResponse.data.filter(filterCourses)
+      const courses = coursesResponse.data
       const newStates = courses.map((course) => {
         return [course.id, normalizeCourse(course, colors, state[course.id])]
       })
@@ -172,6 +166,37 @@ const coursesData: Reducer<CoursesState, any> = handleActions({
           course: oldCourse,
           error: parseErrorMessage(error),
           pending: state[oldCourse.id].pending - 1,
+        },
+      }
+    },
+  }),
+  [getCourseEnabledFeatures.toString()]: handleAsync({
+    pending: (state, { courseID }) => {
+      return {
+        ...state,
+        [courseID]: {
+          ...state[courseID],
+          pending: state[courseID].pending + 1,
+        },
+      }
+    },
+    rejected: (state, { courseID }) => {
+      return {
+        ...state,
+        [courseID]: {
+          ...state[courseID],
+          pending: state[courseID].pending - 1,
+        },
+      }
+    },
+    resolved: (state, payload) => {
+      let { courseID, result } = payload
+      return {
+        ...state,
+        [courseID]: {
+          ...state[courseID],
+          pending: state[courseID].pending - 1,
+          enabledFeatures: result.data,
         },
       }
     },

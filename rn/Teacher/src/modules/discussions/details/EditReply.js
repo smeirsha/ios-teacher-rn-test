@@ -23,12 +23,11 @@ import color from '../../../common/colors'
 import Screen from '../../../routing/Screen'
 import RichTextEditor from '../../../common/components/rich-text-editor/RichTextEditor'
 import Actions from './actions'
-import { ERROR_TITLE } from '../../../redux/middleware/error-handler'
+import { alertError } from '../../../redux/middleware/error-handler'
 import ModalActivityIndicator from '../../../common/components/ModalActivityIndicator'
 import {
-    View,
-    LayoutAnimation,
-    Alert,
+  View,
+  LayoutAnimation,
 } from 'react-native'
 
 type OwnProps = {
@@ -46,7 +45,7 @@ type State = {
 
 type Props = OwnProps & typeof Actions & NavigationProps & State
 
-export class EditReply extends React.Component<any, Props, any> {
+export class EditReply extends React.Component<Props, any> {
   props: Props
 
   constructor (props: Props) {
@@ -89,6 +88,7 @@ export class EditReply extends React.Component<any, Props, any> {
             scrollEnabled={true}
             placeholder={i18n('Message')}
             focusOnLoad={true}
+            navigator={this.props.navigator}
           />
         </View>
       </Screen>
@@ -102,7 +102,6 @@ export class EditReply extends React.Component<any, Props, any> {
       return
     }
     if (this.state.pending && !props.pending) {
-      this.setState({ pending: false })
       this.props.refreshDiscussionEntries(this.props.courseID, this.props.discussionID, true)
       this.props.navigator.dismissAllModals()
       return
@@ -145,7 +144,7 @@ export class EditReply extends React.Component<any, Props, any> {
 
   _handleError (error: string) {
     setTimeout(() => {
-      Alert.alert(ERROR_TITLE, error)
+      alertError(error)
     }, 1000)
   }
 }
@@ -175,4 +174,4 @@ export function mapStateToProps ({ entities }: AppState, { courseID, discussionI
 }
 
 let Connected = connect(mapStateToProps, Actions)(EditReply)
-export default (Connected: Component<any, Props, any>)
+export default (Connected: Component<Props, any>)

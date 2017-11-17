@@ -18,11 +18,13 @@
 
 import React, { PureComponent } from 'react'
 import {
-  View,
+  ScrollView,
+  StyleSheet,
 } from 'react-native'
 import Screen from '../../../routing/Screen'
 import i18n from 'format-message'
 import RowWithSwitch from '../../../common/components/rows/RowWithSwitch'
+import RowSeparator from '../../../common/components/rows/RowSeparator'
 import { connect } from 'react-redux'
 import AssignmentActions from '../../assignments/actions'
 import branding from '../../../common/branding'
@@ -37,6 +39,7 @@ type SubmissionSettingsDataProps = {
   anonymous: boolean,
   muted: boolean,
   assignment: Assignment,
+  disableAnonymous: boolean,
 }
 type SubmissionSettingsActions = {
   anonymousGrading: (string, string, boolean) => void,
@@ -86,38 +89,50 @@ export class SubmissionSettings extends PureComponent {
           action: this.dismiss,
         }]}
       >
-        <View>
+        <ScrollView style={style.container1}>
+          <RowSeparator />
           <RowWithSwitch
-            border='bottom'
-            height={60}
             title={i18n('Mute Grades')}
             value={this.props.muted}
             onValueChange={this.toggleMutedGrading}
             identifier='submission-settings.muted'
           />
+          <RowSeparator />
           <RowWithSwitch
-            border='bottom'
-            height={60}
             title={i18n('Anonymous Grading')}
             value={this.props.anonymous}
             onValueChange={this.toggleAnonymousGrading}
             identifier='submission-settings.anonymous'
+            disabled={this.props.disableAnonymous}
           />
+          <RowSeparator />
           <SubTitle style={{ paddingHorizontal: 12, paddingVertical: 4 }}>
             {i18n('This will anonymize each student and shuffle the submission list.')}
           </SubTitle>
-        </View>
+        </ScrollView>
       </Screen>
     )
   }
 }
 
 export function mapStateToProps (state: AppState, ownProps: SubmissionSettingsOwnProps): SubmissionSettingsDataProps {
-  let anonymous = !!state.entities.assignments[ownProps.assignmentID].anonymousGradingOn
+  let course = state.entities.courses[ownProps.courseID]
+  let anonymousCourse = course && course.enabledFeatures.includes('anonymous_grading')
   let assignment = state.entities.assignments[ownProps.assignmentID].data
-  let muted = !!assignment.muted
-  return { anonymous, muted, assignment }
+  let muted = assignment.muted
+  let quiz = assignment.quiz_id && state.entities.quizzes[assignment.quiz_id]
+  let anonymousQuiz = quiz && quiz.data && quiz.data.anonymous_submissions
+
+  let anonymous = state.entities.assignments[ownProps.assignmentID].anonymousGradingOn || anonymousCourse || anonymousQuiz
+  let disableAnonymous = anonymousCourse || anonymousQuiz || false
+
+  return { anonymous, muted, assignment, disableAnonymous }
 }
 const Connect = connect(mapStateToProps, AssignmentActions)(SubmissionSettings)
 export default (Connect: any)
 
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+})

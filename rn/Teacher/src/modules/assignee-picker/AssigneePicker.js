@@ -69,7 +69,7 @@ export class AssigneePicker extends Component<any, AssigneePickerProps, any> {
   componentDidMount () {
     this.props.refreshSections(this.props.courseID)
     const userIds = this.props.assignees.filter(a => a.type === 'student').map(a => a.dataId)
-    this.props.refreshUsers(userIds)
+    this.props.refreshUsers(this.props.courseID, userIds)
     this.props.assignees
       .filter(a => a.type === 'group')
       .forEach((group) => {
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.seperatorColor,
   },
   button: {
-    height: 54,
+    height: 'auto',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.seperatorColor,
   },
@@ -178,6 +178,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingLeft: global.style.defaultPadding,
     paddingRight: global.style.defaultPadding,
+    paddingVertical: global.style.defaultPadding / 2,
   },
   buttonText: {
     color: colors.primaryButton,
@@ -197,6 +198,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     paddingRight: global.style.defaultPadding,
+    paddingVertical: global.style.defaultPadding / 2,
   },
 })
 

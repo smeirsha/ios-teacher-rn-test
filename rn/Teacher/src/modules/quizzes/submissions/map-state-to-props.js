@@ -21,7 +21,10 @@ import { gradeProp, statusProp } from '../../submissions/list/get-submissions-pr
 import { type QuizSubmissionListDataProps } from './QuizSubmissionList'
 import shuffle from 'knuth-shuffle-seeded'
 
-export function buildRows (enrollments: Enrollment[], quizSubmissions: { [string]: QuizSubmissionState }, submissions: { [string]: SubmissionState }): SubmissionRowDataProps[] {
+export function buildRows (enrollments: Enrollment[],
+                           quizSubmissions: { [string]: QuizSubmissionState },
+                           submissions: { [string]: SubmissionState },
+                           sectionIDs: [string]): SubmissionRowDataProps[] {
   return enrollments.map((enrollment) => {
     const { user } = enrollment
     const quizSubmission = quizSubmissions[user.id]
@@ -31,30 +34,36 @@ export function buildRows (enrollments: Enrollment[], quizSubmissions: { [string
     let score
     let dueAt
 
-    if (quizSubmission && quizSubmission.data) {
-      score = quizSubmission.data.kept_score
-      dueAt = quizSubmission.data.end_at
-    }
-
-    // If there is an actual submission object
     if (submissionState && submissionState.submission) {
+      // use assignment submission data for graded quiz submissions
       const submission = submissionState.submission
       grade = gradeProp(submission)
       status = statusProp(submission, dueAt)
+      score = submission.score // same as quiz submission keptScore
     } else if (quizSubmission && quizSubmission.data) {
-      status = 'submitted'
+      // only use quiz submission data for ungraded quizzes
+      // note: ungraded quiz submissions always have a null data.end_at
       const data = quizSubmission.data
       const keptScore = data.kept_score
       if (keptScore !== null && keptScore !== undefined) {
+        score = keptScore
         grade = String(keptScore)
       }
 
-      if (data.workflow_state === 'pending_review') {
-        grade = 'ungraded'
+      if (data.workflow_state === 'complete') {
+        status = 'submitted'
       }
 
-      if (Date.parse(data.end_at) < Date.now()) {
-        status = 'late'
+      if (data.workflow_state === 'untaken') {
+        grade = 'not_submitted'
+        if (data.overdue_and_needs_submission) {
+          status = 'late'
+        }
+      }
+
+      if (data.workflow_state === 'pending_review') {
+        status = 'submitted'
+        grade = 'ungraded'
       }
     }
 
@@ -65,7 +74,8 @@ export function buildRows (enrollments: Enrollment[], quizSubmissions: { [string
       status,
       grade,
       score,
-      anonymous: false, // this will be done in another commit
+      sectionID: enrollment.course_section_id,
+      allSectionIDs: sectionIDs[user.id],
     }
   })
 }
@@ -75,6 +85,7 @@ export default function mapStateToProps ({ entities }: AppState, { courseID, qui
   let quizSubmissions: { [string]: QuizSubmissionState } = {}
   let submissions: { [string]: SubmissionState } = {}
   let enrollments: Enrollment[] = []
+  let sectionIDs: [string] = []
   let pending = false
   let error = null
   let pointsPossible = 0
@@ -98,19 +109,38 @@ export default function mapStateToProps ({ entities }: AppState, { courseID, qui
     .filter((s) => s)
     .forEach((s) => { submissions[s.submission.user_id] = s })
 
-    if (quiz.data.assignment_id) {
+    if (quiz.data.assignment_id && entities.assignments && entities.assignments[quiz.data.assignment_id]) {
       anonymous = entities.assignments[quiz.data.assignment_id].anonymousGradingOn
       muted = entities.assignments[quiz.data.assignment_id].data.muted
     }
+    anonymous = anonymous || quiz.data && quiz.data.anonymous_submissions || entities.courses[courseID].enabledFeatures.includes('anonymous_grading')
   }
 
   const course = entities.courses[courseID]
   if (course) {
-    enrollments = course.enrollments.refs.map((r) => {
+    const allEnrollments = course.enrollments.refs.map((r) => {
       return entities.enrollments[r]
     })
-    .filter((r) => r)
-    .filter((r) => r.type === 'StudentEnrollment')
+
+    sectionIDs = allEnrollments.reduce((memo, enrollment) => {
+      const userID = enrollment.user_id
+      const existing = memo[userID] || []
+      return { ...memo, [userID]: [...existing, enrollment.course_section_id] }
+    }, {})
+
+    enrollments = allEnrollments.filter((e) => {
+      if (!e) return false
+      return (e.type === 'StudentEnrollment' ||
+              e.type === 'StudentViewEnrollment') &&
+              (e.enrollment_state === 'active' ||
+              e.enrollment_state === 'invited')
+    })
+    .reduce((accum, current) => {
+      if (accum.findIndex(e => e.user_id === current.user_id) >= 0) {
+        return accum
+      }
+      return [...accum, current]
+    }, [])
 
     if (course.color) {
       courseColor = course.color
@@ -120,17 +150,22 @@ export default function mapStateToProps ({ entities }: AppState, { courseID, qui
     }
   }
 
-  const rows = buildRows(enrollments, quizSubmissions, submissions)
+  const sections = Object.values(entities.sections).filter((s) => {
+    return s.course_id === courseID
+  })
+
+  const rows = buildRows(enrollments, quizSubmissions, submissions, sectionIDs, anonymous)
 
   return {
     courseColor,
     courseName,
-    rows: anonymous ? shuffle(rows, quiz.data.assignment_id) : rows,
+    rows: anonymous ? shuffle(rows, quiz.data.id) : rows,
     quiz,
     pending,
     pointsPossible,
     error,
     anonymous,
     muted,
+    sections,
   }
 }

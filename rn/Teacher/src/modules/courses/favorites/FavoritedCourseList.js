@@ -25,6 +25,7 @@ import {
   StyleSheet,
 } from 'react-native'
 
+import { getSession } from '../../../canvas-api'
 import localeSort from '../../../utils/locale-sort'
 import { LinkButton } from '../../../common/buttons'
 import i18n from 'format-message'
@@ -41,6 +42,7 @@ import Screen from '../../../routing/Screen'
 import branding from '../../../common/branding'
 import color from '../../../common/colors'
 import ActivityIndicatorView from '../../../common/components/ActivityIndicatorView'
+import App from '../../app'
 
 const { width: deviceWidth } = Dimensions.get('window')
 
@@ -71,7 +73,11 @@ export class FavoritedCourseList extends Component {
   }
 
   componentWillReceiveProps (newProps: Props) {
-    if (!newProps.pending && !newProps.error && !newProps.totalCourseCount && !this.state.showingModal) {
+    if (!newProps.pending &&
+        !newProps.error &&
+        !newProps.totalCourseCount &&
+        !this.state.showingModal &&
+        getSession()) {
       this.props.navigator.show('/notATeacher', { modal: true })
       this.setState({
         showingModal: true,
@@ -93,6 +99,10 @@ export class FavoritedCourseList extends Component {
 
   goToAllCourses = () => {
     this.props.navigator.show('/courses')
+  }
+
+  goToProfile = () => {
+    this.props.navigator.show('/profile', { modal: true })
   }
 
   renderHeader = () => {
@@ -131,6 +141,19 @@ export class FavoritedCourseList extends Component {
   }
 
   render () {
+    let avatarURL
+    const session = getSession()
+    if (session) {
+      avatarURL = session.user.avatar_url
+    }
+
+    const avatarConfig = {
+      uri: avatarURL,
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+    }
+
     return (
       <Screen
         navBarHidden={false}
@@ -144,6 +167,14 @@ export class FavoritedCourseList extends Component {
             testID: 'favorited-course-list.edit-btn',
             action: this.showFavoritesList,
             disabled: !this.props.totalCourseCount,
+          },
+        ]}
+        leftBarButtons={[
+          {
+            image: avatarURL ? avatarConfig : Images.profile,
+            testID: 'favorited-course-list.profile-btn',
+            action: this.goToProfile,
+            accessibilityLabel: i18n('Profile'),
           },
         ]}
         >
@@ -194,6 +225,7 @@ export function mapStateToProps (state: AppState): FavoritedCourseListDataProps 
   const courses: Array<CourseProps> = courseRefs
     .map(ref => allCourses[ref])
     .map(({ course, color }) => ({ ...course, color }))
+    .filter(App.current().filterCourse)
     .sort((c1, cs2) => localeSort(c1.name, cs2.name))
 
   return { pending, error, courses, totalCourseCount }
@@ -205,4 +237,4 @@ let Refreshed = refresh(
   props => Boolean(props.pending)
 )(FavoritedCourseList)
 let Connected = connect(mapStateToProps, CoursesActions)(Refreshed)
-export default (Connected: Component<any, Props, any>)
+export default (Connected: Component<Props, any>)

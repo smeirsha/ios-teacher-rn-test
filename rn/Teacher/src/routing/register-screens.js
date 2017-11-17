@@ -43,6 +43,7 @@ import QuizzesList from '../modules/quizzes/list/QuizzesList'
 import QuizDetails from '../modules/quizzes/details/QuizDetails'
 import QuizEdit from '../modules/quizzes/edit/QuizEdit'
 import RichTextEditor from '../modules/rich-text-editor/RichTextEditor'
+import LinkModal from '../common/components/rich-text-editor/LinkModal'
 import QuizPreview from '../modules/quizzes/details/QuizPreview'
 import QuizSubmissions from '../modules/quizzes/submissions/QuizSubmissionList'
 import CourseDetailsSplitViewPlaceholder from '../modules/courses/details/components/CourseDetailsSplitViewPlaceholder'
@@ -58,6 +59,12 @@ import GroupList from '../modules/groups/GroupList'
 import Attachments from '../modules/attachments/Attachments'
 import ContextCard from '../modules/users/ContextCard'
 import PeopleList from '../modules/people/PeopleList'
+import Filter from '../modules/filter/Filter'
+import ToDoList from '../modules/to-do/list/ToDoList'
+import CourseFilesList from '../modules/files/CourseFilesList'
+import PagesList from '../modules/pages/list/PagesList'
+import PageDetails from '../modules/pages/details/PageDetails'
+import UI from '../common/UI'
 
 import { Store } from 'redux'
 import { registerScreen } from './'
@@ -82,6 +89,7 @@ export function registerScreens (store: Store): void {
   registerScreen('/courses/:courseID/assignments/:assignmentID/submissions', wrap(SubmissionList), store)
   registerScreen('/courses/:courseID/assignments/:assignmentID/submission_settings', wrap(SubmissionSettings), store)
   registerScreen('/courses/:courseID/assignments/:assignmentID/submissions/:userID', wrap(SpeedGrader), store)
+  registerScreen('/courses/:courseID/gradebook/speed_grader', wrap(SpeedGrader), store)
   registerScreen('/courses/:courseID/assignments/:assignmentID/rubrics/:rubricID/description', wrap(RubricDescription), store)
   registerScreen('/courses/:courseID/quizzes', wrap(QuizzesList), store, { canBecomeMaster: true })
   registerScreen('/courses/:courseID/quizzes/:quizID', wrap(QuizDetails), store)
@@ -96,6 +104,9 @@ export function registerScreens (store: Store): void {
   registerScreen('/courses/:courseID/discussion_topics/:discussionID/entries/:entryID/replies', wrap(EditReply), store)
   registerScreen('/courses/:courseID/users', wrap(PeopleList), store, { canBecomeMaster: true })
   registerScreen('/courses/:courseID/address-book', wrap(AddressBook), store)
+  registerScreen('/courses/:courseID/files', wrap(CourseFilesList), store)
+  registerScreen('/courses/:courseID/files/folder/*subFolder', wrap(CourseFilesList), store)
+  registerScreen('/courses/:courseID/file/:fileID', wrap(CourseFilesList), store)
   registerScreen('/groups/:groupID/users', wrap(GroupList), store)
   registerScreen('/conversations', wrap(Inbox), store, { canBecomeMaster: true })
   registerScreen('/conversations/compose', wrap(Compose), store)
@@ -106,6 +117,7 @@ export function registerScreens (store: Store): void {
   registerScreen('/profile', wrap(Profile), store)
   registerScreen('/staging', wrap(Staging), store)
   registerScreen('/rich-text-editor', wrap(RichTextEditor), store)
+  registerScreen('/rich-text-editor/link', wrap(LinkModal), store)
   registerScreen('/attachment', wrap(AttachmentView), store)
   registerScreen('/attachments', wrap(Attachments), store)
   registerScreen('/courses/:courseID/placeholder', wrap(CourseDetailsSplitViewPlaceholder), store)
@@ -115,4 +127,11 @@ export function registerScreens (store: Store): void {
   registerScreen('/notATeacher', wrap(NoATeacher), store)
   registerScreen('/courses/:courseID/users/:userID', wrap(ContextCard), store)
   registerScreen('/attendance')
+  registerScreen('/filter', wrap(Filter), store)
+  registerScreen('/to-do', wrap(ToDoList), store, { canBecomeMaster: true })
+  registerScreen('/courses/:courseID/wiki', wrap(PagesList), store, { canBecomeMaster: true })
+  registerScreen('/courses/:courseID/pages', wrap(PagesList), store, { canBecomeMaster: true })
+  registerScreen('/courses/:courseID/wiki/:url', wrap(PageDetails), store)
+  registerScreen('/courses/:courseID/pages/:url', wrap(PageDetails), store)
+  registerScreen('/ui', wrap(UI), store)
 }

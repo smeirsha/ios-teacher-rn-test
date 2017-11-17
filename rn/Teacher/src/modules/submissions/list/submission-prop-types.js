@@ -36,6 +36,8 @@ export type SubmissionDataProps = {
   score?: ?number,
   submissionID: ?string,
   submission: ?Object,
+  sectionID: string,
+  allSectionIDs: [string],
 }
 
 export type SubmissionProps = SubmissionDataProps & {
@@ -57,7 +59,7 @@ export type SubmissionListDataProps
     anonymous: boolean,
     muted: boolean,
     assignmentName: string,
-    course: ?Course,
+    sections: Array<Section>,
   }
 
 export type SubmissionListActionProps = {

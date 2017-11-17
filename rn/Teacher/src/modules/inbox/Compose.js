@@ -25,8 +25,8 @@ import ReactNative, {
   TouchableOpacity,
   Image,
   LayoutAnimation,
-  requireNativeComponent,
   Alert,
+  processColor,
 } from 'react-native'
 import { connect } from 'react-redux'
 import i18n from 'format-message'
@@ -40,10 +40,10 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import AutoGrowingTextInput from '../../common/components/AutoGrowingTextInput'
 import ModalActivityIndicator from '../../common/components/ModalActivityIndicator'
 import AddressBookToken from './components/AddressBookToken'
-import { createConversation, addMessage } from 'canvas-api'
+import { createConversation, addMessage } from '../../canvas-api'
 import axios from 'axios'
 import { Text } from '../../common/text'
-const ScrollViewDisabler = requireNativeComponent('ScrollViewDisabler')
+import throttle from 'lodash/throttle'
 
 type OwnProps = {
   conversationID?: string,
@@ -73,6 +73,7 @@ type ComposeState = {
   body: ?string,
   subject: ?string,
   pending: boolean,
+  attachments: Attachment[],
 }
 
 export class Compose extends PureComponent {
@@ -100,6 +101,7 @@ export class Compose extends PureComponent {
       body: null,
       subject: props.subject || null,
       pending: false,
+      attachments: [],
     }
   }
 
@@ -130,6 +132,8 @@ export class Compose extends PureComponent {
       subject: state.subject || '',
       group_conversation: true,
       included_messages: this.props.includedMessages && this.props.includedMessages.map(({ id }) => id),
+      attachment_ids: this.state.attachments.map(a => a.id),
+      context_code: state.contextCode,
     }
 
     if (this.state.sendToAll) {
@@ -197,14 +201,35 @@ export class Compose extends PureComponent {
     })
   }
 
+  adjust = throttle((e: any) => {
+    const element = ReactNative.findNodeHandle(e.target)
+    this.scrollView.scrollToFocusedInput(element)
+  }, 250)
+
   scrollToEnd = (e: any) => {
-    this.scrollView.scrollToFocusedInput(ReactNative.findNodeHandle(e.target))
+    e.persist()
+    this.adjust(e)
   }
 
   setStateAndUpdate = (state: any) => {
     this.setState(state, () => {
       this._validateSendButton()
     })
+  }
+
+  editAttachments = () => {
+    this.props.navigator.show('/attachments', { modal: true }, {
+      attachments: this.state.attachments,
+      storageOptions: {
+        uploadPath: '/users/self/files',
+        targetFolderPath: 'my files/conversation attachments',
+      },
+      onComplete: this.setAttachments,
+    })
+  }
+
+  setAttachments = (attachments: Attachment[]) => {
+    this.setState({ attachments })
   }
 
   componentWillUnmount () {
@@ -223,13 +248,26 @@ export class Compose extends PureComponent {
           testID: 'compose-message.cancel',
           action: this.cancelCompose,
         }]}
-        rightBarButtons={[{
-          disabled: this.state.sendDisabled,
-          title: i18n('Send'),
-          testID: 'compose-message.send',
-          action: this.sendMessage,
-          style: 'done',
-        }]}
+        rightBarButtons={[
+          {
+            disabled: this.state.sendDisabled,
+            title: i18n('Send'),
+            testID: 'compose-message.send',
+            action: this.sendMessage,
+            style: 'done',
+          },
+          {
+            image: Images.attachmentLarge,
+            testID: 'compose-message.attach',
+            action: this.editAttachments,
+            accessibilityLabel: i18n('Edit attachments ({count})', { count: this.state.attachments.length }),
+            badge: this.state.attachments.length > 0 && {
+              text: i18n.number(this.state.attachments.length),
+              backgroundColor: processColor('#008EE2'),
+              textColor: processColor('white'),
+            },
+          },
+        ]}
       >
         <View style={{ flex: 1 }}>
           <ModalActivityIndicator text={i18n('Sending...')} visible={this.state.pending}/>
@@ -259,7 +297,7 @@ export class Compose extends PureComponent {
                 }
                 <View style={styles.tokenContainer}>
                   {this.state.recipients.map((r) => {
-                    return (<AddressBookToken item={r} delete={this._deleteRecipient} />)
+                    return (<AddressBookToken key={r.id} item={r} delete={this._deleteRecipient} />)
                   })}
                 </View>
                 { this.props.canAddRecipients &&
@@ -288,7 +326,7 @@ export class Compose extends PureComponent {
                 identifier='compose-message.send-all-toggle'
               />
             }
-            <ScrollViewDisabler style={[styles.message, styles.messageWrapper]}>
+            <View style={[styles.message, styles.messageWrapper]}>
               <AutoGrowingTextInput
                 placeholder={i18n('Compose message')}
                 style={styles.cell}
@@ -299,7 +337,7 @@ export class Compose extends PureComponent {
                 testID='compose-message.body-text-input'
                 extraHeight={20}
               />
-            </ScrollViewDisabler>
+            </View>
             {this.props.includedMessages &&
               <View testID='compose.forwarded-message' style={styles.forwardedMessage}>
                 <Text style={styles.forwardedMessageTitle}>{i18n('Forwarded Message:')}</Text>
@@ -324,7 +362,8 @@ const styles = StyleSheet.create({
   },
   messageWrapper: {
     borderBottomWidth: 0,
-    paddingVertical: 10,
+    paddingTop: 10,
+    paddingBottom: 40,
   },
   message: {
     fontSize: 16,

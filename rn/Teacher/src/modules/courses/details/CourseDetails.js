@@ -133,12 +133,16 @@ export class CourseDetails extends Component<any, CourseDetailsProps, any> {
       inputRange: [-235, -navbarHeight],
       outputRange: [1, 0],
     })
+    let fadeIn = this.animatedValue.interpolate({
+      inputRange: [-235, -navbarHeight],
+      outputRange: [0, 1],
+    })
 
     let inOffsets = {}
     if (compactMode) {
       inOffsets = {
         contentInset: { top: 235 },
-        contentOffset: { y: -235 },
+        contentOffset: { y: 0 },
       }
     }
 
@@ -169,6 +173,8 @@ export class CourseDetails extends Component<any, CourseDetailsProps, any> {
             {({ height }) => (
               <Animated.ScrollView
                 scrollEventThrottle={1}
+                contentInsetAdjustmentBehavior='never'
+                automaticallyAdjustContentInsets={false}
                 onScroll={Animated.event(
                   [{ nativeEvent: { contentOffset: { y: this.animatedValue } } }],
                 )}
@@ -237,23 +243,7 @@ export class CourseDetails extends Component<any, CourseDetailsProps, any> {
               <View style={styles.headerBottomContainer} >
                 <Animated.Text
                   style={[styles.headerTitle, {
-                    fontSize: this.animatedValue.interpolate({
-                      inputRange: [-235, -navbarHeight],
-                      outputRange: [24, 17],
-                      extrapolate: 'clamp',
-                    }),
-                    transform: [{
-                      translateY: this.animatedValue.interpolate({
-                        inputRange: [-235, -navbarHeight],
-                        outputRange: [0, bothCompact ? -8 : -7],
-                        extrapolate: 'clamp',
-                      }),
-                    }],
-                    marginHorizontal: this.animatedValue.interpolate({
-                      inputRange: [-235, -navbarHeight],
-                      outputRange: [0, 60],
-                      extrapolate: 'clamp',
-                    }),
+                    opacity: fadeOut, // Make it go a tiny bit faster...
                   }]}
                   testID='course-details.title-lbl'
                 >
@@ -271,7 +261,7 @@ export class CourseDetails extends Component<any, CourseDetailsProps, any> {
             </Animated.View>
           }
           <Animated.Text
-            style={[styles.fakeTitle, {
+            style={[styles.navBarTitle, {
               opacity: fadeOut,
               top: bothCompact ? 24.5 : 33,
             }]}
@@ -280,6 +270,17 @@ export class CourseDetails extends Component<any, CourseDetailsProps, any> {
             accessible={false}
           >
             {courseCode}
+          </Animated.Text>
+          <Animated.Text
+            style={[styles.navBarTitle, {
+              opacity: fadeIn,
+              top: bothCompact ? 24.5 : 33,
+            }]}
+            numberOfLines={1}
+            ellipsizeMode='tail'
+            accessible={false}
+          >
+            {name}
           </Animated.Text>
         </View>
       </Screen>
@@ -306,6 +307,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     color: 'white',
     fontWeight: '600',
+    fontSize: 24,
     textAlign: 'center',
     marginBottom: 3,
   },
@@ -356,7 +358,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  fakeTitle: {
+  navBarTitle: {
     position: 'absolute',
     left: 0,
     right: 0,
@@ -364,7 +366,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 17,
     fontWeight: '600',
-    paddingHorizontal: 60,
+    paddingHorizontal: 75,
     textAlign: 'center',
   },
 })

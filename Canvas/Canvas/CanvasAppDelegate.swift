@@ -13,26 +13,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
-    
-    
 
 import UIKit
-import TooLegit
 import TechDebt
 import PSPDFKit
-import SoPretty
-import SoLazy
-import SoPersistent
-import SoEdventurous
 import CanvasKeymaster
 import Fabric
 import Crashlytics
-import Secrets
-import AttendanceLE
+import CanvasCore
+import ReactiveSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    let loginConfig = LoginConfiguration(mobileVerifyName: "iCanvas", logo: #imageLiteral(resourceName: "login_logo"))
+    var session: Session?
     var window: UIWindow?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         if unitTesting {
@@ -43,7 +38,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         makeAWindow()
         postLaunchSetup()
-        prepareTheKeymaster()
+        TheKeymaster?.fetchesBranding = true
+        TheKeymaster?.delegate = loginConfig
         
         return true
     }
@@ -91,6 +87,9 @@ extension AppDelegate {
         app(application, didReceiveRemoteNotification: userInfo)
     }
     
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        AppStoreReview.requestReview()
+    }
 }
 
 // MARK: Local notifications
@@ -112,45 +111,24 @@ extension AppDelegate {
     
     func postLaunchSetup() {
         PSPDFKit.license()
-        self.setupCrashlytics()
+        setupCrashlytics()
+        prepareReactNative()
         Analytics.prepare()
         NetworkMonitor.engage()
-        CBILogger.install(LoginConfiguration.sharedConfiguration.logFileManager)
-        Brand.current().apply(self.window!)
+        CBILogger.install(loginConfig.logFileManager)
+        Brand.current.apply(self.window!)
+        excludeHelmInBranding()
         UINavigationBar.appearance().barStyle = .black
+        if let w = window { Brand.current.apply(w) }
         Router.shared().addCanvasRoutes(handleError)
         setupDefaultErrorHandling()
+        UIApplication.shared.reactive.applicationIconBadgeNumber
+            <~ UnreadMessages.count
     }
 }
 
 // MARK: Logging in/out
 extension AppDelegate {
-    
-    func prepareTheKeymaster() {
-        TheKeymaster?.delegate = LoginConfiguration.sharedConfiguration
-
-        Session.logoutSignalProducer
-            .startWithValues(didLogout)
-
-        Session.loginSignalProducer
-            .startWithValues(didLogin)
-    }
-    
-    func didLogin(_ session: Session) {
-        LegacyModuleProgressShim.observeProgress(session)
-        ModuleItem.beginObservingProgress(session)
-        ConversationUpdater.shared().updateUnreadConversationCount()
-        CKCanvasAPI.updateCurrentAPI() // set's currenAPI from CKIClient.currentClient()
-        
-        let root = rootViewController(session)
-        addClearCacheGesture(root.view)
-
-        window?.rootViewController = root
-    }
-    
-    func didLogout(_ domainPicker: UIViewController) {
-        window?.rootViewController = domainPicker
-    }
     
     func addClearCacheGesture(_ view: UIView) {
         let clearCacheGesture = UITapGestureRecognizer(target: self, action: #selector(clearCache))
@@ -188,7 +166,7 @@ extension AppDelegate {
     }
     
     func setupDefaultErrorHandling() {
-        SoLazy.ErrorReporter.setErrorHandler({ error, presentingViewController in
+        CanvasCore.ErrorReporter.setErrorHandler({ error, presentingViewController in
             self.alertUser(of: error, from: presentingViewController)
             
             if error.shouldRecordInCrashlytics {
@@ -250,5 +228,72 @@ extension AppDelegate {
         
         Router.shared().openCanvasURL(url)
         return true
+    }
+}
+
+import React
+
+extension AppDelegate: RCTBridgeDelegate {
+    func prepareReactNative() {
+        NativeLoginManager.shared().delegate = self
+        NativeLoginManager.shared().app = .student
+        HelmManager.shared.showsLoadingState = false
+        HelmManager.shared.bridge = RCTBridge(delegate: self, launchOptions: nil)
+        HelmManager.shared.onReactLoginComplete = {
+            guard let session = self.session else {
+                return
+            }
+
+            let root = rootViewController(session)
+            self.addClearCacheGesture(root.view)
+            self.window?.rootViewController = root
+        }
+    }
+    
+    func excludeHelmInBranding() {
+        let appearance = UINavigationBar.appearance(whenContainedInInstancesOf: [HelmNavigationController.self])
+        appearance.barTintColor = nil
+        appearance.tintColor = nil
+        appearance.titleTextAttributes = nil
+    }
+    
+    func sourceURL(for bridge: RCTBridge!) -> URL! {
+        let url = RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index.ios", fallbackResource: nil)
+        return url
+    }
+}
+
+extension AppDelegate: NativeLoginManagerDelegate {
+    func didLogin(_ client: CKIClient) {
+        let session = client.authSession
+        self.session = session
+        
+        LegacyModuleProgressShim.observeProgress(session)
+        ModuleItem.beginObservingProgress(session)
+        CKCanvasAPI.updateCurrentAPI()
+        
+        let b = Brand.current
+        guard let brand = CKIBrand() else {
+            fatalError("Why can't I init a brand?")
+        }
+        brand.navigationBackground = "#313640" // ask me why this value is hard-coded and I'll tell you a sad sad tale
+        brand.navigationButtonColor = b.navButtonColor.hex
+        brand.navigationTextColor = b.navTextColor.hex
+        brand.primaryColor = b.tintColor.hex
+        brand.primaryButtonTextColor = b.secondaryTintColor.hex
+        brand.linkColor = b.tintColor.hex
+        brand.primaryButtonBackgroundColor = b.tintColor.hex
+        brand.primaryButtonTextColor = "#FFFFFF"
+        brand.secondaryButtonBackgroundColor = b.secondaryTintColor.hex
+        brand.secondaryButtonTextColor = "#FFFFFF"
+        brand.fontColorDark = "#000000"
+        brand.fontColorLight = "#666666"
+        brand.headerImageURL = ""
+        
+        client.branding = brand
+    }
+    
+    func didLogout(_ controller: UIViewController) {
+        self.window?.rootViewController = controller
     }
 }

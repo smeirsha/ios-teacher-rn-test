@@ -54,16 +54,17 @@ type State = {
   assignmentGroup: ?AssignmentGroup,
   assignment: ?Assignment,
   courseName: string,
+  showSubmissionSummary: boolean,
 }
 
 export type Props = State & OwnProps & RefreshProps & typeof Actions & {
   navigator: Navigator,
 }
 
-export class QuizDetails extends Component<any, Props, any> {
+export class QuizDetails extends Component<Props, any> {
 
   previewQuiz = () => {
-    this.props.navigator.show(`/courses/${this.props.courseID}/quizzes/${this.props.quizID}/preview`, { modal: true })
+    this.props.navigator.show(`/courses/${this.props.courseID}/quizzes/${this.props.quizID}/preview`, { modal: true, modalPresentationStyle: 'fullscreen' })
   }
 
   viewAllSubmissions = () => {
@@ -94,7 +95,7 @@ export class QuizDetails extends Component<any, Props, any> {
           <AssignmentSection isFirstRow={true} style={style.topContainer}>
             <Heading1>{quiz.title}</Heading1>
             <View style={style.pointsContainer}>
-              { quiz.points_possible &&
+              { Boolean(quiz.points_possible) &&
                 <Text style={style.points}>{`${quiz.points_possible} ${i18n('pts')}`}</Text>
               }
               <PublishedIcon published={quiz.published} />
@@ -112,17 +113,19 @@ export class QuizDetails extends Component<any, Props, any> {
             <AssignmentDates assignment={this.props.assignment || quiz} />
           </AssignmentSection>
 
-          <AssignmentSection
-            title={i18n('Submissions')}
-            onPress={this.viewAllSubmissions}
-            testID='quizzes.details.viewAllSubmissionsRow'
-            showDisclosureIndicator>
-            <QuizSubmissionBreakdownGraphSection
-              onPress={this.onSubmissionDialPress}
-              courseID={this.props.courseID}
-              quizID={this.props.quizID}
-              assignmentID={quiz.assignment_id} />
-          </AssignmentSection>
+          {this.props.showSubmissionSummary &&
+            <AssignmentSection
+              title={i18n('Submissions')}
+              onPress={this.viewAllSubmissions}
+              testID='quizzes.details.viewAllSubmissionsRow'
+              showDisclosureIndicator>
+              <QuizSubmissionBreakdownGraphSection
+                onPress={this.onSubmissionDialPress}
+                courseID={this.props.courseID}
+                quizID={this.props.quizID}
+                assignmentID={quiz.assignment_id} />
+            </AssignmentSection>
+          }
 
           <View style={style.section}>
             <Text style={style.header}>{i18n('Description')}</Text>
@@ -188,11 +191,12 @@ export class QuizDetails extends Component<any, Props, any> {
     return (
       <View style={style.detailsSection}>
         {
-          details.filter(d => d[1]).map((detail) => {
+          details.filter(d => d[1]).map((detail, index) => {
             // $FlowFixMe
             const accessibilityLabel = `${detail[0]}, ${detail[1]}`
             return (
               <View
+                key={`detail_section_${index}`}
                 style={style.details}
                 accessible={true}
                 accessibilityLabel={accessibilityLabel}
@@ -335,6 +339,9 @@ export function mapStateToProps ({ entities }: AppState, { courseID, quizID }: O
     }
   }
 
+  let course = entities.courses[courseID].course
+  let enrollment = course && course.enrollments[0]
+
   return {
     quiz,
     pending,
@@ -344,6 +351,7 @@ export function mapStateToProps ({ entities }: AppState, { courseID, quizID }: O
     quizID,
     assignmentGroup,
     assignment,
+    showSubmissionSummary: enrollment && enrollment.type !== 'designer',
   }
 }
 
@@ -353,4 +361,4 @@ let Refreshed = refresh(
   props => Boolean(props.pending)
 )(QuizDetails)
 let Connected = connect(mapStateToProps, Actions)(Refreshed)
-export default (Connected: Component<any, Props, any>)
+export default (Connected: Component<Props, any>)
